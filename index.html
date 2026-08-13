@@ -3534,7 +3534,7 @@ function isValidUrl(value){
 }
 
 
-function forceDownload(url,filename){
+async function forceDownload(url,filename){
 
     if(!isValidUrl(url)){
 
@@ -3545,28 +3545,135 @@ function forceDownload(url,filename){
         return;
     }
 
-    const a =
-        document.createElement("a");
-
-    a.href =
-        url;
-
-    a.download =
+    const safeName =
         sanitizeFilename(
             filename
         );
 
-    a.target =
-        "_blank";
+    /*
+       APK / Android WebView:
+       به‌جای target="_blank" که می‌تواند یک صفحه سفید
+       داخل WebView باز کند، ابتدا فایل را به Blob تبدیل
+       می‌کنیم و سپس دانلود را با یک لینک موقت انجام می‌دهیم.
+    */
 
-    a.rel =
-        "noopener noreferrer";
+    try{
 
-    document.body.appendChild(a);
+        showToast(
+            "در حال آماده‌سازی دانلود..."
+        );
 
-    a.click();
+        const response =
+            await fetch(
+                url,
+                {
+                    method:"GET",
+                    mode:"cors",
+                    credentials:"omit"
+                }
+            );
 
-    a.remove();
+        if(!response.ok){
+
+            throw new Error(
+                "HTTP " + response.status
+            );
+        }
+
+        const blob =
+            await response.blob();
+
+        if(!blob || blob.size === 0){
+
+            throw new Error(
+                "فایل خالی است"
+            );
+        }
+
+        const blobUrl =
+            URL.createObjectURL(blob);
+
+        const a =
+            document.createElement("a");
+
+        a.href =
+            blobUrl;
+
+        a.download =
+            safeName;
+
+        a.style.display =
+            "none";
+
+        document.body.appendChild(a);
+
+        a.click();
+
+        a.remove();
+
+        setTimeout(
+            ()=>{
+                URL.revokeObjectURL(
+                    blobUrl
+                );
+            },
+            5000
+        );
+
+        showToast(
+            "دانلود شروع شد"
+        );
+
+    }catch(error){
+
+        console.warn(
+            "Blob download failed:",
+            error
+        );
+
+        /*
+           اگر سرور CORS را اجازه ندهد،
+           فایل را مستقیماً باز می‌کنیم.
+           مهم: دیگر target="_blank" استفاده نمی‌شود
+           تا WebView صفحه سفید جدید نسازد.
+        */
+
+        try{
+
+            const a =
+                document.createElement("a");
+
+            a.href =
+                url;
+
+            a.download =
+                safeName;
+
+            a.style.display =
+                "none";
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            a.remove();
+
+            showToast(
+                "درخواست دانلود ارسال شد"
+            );
+
+        }catch(fallbackError){
+
+            console.error(
+                "Download fallback failed:",
+                fallbackError
+            );
+
+            showToast(
+                "دانلود در این WebView پشتیبانی نمی‌شود"
+            );
+        }
+    }
 }
 
 
