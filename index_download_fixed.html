@@ -1,0 +1,5580 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>کافه‌کتاب</title>
+
+<!-- Appwrite SDK
+     برای سازگاری بهتر با Android WebView/APK
+     به‌صورت Global Script بارگذاری می‌شود.
+-->
+<script src="https://cdn.jsdelivr.net/npm/appwrite@16.1.0"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+:root{
+    --bg:#17100c;
+    --bg2:#1e1510;
+    --card:#241912;
+    --card2:#2b1d14;
+    --brown:#684126;
+    --brown2:#8b552d;
+    --orange:#c47a35;
+    --cream:#f2e4ca;
+    --text:#eee1cc;
+    --muted:#927d67;
+    --line:#302119;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+    background:#120c09;
+}
+
+body{
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+button,input,textarea,select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    width:100%;
+    max-width:520px;
+    min-height:100vh;
+    margin:auto;
+    position:relative;
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(123,74,38,.12),
+            transparent 25%
+        ),
+        var(--bg);
+}
+
+.page{
+    display:none;
+    width:100%;
+    min-height:100vh;
+    padding:22px 16px 100px;
+}
+
+.page.active{
+    display:block;
+}
+
+.top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+}
+
+.top h2{
+    font-size:18px;
+}
+
+.back{
+    border:0;
+    background:none;
+    color:#d2b28c;
+    font-size:20px;
+}
+
+.segment{
+    display:flex;
+    background:#201610;
+    border-radius:25px;
+    padding:4px;
+    margin-bottom:25px;
+}
+
+.segment button{
+    flex:1;
+    border:0;
+    border-radius:22px;
+    height:39px;
+    background:transparent;
+    color:#8d7660;
+}
+
+.segment button.active{
+    background:var(--orange);
+    color:#21150e;
+}
+
+.sectionHead{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:22px 0 13px;
+}
+
+.sectionHead h3{
+    font-size:14px;
+}
+
+.arrow{
+    color:#8b745d;
+}
+
+.books{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.book{
+    min-width:0;
+    cursor:pointer;
+}
+
+.cover{
+    height:155px;
+    border-radius:11px;
+    position:relative;
+    overflow:hidden;
+    background:#684126;
+}
+
+.cover.bookCover{
+    background:linear-gradient(145deg,#684126,#9b6131);
+}
+
+.cover.mangaCover{
+    background:linear-gradient(145deg,#234a7a,#397ab7);
+}
+
+.cover.manhwaCover{
+    background:linear-gradient(145deg,#762b28,#b9473f);
+}
+
+.cover img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.cover:after{
+    content:"";
+    position:absolute;
+    top:0;
+    right:0;
+    border-top:17px solid rgba(0,0,0,.35);
+    border-left:17px solid transparent;
+}
+
+.coverType{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    color:#f2e4ca;
+    font-size:13px;
+    text-align:center;
+    z-index:1;
+    width:100%;
+}
+
+.star{
+    position:absolute;
+    top:7px;
+    right:7px;
+    z-index:5;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:rgba(25,15,10,.75);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#e2c6a3;
+    font-size:14px;
+    border:0;
+}
+
+.bookTitle{
+    font-size:11px;
+    margin-top:8px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.bookAuthor{
+    font-size:9px;
+    color:var(--muted);
+    margin-top:5px;
+}
+
+.empty{
+    grid-column:1/-1;
+    text-align:center;
+    padding:50px 15px;
+    color:#796655;
+}
+
+.emptyIcon{
+    font-size:38px;
+    margin-bottom:12px;
+}
+
+.searchBox{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    height:46px;
+    background:#241912;
+    border-radius:13px;
+    padding:0 13px;
+    border:1px solid #302219;
+}
+
+.searchBox input{
+    width:100%;
+    border:0;
+    outline:0;
+    background:none;
+    color:white;
+}
+
+.searchBox input::placeholder{
+    color:#806c59;
+}
+
+.genres{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.genre{
+    height:58px;
+    border:0;
+    border-radius:13px;
+    color:#f4e5d0;
+    font-size:12px;
+    background:#573621;
+}
+
+.genre:nth-child(2){background:#492b25;}
+.genre:nth-child(3){background:#53632d;}
+.genre:nth-child(4){background:#175b43;}
+.genre:nth-child(5){background:#263e75;}
+.genre:nth-child(6){background:#583051;}
+.genre:nth-child(7){background:#704029;}
+.genre:nth-child(8){background:#43354f;}
+.genre:nth-child(9){background:#6a5429;}
+.genre:nth-child(10){background:#315b63;}
+
+.profileCenter{
+    text-align:center;
+    padding-top:20px;
+}
+
+.avatar{
+    width:86px;
+    height:86px;
+    border-radius:50%;
+    background:#2b2018;
+    border:1px solid #453022;
+    margin:auto;
+    overflow:hidden;
+    position:relative;
+}
+
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.avatarEmpty{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:35px;
+    color:#8e6c4d;
+}
+
+.profileName{
+    margin-top:13px;
+    font-size:14px;
+}
+
+.profileEmail{
+    color:#8d7660;
+    font-size:10px;
+    margin-top:6px;
+}
+
+.outlineBtn{
+    background:transparent;
+    color:#d6b994;
+    border:1px solid #3a291e;
+    padding:10px 18px;
+    border-radius:18px;
+    margin-top:12px;
+    font-size:11px;
+}
+
+.profileMenu{
+    margin-top:30px;
+    border-top:1px solid var(--line);
+}
+
+.menu{
+    height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid var(--line);
+    color:#c0a78b;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.adminAccess{
+    background:#2b1d14;
+    border-radius:12px;
+    margin:15px 0;
+    padding:0 15px;
+}
+
+.form input,
+.form textarea,
+.form select{
+    width:100%;
+    border:0;
+    outline:0;
+    background:#2b1d15;
+    color:#e7d6bf;
+    padding:14px;
+    border-radius:12px;
+    margin-bottom:11px;
+}
+
+.form textarea{
+    resize:vertical;
+}
+
+.form label{
+    display:block;
+    font-size:11px;
+    color:#967c64;
+    margin:10px 4px 7px;
+}
+
+.save{
+    width:100%;
+    height:48px;
+    border:0;
+    border-radius:13px;
+    background:#d0c8ba;
+    color:#34251b;
+}
+
+.detailCover{
+    width:180px;
+    height:255px;
+    margin:25px auto 18px;
+    border-radius:12px;
+    overflow:hidden;
+    background:#744526;
+    position:relative;
+}
+
+.detailCover.bookCover{
+    background:linear-gradient(145deg,#684126,#9b6131);
+}
+
+.detailCover.mangaCover{
+    background:linear-gradient(145deg,#234a7a,#397ab7);
+}
+
+.detailCover.manhwaCover{
+    background:linear-gradient(145deg,#762b28,#b9473f);
+}
+
+.detailCover img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.detailCoverType{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    color:#f2e4ca;
+    font-size:17px;
+    z-index:2;
+}
+
+.detail h1{
+    font-size:19px;
+    margin-bottom:8px;
+}
+
+.detailMeta{
+    color:#8d755d;
+    font-size:11px;
+    margin-bottom:20px;
+}
+
+.description{
+    color:#a9937c;
+    line-height:2;
+    font-size:12px;
+    margin-bottom:22px;
+}
+
+.detailButtons{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+}
+
+.downloadBtn{
+    height:46px;
+    border-radius:12px;
+    font-size:12px;
+    background:transparent;
+    border:1px solid #39271d;
+    color:#c9ac89;
+}
+
+.saveWorkBtn{
+    width:100%;
+    height:45px;
+    margin-top:10px;
+    border-radius:12px;
+    border:1px solid #3a291e;
+    background:#241912;
+    color:#c9ac89;
+}
+
+#chaptersBox{
+    margin-top:25px;
+}
+
+.chapterTitle{
+    font-size:14px;
+    margin-bottom:13px;
+}
+
+#chaptersList{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.chapterItem{
+    width:100%;
+    min-height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:1px solid #33231a;
+    border-radius:12px;
+    background:#241912;
+    color:#dfc9ad;
+    padding:12px;
+    text-align:right;
+    font-size:11px;
+}
+
+.chapterItem span:first-child{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.chapterItem span:last-child{
+    color:#c37934;
+    margin-right:8px;
+}
+
+.adminBox{
+    background:#211710;
+    border-radius:18px;
+    padding:15px;
+}
+
+.adminTabs{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    background:#2b1d14;
+    padding:4px;
+    border-radius:13px;
+    margin-bottom:18px;
+}
+
+.adminTabs button{
+    border:0;
+    background:none;
+    color:#8f775f;
+    padding:11px 3px;
+    border-radius:10px;
+    font-size:10px;
+}
+
+.adminTabs button.active{
+    background:#a96631;
+    color:white;
+}
+
+.adminSection{
+    display:none;
+}
+
+.adminSection.active{
+    display:block;
+}
+
+.upload{
+    border:1px dashed #63462f;
+    border-radius:13px;
+    padding:18px;
+    text-align:center;
+    color:#967c63;
+    font-size:11px;
+    margin-bottom:12px;
+}
+
+.addBtn{
+    width:100%;
+    height:46px;
+    border:0;
+    border-radius:12px;
+    background:#bd7232;
+    color:white;
+}
+
+.adminItem{
+    background:#2a1c14;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:10px;
+}
+
+.adminItemInfo{
+    margin-bottom:10px;
+}
+
+.adminItemInfo b{
+    font-size:12px;
+    display:block;
+}
+
+.adminItemInfo small{
+    display:block;
+    color:#866d57;
+    font-size:9px;
+    margin-top:5px;
+}
+
+.adminActions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.editBtn,
+.delete{
+    border:0;
+    border-radius:8px;
+    padding:9px;
+    font-size:10px;
+}
+
+.editBtn{
+    background:#60452d;
+    color:#ead4b8;
+}
+
+.delete{
+    background:#5b3028;
+    color:#e3b8a5;
+}
+
+.pendingChapter{
+    background:#2a1c14;
+    border-radius:10px;
+    padding:10px;
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:11px;
+}
+
+.adminSearch{
+    margin-bottom:15px;
+}
+
+.editChapter{
+    background:#2a1c14;
+    border-radius:10px;
+    padding:10px;
+    margin-bottom:9px;
+}
+
+.editChapter .form input{
+    margin-bottom:8px;
+}
+
+.genreAdminItem{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#2a1c14;
+    border-radius:10px;
+    padding:10px;
+    margin-bottom:8px;
+    font-size:11px;
+}
+
+.nav{
+    position:fixed;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:520px;
+    height:70px;
+    background:#1c130e;
+    border-top:1px solid #302219;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    z-index:1000;
+}
+
+.nav button{
+    border:0;
+    background:none;
+    color:#766453;
+    font-size:9px;
+}
+
+.nav button.active{
+    color:#c37934;
+}
+
+.navIcon{
+    display:block;
+    font-size:18px;
+    margin-bottom:4px;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    z-index:4000;
+    display:none;
+    align-items:flex-end;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modalContent{
+    width:100%;
+    max-width:520px;
+    margin:auto;
+    background:#211710;
+    border-radius:22px 22px 0 0;
+    padding:20px;
+    max-height:90vh;
+    overflow:auto;
+}
+
+.modalContent h3{
+    margin-bottom:18px;
+}
+
+.modalContent p{
+    font-size:11px;
+    color:#8d7660;
+    line-height:2;
+    margin-bottom:15px;
+}
+
+.modalInput{
+    width:100%;
+    background:#2c1e15;
+    border:1px solid #3a281d;
+    border-radius:12px;
+    padding:14px;
+    color:white;
+    outline:none;
+    margin-bottom:12px;
+}
+
+.modalBtn{
+    width:100%;
+    height:46px;
+    border:0;
+    border-radius:12px;
+    background:#bd7232;
+    color:white;
+    margin-top:7px;
+}
+
+.toast{
+    position:fixed;
+    bottom:85px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#d9cdbb;
+    color:#302117;
+    padding:11px 17px;
+    border-radius:10px;
+    font-size:11px;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:9000;
+    white-space:nowrap;
+}
+
+.toast.show{
+    opacity:1;
+}
+
+.avatarPreview{
+    width:75px;
+    height:75px;
+    border-radius:50%;
+    margin:0 auto 15px;
+    overflow:hidden;
+    background:#2b2018;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+}
+
+.avatarPreview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.firebaseStatus{
+    position:fixed;
+    top:8px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#2b1d14;
+    color:#8d7660;
+    padding:5px 10px;
+    border-radius:10px;
+    font-size:8px;
+    z-index:9999;
+    display:none;
+}
+
+.errorModalContent{
+    max-height:85vh;
+    overflow:auto;
+}
+
+.errorCode{
+    background:#170d09;
+    border:1px solid #5b3028;
+    color:#e5b4a3;
+    border-radius:10px;
+    padding:12px;
+    font-family:monospace;
+    direction:ltr;
+    text-align:left;
+    white-space:pre-wrap;
+    word-break:break-word;
+    font-size:10px;
+    line-height:1.7;
+}
+
+.adminLogoutBtn{
+    background:#5b3028 !important;
+    color:#e3b8a5 !important;
+}
+
+@media(min-width:700px){
+    .app{
+        box-shadow:0 0 50px rgba(0,0,0,.4);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="firebaseStatus" class="firebaseStatus">
+    اتصال ابری
+</div>
+
+<div class="app">
+
+<section id="homePage" class="page active">
+
+<div class="segment">
+
+<button id="booksTab" class="active">
+📖 کتاب
+</button>
+
+<button id="mangaTab">
+📚 مانگا و مانهوا
+</button>
+
+</div>
+
+<div class="sectionHead">
+<h3 id="latestTitle">تازه‌ترین کتاب‌ها</h3>
+<span class="arrow">‹</span>
+</div>
+
+<div id="latestBooks" class="books"></div>
+
+<div class="sectionHead">
+<h3 id="newTitle">جدیدترین کتاب‌ها</h3>
+<span class="arrow">‹</span>
+</div>
+
+<div id="newBooks" class="books"></div>
+
+<div class="sectionHead">
+<h3>برای شما</h3>
+<span class="arrow">‹</span>
+</div>
+
+<div id="forYou" class="books"></div>
+
+</section>
+
+
+<section id="searchPage" class="page">
+
+<div class="top">
+<h2>جستجو</h2>
+</div>
+
+<div class="searchBox">
+
+<span>🔍</span>
+
+<input
+id="searchInput"
+placeholder="نام کتاب، مانگا یا مانهوا">
+
+<span id="clearSearch" style="cursor:pointer">
+×
+</span>
+
+</div>
+
+<div class="sectionHead">
+<h3>نتایج</h3>
+</div>
+
+<div id="searchResults" class="books"></div>
+
+</section>
+
+
+<section id="genresPage" class="page">
+
+<div class="top">
+<h2>ژانرها</h2>
+</div>
+
+<div id="genres" class="genres"></div>
+
+</section>
+
+
+<section id="savedPage" class="page">
+
+<div class="top">
+<h2>ذخیره‌ها</h2>
+</div>
+
+<div class="segment">
+
+<button class="active">
+نشان‌گذاری شده
+</button>
+
+<button disabled>
+تاریخچه
+</button>
+
+</div>
+
+<div id="savedBooks" class="books"></div>
+
+</section>
+
+
+<section id="profilePage" class="page">
+
+<div class="top">
+<h2>پروفایل</h2>
+</div>
+
+<div class="profileCenter">
+
+<div class="avatar">
+
+<div id="avatarEmpty" class="avatarEmpty">
+♙
+</div>
+
+<img
+id="avatarImg"
+alt="پروفایل"
+style="display:none">
+
+</div>
+
+<div class="profileName" id="profileName">
+کاربر
+</div>
+
+<div class="profileEmail" id="profileEmail">
+کاربر مهمان
+</div>
+
+<button class="outlineBtn" id="editProfileBtn">
+✏️ ویرایش پروفایل
+</button>
+
+</div>
+
+<div class="profileMenu">
+
+<div class="menu" id="supportBtn">
+<span>پشتیبانی و درخواست کتاب</span>
+<span>›</span>
+</div>
+
+<div class="menu" id="copyDownloadBtn">
+<span>کپی لینک دانلود</span>
+<span>›</span>
+</div>
+
+<div class="menu adminAccess" id="adminAccessBtn">
+<span>🔐 ورود به حساب مدیریت</span>
+<span>›</span>
+</div>
+
+</div>
+
+</section>
+
+
+<section id="detailPage" class="page">
+
+<div class="top">
+
+<button class="back" id="detailBack">
+←
+</button>
+
+<h2>جزئیات</h2>
+
+</div>
+
+<div class="detail">
+
+<div id="detailCover" class="detailCover">
+
+<img
+id="detailImage"
+alt="جلد"
+style="display:none">
+
+<div id="detailCoverType" class="detailCoverType">
+کافه‌کتاب
+</div>
+
+</div>
+
+<h1 id="detailTitle"></h1>
+
+<div class="detailMeta" id="detailMeta"></div>
+
+<div class="description" id="detailDescription"></div>
+
+<div class="detailButtons">
+
+<button class="downloadBtn" id="downloadBtn">
+⬇ دانلود
+</button>
+
+</div>
+
+<button class="saveWorkBtn" id="saveWorkBtn">
+☆ افزودن به ذخیره‌ها
+</button>
+
+<div id="chaptersBox" style="display:none">
+
+<h3 class="chapterTitle">
+چپترها
+</h3>
+
+<div
+class="searchBox"
+style="margin-bottom:12px">
+
+<span>🔍</span>
+
+<input
+id="chapterSearchInput"
+type="text"
+placeholder="جستجوی چپتر...">
+
+<span
+id="clearChapterSearch"
+style="cursor:pointer">
+×
+</span>
+
+</div>
+
+<div id="chaptersList"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section id="adminPage" class="page">
+
+<div class="top">
+
+<button class="back" id="adminBack">
+←
+</button>
+
+<h2>حساب مدیریت</h2>
+
+</div>
+
+<div class="adminBox">
+
+<div class="adminTabs">
+
+<button
+class="active"
+data-admin-tab="add">
+افزودن اثر
+</button>
+
+<button
+data-admin-tab="genres">
+مدیریت ژانرها
+</button>
+
+<button
+data-admin-tab="published">
+انتشار شده
+</button>
+
+</div>
+
+
+<div
+id="adminAdd"
+class="adminSection active">
+
+<div class="form">
+
+<label>نوع اثر</label>
+
+<select id="adminType">
+
+<option value="book">
+📖 کتاب
+</option>
+
+<option value="manga">
+📚 مانگا
+</option>
+
+<option value="manhwa">
+📕 مانهوا
+</option>
+
+</select>
+
+
+<label>عنوان</label>
+
+<input
+id="adminTitle"
+placeholder="عنوان">
+
+
+<label>Author</label>
+
+<input
+id="adminAuthor"
+placeholder="Author">
+
+
+<label>ژانر</label>
+
+<select id="adminGenre"></select>
+
+
+<label>توضیحات</label>
+
+<textarea
+id="adminDescription"
+placeholder="توضیحات اثر"
+style="min-height:110px"></textarea>
+
+
+<div id="bookLinkBox">
+
+<label>
+لینک مستقیم کتاب
+</label>
+
+<input
+id="bookLinkInput"
+type="url"
+placeholder="https://example.com/book.pdf">
+
+</div>
+
+
+<div
+id="chapterPublishBox"
+style="display:none">
+
+<label>
+عنوان چپتر
+</label>
+
+<input
+id="chapterTitle"
+placeholder="مثلاً چپتر ۱">
+
+
+<label>
+لینک مستقیم چپتر
+</label>
+
+<input
+id="chapterLinkInput"
+type="url"
+placeholder="https://example.com/chapter1">
+
+
+<button
+class="addBtn"
+id="addChapterBtn">
++ افزودن چپتر
+</button>
+
+<div
+id="pendingChapters"
+style="margin-top:12px">
+</div>
+
+</div>
+
+
+<button
+class="addBtn"
+id="publishBtn"
+style="margin-top:15px">
+
+🚀 انتشار اثر
+
+</button>
+
+</div>
+
+</div>
+
+
+<div
+id="adminGenres"
+class="adminSection">
+
+<div class="form">
+
+<label>
+ژانر جدید
+</label>
+
+<input
+id="newGenre"
+placeholder="مثلاً فلسفی">
+
+<button
+class="addBtn"
+id="addGenreBtn">
++ افزودن ژانر
+</button>
+
+</div>
+
+<div
+id="genreAdminList"
+style="margin-top:15px">
+</div>
+
+</div>
+
+
+<div
+id="adminPublished"
+class="adminSection">
+
+<div class="searchBox adminSearch">
+
+<span>🔍</span>
+
+<input
+id="publishedSearchInput"
+placeholder="جستجوی آثار منتشر شده...">
+
+<span
+id="clearPublishedSearch"
+style="cursor:pointer">
+×
+</span>
+
+</div>
+
+<div id="adminPublishedList"></div>
+
+</div>
+
+<button
+class="modalBtn adminLogoutBtn"
+id="adminLogoutBtn"
+style="margin-top:15px">
+🚪 خروج از حساب مدیریت
+</button>
+
+</div>
+
+</section>
+
+
+<nav class="nav" id="mainNav">
+
+<button
+data-page="homePage"
+class="active">
+
+<span class="navIcon">⌂</span>
+خانه
+
+</button>
+
+<button data-page="searchPage">
+
+<span class="navIcon">⌕</span>
+جستجو
+
+</button>
+
+<button data-page="genresPage">
+
+<span class="navIcon">▦</span>
+ژانرها
+
+</button>
+
+<button data-page="savedPage">
+
+<span class="navIcon">☆</span>
+ذخیره‌ها
+
+</button>
+
+<button data-page="profilePage">
+
+<span class="navIcon">♙</span>
+پروفایل
+
+</button>
+
+</nav>
+
+</div>
+
+
+<div id="profileModal" class="modal">
+
+<div class="modalContent">
+
+<h3>
+ویرایش پروفایل
+</h3>
+
+<div class="avatarPreview">
+
+<img
+id="profilePreview"
+style="display:none">
+
+<span id="profilePreviewIcon">
+♙
+</span>
+
+</div>
+
+<input
+id="profileAvatarInput"
+class="modalInput"
+type="file"
+accept="image/*">
+
+<input
+id="profileNameInput"
+class="modalInput"
+placeholder="نام شما">
+
+<button
+class="modalBtn"
+id="saveProfileBtn">
+ذخیره تغییرات
+</button>
+
+<button
+class="modalBtn"
+id="closeProfileModal"
+style="background:#302119;color:#c8ad90">
+بستن
+</button>
+
+</div>
+
+</div>
+
+
+<div id="adminModal" class="modal">
+
+<div class="modalContent">
+
+<h3>
+ورود به حساب مدیریت
+</h3>
+
+<p>
+با حسابی که در Appwrite ساخته‌اید وارد شوید.
+</p>
+
+<input
+id="adminEmailInput"
+class="modalInput"
+type="email"
+autocomplete="username"
+placeholder="ایمیل حساب مدیریت">
+
+<input
+id="adminPasswordInput"
+class="modalInput"
+type="password"
+autocomplete="current-password"
+placeholder="رمز عبور">
+
+<button
+class="modalBtn"
+id="checkAdminBtn">
+ورود به حساب مدیریت
+</button>
+
+<button
+class="modalBtn"
+id="closeAdminModal"
+style="background:#302119;color:#c8ad90">
+بستن
+</button>
+
+</div>
+
+</div>
+
+
+<div id="editWorkModal" class="modal">
+
+<div class="modalContent">
+
+<h3>
+ویرایش اثر
+</h3>
+
+<div class="form">
+
+<label>
+عنوان
+</label>
+
+<input
+id="editTitle"
+placeholder="عنوان">
+
+
+<label>
+نویسنده
+</label>
+
+<input
+id="editAuthor"
+placeholder="نویسنده">
+
+
+<label>
+توضیحات
+</label>
+
+<textarea
+id="editDescription"
+style="min-height:110px"
+placeholder="توضیحات">
+</textarea>
+
+
+<div id="editBookLinkBox">
+
+<label>
+لینک دانلود
+</label>
+
+<input
+id="editBookLink"
+type="url"
+placeholder="https://example.com/book.pdf">
+
+</div>
+
+
+<div
+id="editChaptersBox"
+style="display:none">
+
+<label>
+چپترها
+</label>
+
+<div id="editChaptersList"></div>
+
+<button
+class="addBtn"
+id="addEditChapterBtn"
+type="button"
+style="margin-top:10px">
++ افزودن چپتر
+</button>
+
+</div>
+
+</div>
+
+<button
+class="modalBtn"
+id="saveEditWorkBtn">
+ذخیره ویرایش
+</button>
+
+<button
+class="modalBtn"
+id="closeEditWorkModal"
+style="background:#302119;color:#c8ad90">
+انصراف
+</button>
+
+</div>
+
+</div>
+
+
+<div id="errorModal" class="modal">
+
+<div class="modalContent errorModalContent">
+
+<h3>
+خطای Appwrite
+</h3>
+
+<p>
+برنامه نتوانست عملیات را انجام دهد.
+</p>
+
+<div
+id="errorDetails"
+class="errorCode">
+</div>
+
+<button
+class="modalBtn"
+id="copyErrorBtn">
+کپی خطا
+</button>
+
+<button
+class="modalBtn"
+id="closeErrorModal"
+style="background:#302119;color:#c8ad90">
+بستن
+</button>
+
+</div>
+
+</div>
+
+
+<div id="toast" class="toast">
+انجام شد
+</div>
+
+
+<script>
+
+/* =========================================================
+   APPWRITE CONFIG
+========================================================= */
+
+const APPWRITE_ENDPOINT =
+    "https://fra.cloud.appwrite.io/v1";
+
+const APPWRITE_PROJECT =
+    "6a7d1c4c00054afdb906";
+
+const DATABASE_ID =
+    "Hotaro_1391";
+
+const COLLECTION_WORKS =
+    "works";
+
+const COLLECTION_CHAPTERS =
+    "chapters";
+
+const RUBIKA_ID =
+    "@rraararar";
+
+const APP_DOWNLOAD_LINK =
+    "https://cafeketab.app/download";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let client = null;
+let databases = null;
+let account = null;
+
+let appwriteReady = false;
+let appwriteID = null;
+let appwriteQuery = null;
+
+let allWorks = [];
+let currentWork = null;
+
+let currentCategory = "book";
+
+let pendingChapters = [];
+
+let isAdminMode = false;
+let publishing = false;
+
+let editingWork = null;
+let editingWorkType = null;
+let editingWorkld = null;
+let editingChapters = [];
+
+let lastAppwriteError = "";
+
+
+/* =========================================================
+   SHORTCUT
+========================================================= */
+
+function $(id){
+    return document.getElementById(id);
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(text){
+
+    const toast = $("toast");
+
+    if(!toast) return;
+
+    toast.textContent = text;
+
+    toast.classList.add("show");
+
+    clearTimeout(window.__toastTimer);
+
+    window.__toastTimer =
+        setTimeout(()=>{
+            toast.classList.remove("show");
+        },2300);
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function getErrorText(error,operation){
+
+    return [
+        "APPWRITE ERROR",
+        "-------------------------",
+        "Operation: " + operation,
+        "Code: " + (error?.code ?? "نامشخص"),
+        "Type: " + (error?.type ?? "نامشخص"),
+        "Message: " + (error?.message ?? String(error)),
+        "-------------------------",
+        "Project ID: " + APPWRITE_PROJECT,
+        "Database ID: " + DATABASE_ID,
+        "Works Collection: " + COLLECTION_WORKS,
+        "Chapters Collection: " + COLLECTION_CHAPTERS
+    ].join("\n");
+}
+
+
+function showAppwriteError(error,operation){
+
+    console.error(
+        "APPWRITE ERROR:",
+        operation,
+        error
+    );
+
+    lastAppwriteError =
+        getErrorText(
+            error,
+            operation
+        );
+
+    $("errorDetails").textContent =
+        lastAppwriteError;
+
+    $("errorModal")
+        .classList.add("active");
+
+    showToast(
+        "خطای Appwrite"
+    );
+}
+
+
+/* =========================================================
+   SAFE HTML
+========================================================= */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+/* =========================================================
+   DEVICE
+========================================================= */
+
+function getDeviceId(){
+
+    let id =
+        localStorage.getItem(
+            "cafeketab_device_id"
+        );
+
+    if(!id){
+
+        id =
+            "device_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .slice(2);
+
+        localStorage.setItem(
+            "cafeketab_device_id",
+            id
+        );
+    }
+
+    return id;
+}
+
+const deviceId =
+    getDeviceId();
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+function showPage(id){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page=>{
+            page.classList.remove("active");
+        });
+
+    const page = $(id);
+
+    if(page){
+        page.classList.add("active");
+    }
+
+    document
+        .querySelectorAll("#mainNav button")
+        .forEach(button=>{
+            button.classList.toggle(
+                "active",
+                button.dataset.page === id
+            );
+        });
+
+    window.scrollTo(0,0);
+}
+
+
+document
+    .querySelectorAll("#mainNav button")
+    .forEach(button=>{
+
+        button.addEventListener(
+            "click",
+            ()=>{
+                showPage(
+                    button.dataset.page
+                );
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function getProfile(){
+
+    try{
+
+        return JSON.parse(
+            localStorage.getItem(
+                "cafeketab_profile"
+            ) ||
+            '{"name":"کاربر","avatar":""}'
+        );
+
+    }catch{
+
+        return {
+            name:"کاربر",
+            avatar:""
+        };
+
+    }
+}
+
+
+function saveProfileData(profile){
+
+    localStorage.setItem(
+        "cafeketab_profile",
+        JSON.stringify(profile)
+    );
+}
+
+
+function updateProfile(){
+
+    const profile =
+        getProfile();
+
+    $("profileName")
+        .textContent =
+        profile.name || "کاربر";
+
+    $("profileEmail")
+        .textContent =
+        "کاربر مهمان";
+
+    if(profile.avatar){
+
+        $("avatarImg").src =
+            profile.avatar;
+
+        $("avatarImg").style.display =
+            "block";
+
+        $("avatarEmpty").style.display =
+            "none";
+
+    }else{
+
+        $("avatarImg").style.display =
+            "none";
+
+        $("avatarEmpty").style.display =
+            "flex";
+    }
+}
+
+
+$("editProfileBtn")
+.addEventListener(
+    "click",
+    ()=>{
+
+        const profile =
+            getProfile();
+
+        $("profileNameInput").value =
+            profile.name || "";
+
+        if(profile.avatar){
+
+            $("profilePreview").src =
+                profile.avatar;
+
+            $("profilePreview").style.display =
+                "block";
+
+            $("profilePreviewIcon").style.display =
+                "none";
+
+        }else{
+
+            $("profilePreview").style.display =
+                "none";
+
+            $("profilePreviewIcon").style.display =
+                "block";
+        }
+
+        $("profileAvatarInput").value = "";
+
+        $("profileModal")
+            .classList.add("active");
+    }
+);
+
+
+$("profileAvatarInput")
+.addEventListener(
+    "change",
+    event=>{
+
+        const file =
+            event.target.files?.[0];
+
+        if(!file) return;
+
+        if(!file.type.startsWith("image/")){
+
+            showToast(
+                "فقط فایل تصویری انتخاب کنید"
+            );
+
+            return;
+        }
+
+        const reader =
+            new FileReader();
+
+        reader.onload =
+            ()=>{
+                $("profilePreview").src =
+                    reader.result;
+
+                $("profilePreview").style.display =
+                    "block";
+
+                $("profilePreviewIcon").style.display =
+                    "none";
+            };
+
+        reader.readAsDataURL(file);
+    }
+);
+
+
+$("saveProfileBtn")
+.addEventListener(
+    "click",
+    ()=>{
+
+        const old =
+            getProfile();
+
+        const name =
+            $("profileNameInput")
+                .value
+                .trim();
+
+        const preview =
+            $("profilePreview");
+
+        saveProfileData({
+
+            name:
+                name || "کاربر",
+
+            avatar:
+                preview.style.display !== "none"
+                    ? preview.src
+                    : old.avatar || ""
+        });
+
+        updateProfile();
+
+        $("profileModal")
+            .classList.remove("active");
+
+        showToast(
+            "پروفایل ذخیره شد"
+        );
+    }
+);
+
+
+$("closeProfileModal")
+.addEventListener(
+    "click",
+    ()=>{
+        $("profileModal")
+            .classList.remove("active");
+    }
+);
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+$("booksTab")
+.addEventListener(
+    "click",
+    ()=>{
+
+        currentCategory = "book";
+
+        $("booksTab")
+            .classList.add("active");
+
+        $("mangaTab")
+            .classList.remove("active");
+
+        $("latestTitle").textContent =
+            "تازه‌ترین کتاب‌ها";
+
+        $("newTitle").textContent =
+            "جدیدترین کتاب‌ها";
+
+        renderHome();
+    }
+);
+
+
+$("mangaTab")
+.addEventListener(
+    "click",
+    ()=>{
+
+        currentCategory = "manga";
+
+        $("mangaTab")
+            .classList.add("active");
+
+        $("booksTab")
+            .classList.remove("active");
+
+        $("latestTitle").textContent =
+            "تازه‌ترین مانگا و مانهوا";
+
+        $("newTitle").textContent =
+            "جدیدترین آثار";
+
+        renderHome();
+    }
+);
+
+
+/* =========================================================
+   COVER
+========================================================= */
+
+function getCoverClass(type){
+
+    if(type === "manga")
+        return "mangaCover";
+
+    if(type === "manhwa")
+        return "manhwaCover";
+
+    return "bookCover";
+}
+
+
+function getCoverText(type){
+
+    if(type === "manga")
+        return "📚 مانگا";
+
+    if(type === "manhwa")
+        return "📕 مانهوا";
+
+    return "📖 کتاب";
+}
+
+
+function createCover(work){
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "cover " +
+        getCoverClass(work.type);
+
+    if(work.coverUrl){
+
+        const img =
+            document.createElement("img");
+
+        img.src =
+            work.coverUrl;
+
+        img.alt =
+            "جلد";
+
+        img.onerror =
+            ()=>{
+                img.style.display =
+                    "none";
+            };
+
+        wrapper.appendChild(img);
+
+    }else{
+
+        const type =
+            document.createElement("div");
+
+        type.className =
+            "coverType";
+
+        type.textContent =
+            getCoverText(
+                work.type
+            );
+
+        wrapper.appendChild(type);
+    }
+
+    const star =
+        document.createElement("button");
+
+    star.className =
+        "star";
+
+    star.type =
+        "button";
+
+    star.dataset.save =
+        work.id;
+
+    star.textContent =
+        isSaved(work.id)
+            ? "★"
+            : "☆";
+
+    wrapper.appendChild(star);
+
+    return wrapper;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+function createBookCard(work){
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "book";
+
+    div.appendChild(
+        createCover(work)
+    );
+
+    const title =
+        document.createElement("div");
+
+    title.className =
+        "bookTitle";
+
+    title.textContent =
+        work.title ||
+        "بدون عنوان";
+
+    div.appendChild(title);
+
+    const author =
+        document.createElement("div");
+
+    author.className =
+        "bookAuthor";
+
+    author.textContent =
+        work.Author ||
+        "نامشخص";
+
+    div.appendChild(author);
+
+    div.addEventListener(
+        "click",
+        event=>{
+
+            if(
+                event.target.closest(
+                    "[data-save]"
+                )
+            ) return;
+
+            openDetail(work);
+        }
+    );
+
+    const save =
+        div.querySelector(
+            "[data-save]"
+        );
+
+    save.addEventListener(
+        "click",
+        event=>{
+
+            event.stopPropagation();
+
+            toggleSaveById(
+                work.id
+            );
+        }
+    );
+
+    return div;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+function showEmpty(container,text){
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "empty";
+
+    div.innerHTML =
+        "<div class='emptyIcon'>📚</div>" +
+        escapeHtml(text);
+
+    container.appendChild(div);
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function renderHome(){
+
+    const latest =
+        $("latestBooks");
+
+    const newest =
+        $("newBooks");
+
+    const forYou =
+        $("forYou");
+
+    latest.innerHTML = "";
+    newest.innerHTML = "";
+    forYou.innerHTML = "";
+
+    const filtered =
+        allWorks.filter(
+            work=>{
+
+                if(currentCategory === "book")
+                    return work.type === "book";
+
+                return (
+                    work.type === "manga" ||
+                    work.type === "manhwa"
+                );
+            }
+        );
+
+    if(!filtered.length){
+
+        showEmpty(
+            latest,
+            "هنوز اثری اضافه نشده است."
+        );
+
+        showEmpty(
+            newest,
+            "هنوز اثری اضافه نشده است."
+        );
+
+        showEmpty(
+            forYou,
+            "به‌زودی آثار جدید اضافه می‌شوند."
+        );
+
+        return;
+    }
+
+    filtered
+        .slice(0,6)
+        .forEach(
+            work=>{
+                latest.appendChild(
+                    createBookCard(work)
+                );
+            }
+        );
+
+    filtered
+        .slice(0,6)
+        .forEach(
+            work=>{
+                newest.appendChild(
+                    createBookCard(work)
+                );
+            }
+        );
+
+    filtered
+        .slice(0,3)
+        .forEach(
+            work=>{
+                forYou.appendChild(
+                    createBookCard(work)
+                );
+            }
+        );
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+$("searchInput")
+.addEventListener(
+    "input",
+    renderSearch
+);
+
+
+$("clearSearch")
+.addEventListener(
+    "click",
+    ()=>{
+        $("searchInput").value = "";
+        renderSearch();
+    }
+);
+
+
+function renderSearch(){
+
+    const box =
+        $("searchResults");
+
+    const text =
+        $("searchInput")
+            .value
+            .trim()
+            .toLowerCase();
+
+    box.innerHTML = "";
+
+    if(!text){
+
+        showEmpty(
+            box,
+            "نام کتاب یا اثر را جستجو کنید."
+        );
+
+        return;
+    }
+
+    const results =
+        allWorks.filter(
+            work=>{
+
+                const value =
+                    (
+                        (work.title || "") +
+                        " " +
+                        (work.Author || "") +
+                        " " +
+                        (work.genre || "")
+                    )
+                    .toLowerCase();
+
+                return value.includes(text);
+            }
+        );
+
+    if(!results.length){
+
+        showEmpty(
+            box,
+            "نتیجه‌ای پیدا نشد."
+        );
+
+        return;
+    }
+
+    results.forEach(
+        work=>{
+            box.appendChild(
+                createBookCard(work)
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   SAVED
+========================================================= */
+
+function getSavedIds(){
+
+    try{
+
+        return JSON.parse(
+            localStorage.getItem(
+                "cafeketab_saved"
+            ) || "[]"
+        );
+
+    }catch{
+
+        return [];
+    }
+}
+
+
+function saveIds(ids){
+
+    localStorage.setItem(
+        "cafeketab_saved",
+        JSON.stringify(ids)
+    );
+}
+
+
+function isSaved(id){
+
+    return getSavedIds()
+        .includes(id);
+}
+
+
+function toggleSaveById(id){
+
+    const ids =
+        getSavedIds();
+
+    const index =
+        ids.indexOf(id);
+
+    if(index >= 0){
+
+        ids.splice(index,1);
+
+        showToast(
+            "از ذخیره‌ها حذف شد"
+        );
+
+    }else{
+
+        ids.push(id);
+
+        showToast(
+            "به ذخیره‌ها اضافه شد"
+        );
+    }
+
+    saveIds(ids);
+
+    renderHome();
+
+    renderSaved();
+
+    updateSaveButton();
+}
+
+
+function renderSaved(){
+
+    const box =
+        $("savedBooks");
+
+    box.innerHTML = "";
+
+    const ids =
+        getSavedIds();
+
+    const works =
+        allWorks.filter(
+            work=>ids.includes(work.id)
+        );
+
+    if(!works.length){
+
+        showEmpty(
+            box,
+            "هنوز اثری ذخیره نکرده‌اید."
+        );
+
+        return;
+    }
+
+    works.forEach(
+        work=>{
+            box.appendChild(
+                createBookCard(work)
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   DETAIL
+========================================================= */
+
+function openDetail(work){
+
+    currentWork =
+        work;
+
+    const cover =
+        $("detailCover");
+
+    cover.className =
+        "detailCover " +
+        getCoverClass(work.type);
+
+    const image =
+        $("detailImage");
+
+    const type =
+        $("detailCoverType");
+
+    if(work.coverUrl){
+
+        image.src =
+            work.coverUrl;
+
+        image.style.display =
+            "block";
+
+        type.style.display =
+            "none";
+
+    }else{
+
+        image.style.display =
+            "none";
+
+        type.textContent =
+            getCoverText(
+                work.type
+            );
+
+        type.style.display =
+            "block";
+    }
+
+    $("detailTitle")
+        .textContent =
+        work.title || "";
+
+    $("detailMeta")
+        .textContent =
+        (
+            work.Author ||
+            "نامشخص"
+        ) +
+        " • " +
+        (
+            work.genre ||
+            "بدون ژانر"
+        );
+
+    $("detailDescription")
+        .textContent =
+        work.description ||
+        "توضیحاتی برای این اثر ثبت نشده است.";
+
+    $("downloadBtn")
+        .textContent =
+        work.type === "book"
+            ? "⬇ دانلود"
+            : "⬇ دانلود کل چپترها";
+
+    updateSaveButton();
+
+    if(work.type !== "book"){
+
+        loadChapters(
+            work.id
+        );
+
+    }else{
+
+        $("chaptersBox")
+            .style.display =
+            "none";
+    }
+
+    showPage(
+        "detailPage"
+    );
+}
+
+
+function updateSaveButton(){
+
+    if(!currentWork)
+        return;
+
+    $("saveWorkBtn")
+        .textContent =
+        isSaved(currentWork.id)
+            ? "★ حذف از ذخیره‌ها"
+            : "☆ افزودن به ذخیره‌ها";
+}
+
+
+$("saveWorkBtn")
+.addEventListener(
+    "click",
+    ()=>{
+        if(currentWork)
+            toggleSaveById(
+                currentWork.id
+            );
+    }
+);
+
+
+$("detailBack")
+.addEventListener(
+    "click",
+    ()=>{
+        showPage("homePage");
+    }
+);
+
+
+/* =========================================================
+   GENRES
+========================================================= */
+
+const defaultGenres = [
+    "رمان",
+    "عاشقانه",
+    "فانتزی",
+    "جنایی",
+    "ترسناک",
+    "معمایی",
+    "علمی‌تخیلی",
+    "فلسفی",
+    "تاریخی",
+    "درام"
+];
+
+
+function getGenres(){
+
+    try{
+
+        const saved =
+            JSON.parse(
+                localStorage.getItem(
+                    "cafeketab_genres"
+                )
+            );
+
+        if(
+            Array.isArray(saved) &&
+            saved.length
+        ){
+            return saved;
+        }
+
+    }catch{}
+
+    return [...defaultGenres];
+}
+
+
+function saveGenres(genres){
+
+    localStorage.setItem(
+        "cafeketab_genres",
+        JSON.stringify(genres)
+    );
+}
+
+
+function renderGenres(){
+
+    const box =
+        $("genres");
+
+    box.innerHTML = "";
+
+    getGenres().forEach(
+        genre=>{
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.className =
+                "genre";
+
+            button.type =
+                "button";
+
+            button.textContent =
+                genre;
+
+            button.addEventListener(
+                "click",
+                ()=>{
+                    $("searchInput")
+                        .value =
+                        genre;
+
+                    renderSearch();
+
+                    showPage(
+                        "searchPage"
+                    );
+                }
+            );
+
+            box.appendChild(button);
+        }
+    );
+}
+
+
+function fillGenreSelect(){
+
+    const select =
+        $("adminGenre");
+
+    if(!select) return;
+
+    select.innerHTML = "";
+
+    getGenres().forEach(
+        genre=>{
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                genre;
+
+            option.textContent =
+                genre;
+
+            select.appendChild(option);
+        }
+    );
+}
+
+
+/* =========================================================
+   APPWRITE INIT - APK / WEBVIEW SAFE
+========================================================= */
+
+async function initAppwrite(){
+
+    try{
+
+        $("firebaseStatus")
+            .textContent =
+            "در حال اتصال به Appwrite...";
+
+        $("firebaseStatus")
+            .style.display =
+            "block";
+
+
+        /*
+           مهم:
+           در نسخه APK دیگر import() داینامیک نداریم.
+
+           SDK در head با script معمولی لود شده
+           و باید در window.Appwrite موجود باشد.
+        */
+
+        if(
+            typeof window.Appwrite === "undefined"
+        ){
+
+            throw new Error(
+                "Appwrite SDK در WebView بارگذاری نشده است."
+            );
+        }
+
+
+        const {
+            Client,
+            Databases,
+            Account,
+            ID,
+            Query
+        } = window.Appwrite;
+
+
+        if(
+            !Client ||
+            !Databases ||
+            !Account ||
+            !ID ||
+            !Query
+        ){
+
+            throw new Error(
+                "نسخه SDK Appwrite کامل بارگذاری نشده است."
+            );
+        }
+
+
+        client =
+            new Client();
+
+
+        client
+            .setEndpoint(
+                APPWRITE_ENDPOINT
+            )
+            .setProject(
+                APPWRITE_PROJECT
+            );
+
+
+        databases =
+            new Databases(
+                client
+            );
+
+
+        account =
+            new Account(
+                client
+            );
+
+
+        appwriteID =
+            ID;
+
+        appwriteQuery =
+            Query;
+
+
+        /*
+           تست واقعی اتصال به دیتابیس
+        */
+
+        await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_WORKS,
+            [
+                Query.limit(1)
+            ]
+        );
+
+
+        appwriteReady =
+            true;
+
+
+        $("firebaseStatus")
+            .style.display =
+            "none";
+
+
+        await checkExistingAdminSession();
+
+        await loadWorks();
+
+
+    }catch(error){
+
+        appwriteReady =
+            false;
+
+
+        $("firebaseStatus")
+            .textContent =
+            "اتصال Appwrite برقرار نیست";
+
+        $("firebaseStatus")
+            .style.display =
+            "block";
+
+
+        showAppwriteError(
+            error,
+            "Appwrite Initialization"
+        );
+    }
+}
+
+
+/* =========================================================
+   ADMIN APPWRITE SESSION
+========================================================= */
+
+async function checkExistingAdminSession(){
+
+    if(!account){
+        return;
+    }
+
+    try{
+
+        const user =
+            await account.get();
+
+        if(user && user.$id){
+
+            isAdminMode =
+                true;
+
+            console.log(
+                "Appwrite admin session:",
+                user.$id
+            );
+        }
+
+    }catch(error){
+
+        isAdminMode =
+            false;
+
+        console.log(
+            "No active Appwrite session."
+        );
+    }
+}
+
+
+async function loginAdmin(){
+
+    if(
+        !account ||
+        !appwriteReady
+    ){
+
+        showToast(
+            "Appwrite هنوز آماده نیست"
+        );
+
+        return;
+    }
+
+    const email =
+        $("adminEmailInput")
+            .value
+            .trim();
+
+    const password =
+        $("adminPasswordInput")
+            .value;
+
+    if(!email){
+
+        showToast(
+            "ایمیل حساب مدیریت را وارد کنید"
+        );
+
+        return;
+    }
+
+    if(!password){
+
+        showToast(
+            "رمز عبور را وارد کنید"
+        );
+
+        return;
+    }
+
+    const button =
+        $("checkAdminBtn");
+
+    const oldText =
+        button.textContent;
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "در حال ورود...";
+
+    try{
+
+        await account.createEmailPasswordSession(
+            email,
+            password
+        );
+
+
+        const user =
+            await account.get();
+
+
+        if(!user || !user.$id){
+
+            throw new Error(
+                "حساب Appwrite معتبر نیست."
+            );
+        }
+
+
+        isAdminMode =
+            true;
+
+
+        $("adminPasswordInput")
+            .value = "";
+
+
+        $("adminModal")
+            .classList.remove(
+                "active"
+            );
+
+
+        showPage(
+            "adminPage"
+        );
+
+
+        renderPublishedWorks();
+
+
+        showToast(
+            "ورود به حساب مدیریت موفق بود"
+        );
+
+
+    }catch(error){
+
+        isAdminMode =
+            false;
+
+        showAppwriteError(
+            error,
+            "Admin login"
+        );
+
+
+    }finally{
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            oldText;
+    }
+}
+
+
+async function logoutAdmin(){
+
+    if(!account){
+
+        isAdminMode =
+            false;
+
+        showPage(
+            "profilePage"
+        );
+
+        return;
+    }
+
+    try{
+
+        await account.deleteSession(
+            "current"
+        );
+
+    }catch(error){
+
+        console.warn(
+            "Admin logout:",
+            error
+        );
+
+    }finally{
+
+        isAdminMode =
+            false;
+
+        $("adminEmailInput")
+            .value = "";
+
+        $("adminPasswordInput")
+            .value = "";
+
+        showPage(
+            "profilePage"
+        );
+
+        showToast(
+            "از حساب مدیریت خارج شدید"
+        );
+    }
+}
+
+
+/* =========================================================
+   LOAD WORKS
+========================================================= */
+
+async function loadWorks(){
+
+    if(
+        !appwriteReady ||
+        !databases ||
+        !appwriteQuery
+    ){
+        return;
+    }
+
+    try{
+
+        const res =
+            await databases.listDocuments(
+                DATABASE_ID,
+                COLLECTION_WORKS,
+                [
+                    appwriteQuery.orderDesc(
+                        "$createdAt"
+                    ),
+                    appwriteQuery.limit(100)
+                ]
+            );
+
+        allWorks =
+            res.documents.map(
+                doc=>({
+
+                    id:
+                        doc.$id,
+
+                    title:
+                        doc.title || "",
+
+                    Author:
+                        doc.Author || "",
+
+                    genre:
+                        doc.genre || "",
+
+                    description:
+                        doc.description || "",
+
+                    type:
+                        doc.type || "book",
+
+                    link:
+                        doc.bookLink || "",
+
+                    coverUrl:
+                        doc.coverUrl || "",
+
+                    createdByDevice:
+                        doc.createdByDevice || "",
+
+                    createdAt:
+                        doc.$createdAt
+                })
+            );
+
+        renderHome();
+        renderSearch();
+        renderSaved();
+        renderPublishedWorks();
+
+    }catch(error){
+
+        showAppwriteError(
+            error,
+            "Load works"
+        );
+    }
+}
+
+
+/* =========================================================
+   CHAPTERS
+========================================================= */
+
+async function loadChapters(workld){
+
+    const box =
+        $("chaptersBox");
+
+    const list =
+        $("chaptersList");
+
+    list.innerHTML = "";
+
+    $("chapterSearchInput")
+        .value = "";
+
+    window.currentChapters = [];
+
+    if(
+        !appwriteReady ||
+        !databases ||
+        !appwriteQuery
+    ){
+        box.style.display =
+            "none";
+
+        return;
+    }
+
+    try{
+
+        const res =
+            await databases.listDocuments(
+                DATABASE_ID,
+                COLLECTION_CHAPTERS,
+                [
+                    appwriteQuery.equal(
+                        "workld",
+                        workld
+                    ),
+                    appwriteQuery.orderAsc(
+                        "$createdAt"
+                    ),
+                    appwriteQuery.limit(100)
+                ]
+            );
+
+        const chapters =
+            res.documents || [];
+
+        window.currentChapters =
+            chapters;
+
+        if(!chapters.length){
+
+            box.style.display =
+                "none";
+
+            showToast(
+                "برای این اثر چپتری ثبت نشده است"
+            );
+
+            return;
+        }
+
+        box.style.display =
+            "block";
+
+        renderChapters(
+            chapters
+        );
+
+    }catch(error){
+
+        box.style.display =
+            "none";
+
+        showAppwriteError(
+            error,
+            "Load chapters"
+        );
+    }
+}
+
+
+function renderChapters(chapters){
+
+    const list =
+        $("chaptersList");
+
+    list.innerHTML = "";
+
+    if(!chapters.length){
+
+        showEmpty(
+            list,
+            "چپتری پیدا نشد."
+        );
+
+        return;
+    }
+
+    chapters.forEach(
+        (chapter,index)=>{
+
+            const item =
+                document.createElement(
+                    "button"
+                );
+
+            item.className =
+                "chapterItem";
+
+            item.type =
+                "button";
+
+            const title =
+                document.createElement(
+                    "span"
+                );
+
+            title.textContent =
+                chapter.title ||
+                "چپتر " + (index + 1);
+
+            const icon =
+                document.createElement(
+                    "span"
+                );
+
+            icon.textContent =
+                "⬇";
+
+            item.appendChild(title);
+            item.appendChild(icon);
+
+            item.addEventListener(
+                "click",
+                ()=>{
+                    const link =
+                        chapter.link || "";
+
+                    if(!link){
+
+                        showToast(
+                            "لینک این چپتر موجود نیست"
+                        );
+
+                        return;
+                    }
+
+                    forceDownload(
+                        link,
+                        chapter.title ||
+                        "chapter"
+                    );
+                }
+            );
+
+            list.appendChild(item);
+        }
+    );
+}
+
+
+/* =========================================================
+   CHAPTER SEARCH
+========================================================= */
+
+$("chapterSearchInput")
+.addEventListener(
+    "input",
+    ()=>{
+        const text =
+            $("chapterSearchInput")
+                .value
+                .trim()
+                .toLowerCase();
+
+        const chapters =
+            window.currentChapters || [];
+
+        if(!text){
+
+            renderChapters(
+                chapters
+            );
+
+            return;
+        }
+
+        const results =
+            chapters.filter(
+                chapter=>{
+                    return String(
+                        chapter.title || ""
+                    )
+                    .toLowerCase()
+                    .includes(text);
+                }
+            );
+
+        renderChapters(
+            results
+        );
+    }
+);
+
+
+$("clearChapterSearch")
+.addEventListener(
+    "click",
+    ()=>{
+        $("chapterSearchInput")
+            .value = "";
+
+        renderChapters(
+            window.currentChapters || []
+        );
+    }
+);
+
+
+/* =========================================================
+   DOWNLOAD
+========================================================= */
+
+$("downloadBtn")
+.addEventListener(
+    "click",
+    async ()=>{
+
+        if(!currentWork)
+            return;
+
+        if(currentWork.type === "book"){
+
+            const link =
+                currentWork.link || "";
+
+            if(!link){
+
+                showToast(
+                    "لینک دانلود موجود نیست"
+                );
+
+                return;
+            }
+
+            forceDownload(
+                link,
+                currentWork.title || "book"
+            );
+
+            return;
+        }
+
+        const chapters =
+            window.currentChapters || [];
+
+        if(!chapters.length){
+
+            showToast(
+                "چپتری برای دانلود وجود ندارد"
+            );
+
+            return;
+        }
+
+        let count = 0;
+
+        for(
+            const chapter of chapters
+        ){
+
+            if(
+                !chapter.link ||
+                !isValidUrl(
+                    chapter.link
+                )
+            ){
+                continue;
+            }
+
+            forceDownload(
+                chapter.link,
+                chapter.title ||
+                "chapter"
+            );
+
+            count++;
+
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        500
+                    )
+            );
+        }
+
+        if(count){
+
+            showToast(
+                count +
+                " چپتر برای دانلود ارسال شد"
+            );
+
+        }else{
+
+            showToast(
+                "هیچ لینک دانلود معتبری وجود ندارد"
+            );
+        }
+    }
+);
+
+
+function isValidUrl(value){
+
+    try{
+
+        const url =
+            new URL(value);
+
+        return (
+            url.protocol === "http:" ||
+            url.protocol === "https:"
+        );
+
+    }catch{
+
+        return false;
+    }
+}
+
+
+async function forceDownload(url,filename){
+
+    if(!isValidUrl(url)){
+
+        showToast(
+            "لینک معتبر نیست"
+        );
+
+        return;
+    }
+
+    const safeName =
+        sanitizeFilename(
+            filename
+        );
+
+    /*
+       APK / Android WebView:
+       به‌جای target="_blank" که می‌تواند یک صفحه سفید
+       داخل WebView باز کند، ابتدا فایل را به Blob تبدیل
+       می‌کنیم و سپس دانلود را با یک لینک موقت انجام می‌دهیم.
+    */
+
+    try{
+
+        showToast(
+            "در حال آماده‌سازی دانلود..."
+        );
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method:"GET",
+                    mode:"cors",
+                    credentials:"omit"
+                }
+            );
+
+        if(!response.ok){
+
+            throw new Error(
+                "HTTP " + response.status
+            );
+        }
+
+        const blob =
+            await response.blob();
+
+        if(!blob || blob.size === 0){
+
+            throw new Error(
+                "فایل خالی است"
+            );
+        }
+
+        const blobUrl =
+            URL.createObjectURL(blob);
+
+        const a =
+            document.createElement("a");
+
+        a.href =
+            blobUrl;
+
+        a.download =
+            safeName;
+
+        a.style.display =
+            "none";
+
+        document.body.appendChild(a);
+
+        a.click();
+
+        a.remove();
+
+        setTimeout(
+            ()=>{
+                URL.revokeObjectURL(
+                    blobUrl
+                );
+            },
+            5000
+        );
+
+        showToast(
+            "دانلود شروع شد"
+        );
+
+    }catch(error){
+
+        console.warn(
+            "Blob download failed:",
+            error
+        );
+
+        /*
+           اگر سرور CORS را اجازه ندهد،
+           فایل را مستقیماً باز می‌کنیم.
+           مهم: دیگر target="_blank" استفاده نمی‌شود
+           تا WebView صفحه سفید جدید نسازد.
+        */
+
+        try{
+
+            const a =
+                document.createElement("a");
+
+            a.href =
+                url;
+
+            a.download =
+                safeName;
+
+            a.style.display =
+                "none";
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            a.remove();
+
+            showToast(
+                "درخواست دانلود ارسال شد"
+            );
+
+        }catch(fallbackError){
+
+            console.error(
+                "Download fallback failed:",
+                fallbackError
+            );
+
+            showToast(
+                "دانلود در این WebView پشتیبانی نمی‌شود"
+            );
+        }
+    }
+}
+
+
+function sanitizeFilename(name){
+
+    return String(
+        name || "book"
+    )
+    .replace(
+        /[\\/:*?"<>|]/g,
+        "_"
+    )
+    .trim();
+}
+
+
+/* =========================================================
+   ADMIN LOGIN UI
+========================================================= */
+
+$("adminAccessBtn")
+.addEventListener(
+    "click",
+    async ()=>{
+
+        if(isAdminMode){
+
+            showPage(
+                "adminPage"
+            );
+
+            return;
+        }
+
+        if(account){
+
+            try{
+
+                const user =
+                    await account.get();
+
+                if(user && user.$id){
+
+                    isAdminMode =
+                        true;
+
+                    showPage(
+                        "adminPage"
+                    );
+
+                    renderPublishedWorks();
+
+                    return;
+                }
+
+            }catch{
+
+                isAdminMode =
+                    false;
+            }
+        }
+
+        $("adminEmailInput")
+            .value = "";
+
+        $("adminPasswordInput")
+            .value = "";
+
+        $("adminModal")
+            .classList.add("active");
+    }
+);
+
+
+$("checkAdminBtn")
+.addEventListener(
+    "click",
+    loginAdmin
+);
+
+
+$("adminPasswordInput")
+.addEventListener(
+    "keydown",
+    event=>{
+        if(event.key === "Enter"){
+            loginAdmin();
+        }
+    }
+);
+
+
+$("adminEmailInput")
+.addEventListener(
+    "keydown",
+    event=>{
+        if(event.key === "Enter"){
+            loginAdmin();
+        }
+    }
+);
+
+
+$("adminLogoutBtn")
+.addEventListener(
+    "click",
+    logoutAdmin
+);
+
+
+$("closeAdminModal")
+.addEventListener(
+    "click",
+    ()=>{
+        $("adminModal")
+            .classList.remove(
+                "active"
+            );
+    }
+);
+
+
+$("adminBack")
+.addEventListener(
+    "click",
+    ()=>{
+        showPage(
+            "profilePage"
+        );
+    }
+);
+
+
+/* =========================================================
+   ADMIN TABS
+========================================================= */
+
+document
+.querySelectorAll(
+    "[data-admin-tab]"
+)
+.forEach(button=>{
+
+    button.addEventListener(
+        "click",
+        ()=>{
+
+            document
+                .querySelectorAll(
+                    "[data-admin-tab]"
+                )
+                .forEach(btn=>{
+                    btn.classList.remove(
+                        "active"
+                    );
+                });
+
+            button.classList.add(
+                "active"
+            );
+
+            document
+                .querySelectorAll(
+                    ".adminSection"
+                )
+                .forEach(section=>{
+                    section.classList.remove(
+                        "active"
+                    );
+                });
+
+            const tab =
+                button.dataset.adminTab;
+
+            if(tab === "add"){
+
+                $("adminAdd")
+                    .classList.add(
+                        "active"
+                    );
+            }
+
+            if(tab === "genres"){
+
+                $("adminGenres")
+                    .classList.add(
+                        "active"
+                    );
+
+                renderGenreAdmin();
+            }
+
+            if(tab === "published"){
+
+                $("adminPublished")
+                    .classList.add(
+                        "active"
+                    );
+
+                renderPublishedWorks();
+            }
+        }
+    );
+});
+
+
+/* =========================================================
+   ADMIN TYPE
+========================================================= */
+
+$("adminType")
+.addEventListener(
+    "change",
+    changePublishType
+);
+
+
+function changePublishType(){
+
+    const type =
+        $("adminType").value;
+
+    if(type === "book"){
+
+        $("bookLinkBox")
+            .style.display =
+            "block";
+
+        $("chapterPublishBox")
+            .style.display =
+            "none";
+
+    }else{
+
+        $("bookLinkBox")
+            .style.display =
+            "none";
+
+        $("chapterPublishBox")
+            .style.display =
+            "block";
+    }
+}
+
+
+/* =========================================================
+   ADD CHAPTER
+========================================================= */
+
+$("addChapterBtn")
+.addEventListener(
+    "click",
+    addChapter
+);
+
+
+function addChapter(){
+
+    if(!isAdminMode){
+
+        showToast(
+            "ابتدا وارد مدیریت شوید"
+        );
+
+        return;
+    }
+
+    const title =
+        $("chapterTitle")
+            .value
+            .trim();
+
+    const link =
+        $("chapterLinkInput")
+            .value
+            .trim();
+
+    if(!title || !link){
+
+        showToast(
+            "عنوان و لینک چپتر را وارد کنید"
+        );
+
+        return;
+    }
+
+    if(!isValidUrl(link)){
+
+        showToast(
+            "لینک واردشده معتبر نیست"
+        );
+
+        return;
+    }
+
+    pendingChapters.push({
+        title,
+        link
+    });
+
+    $("chapterTitle").value = "";
+    $("chapterLinkInput").value = "";
+
+    renderPendingChapters();
+}
+
+
+function renderPendingChapters(){
+
+    const box =
+        $("pendingChapters");
+
+    box.innerHTML = "";
+
+    pendingChapters.forEach(
+        (chapter,index)=>{
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "pendingChapter";
+
+            const span =
+                document.createElement(
+                    "span"
+                );
+
+            span.textContent =
+                chapter.title;
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.className =
+                "delete";
+
+            button.type =
+                "button";
+
+            button.textContent =
+                "حذف";
+
+            button.addEventListener(
+                "click",
+                ()=>{
+                    pendingChapters.splice(
+                        index,
+                        1
+                    );
+
+                    renderPendingChapters();
+                }
+            );
+
+            div.appendChild(span);
+            div.appendChild(button);
+
+            box.appendChild(div);
+        }
+    );
+}
+
+
+/* =========================================================
+   PUBLISH
+========================================================= */
+
+$("publishBtn")
+.addEventListener(
+    "click",
+    publishWork
+);
+
+
+async function publishWork(){
+
+    if(publishing){
+
+        showToast(
+            "انتشار قبلی هنوز در حال انجام است"
+        );
+
+        return;
+    }
+
+    if(!isAdminMode){
+
+        showToast(
+            "ابتدا وارد مدیریت شوید"
+        );
+
+        return;
+    }
+
+    if(
+        !appwriteReady ||
+        !databases ||
+        !appwriteID
+    ){
+
+        showToast(
+            "Appwrite متصل نیست"
+        );
+
+        return;
+    }
+
+    const type =
+        $("adminType").value;
+
+    const title =
+        $("adminTitle")
+            .value
+            .trim();
+
+    const Author =
+        $("adminAuthor")
+            .value
+            .trim();
+
+    const genre =
+        $("adminGenre").value;
+
+    const description =
+        $("adminDescription")
+            .value
+            .trim();
+
+    if(!title){
+
+        showToast(
+            "عنوان را وارد کنید"
+        );
+
+        return;
+    }
+
+    let bookLink = "";
+
+    if(type === "book"){
+
+        bookLink =
+            $("bookLinkInput")
+                .value
+                .trim();
+
+        if(!bookLink){
+
+            showToast(
+                "لینک مستقیم کتاب را وارد کنید"
+            );
+
+            return;
+        }
+
+        if(!isValidUrl(bookLink)){
+
+            showToast(
+                "لینک کتاب معتبر نیست"
+            );
+
+            return;
+        }
+
+    }else{
+
+        if(!pendingChapters.length){
+
+            showToast(
+                "حداقل یک چپتر اضافه کنید"
+            );
+
+            return;
+        }
+    }
+
+    publishing =
+        true;
+
+    const button =
+        $("publishBtn");
+
+    const oldText =
+        button.textContent;
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "در حال انتشار...";
+
+    try{
+
+        const workData = {
+
+            title:
+                title,
+
+            Author:
+                Author,
+
+            genre:
+                genre,
+
+            description:
+                description,
+
+            type:
+                type,
+
+            coverUrl:
+                "",
+
+            bookLink:
+                type === "book"
+                    ? bookLink
+                    : "",
+
+            createdByDevice:
+                deviceId
+        };
+
+        const workDoc =
+            await databases.createDocument(
+
+                DATABASE_ID,
+
+                COLLECTION_WORKS,
+
+                appwriteID.unique(),
+
+                workData
+            );
+
+
+        if(
+            type !== "book" &&
+            pendingChapters.length
+        ){
+
+            for(
+                const chapter of
+                pendingChapters
+            ){
+
+                await databases.createDocument(
+
+                    DATABASE_ID,
+
+                    COLLECTION_CHAPTERS,
+
+                    appwriteID.unique(),
+
+                    {
+                        workld:
+                            workDoc.$id,
+
+                        title:
+                            chapter.title,
+
+                        link:
+                            chapter.link
+                    }
+                );
+            }
+        }
+
+
+        clearAdminForm();
+
+        await loadWorks();
+
+        showToast(
+            "اثر با موفقیت منتشر شد"
+        );
+
+    }catch(error){
+
+        showAppwriteError(
+            error,
+            "Publish work"
+        );
+
+    }finally{
+
+        publishing =
+            false;
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            oldText;
+    }
+}
+
+
+function clearAdminForm(){
+
+    $("adminTitle").value = "";
+    $("adminAuthor").value = "";
+    $("adminDescription").value = "";
+    $("bookLinkInput").value = "";
+    $("chapterTitle").value = "";
+    $("chapterLinkInput").value = "";
+
+    pendingChapters = [];
+
+    renderPendingChapters();
+}
+
+
+/* =========================================================
+   PUBLISHED WORKS
+========================================================= */
+
+$("publishedSearchInput")
+.addEventListener(
+    "input",
+    renderPublishedWorks
+);
+
+
+$("clearPublishedSearch")
+.addEventListener(
+    "click",
+    ()=>{
+        $("publishedSearchInput")
+            .value = "";
+
+        renderPublishedWorks();
+    }
+);
+
+
+function renderPublishedWorks(){
+
+    const box =
+        $("adminPublishedList");
+
+    if(!box) return;
+
+    box.innerHTML = "";
+
+    if(!isAdminMode)
+        return;
+
+    const text =
+        $("publishedSearchInput")
+            ?.value
+            ?.trim()
+            ?.toLowerCase() || "";
+
+    let works =
+        [...allWorks];
+
+    if(text){
+
+        works =
+            works.filter(
+                work=>{
+
+                    const value =
+                        (
+                            work.title || ""
+                        ) +
+                        " " +
+                        (
+                            work.Author || ""
+                        ) +
+                        " " +
+                        (
+                            work.genre || ""
+                        );
+
+                    return value
+                        .toLowerCase()
+                        .includes(text);
+                }
+            );
+    }
+
+    if(!works.length){
+
+        showEmpty(
+            box,
+            text
+                ? "اثری با این مشخصات پیدا نشد."
+                : "هنوز اثری منتشر نشده است."
+        );
+
+        return;
+    }
+
+    works.forEach(
+        work=>{
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "adminItem";
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+            info.className =
+                "adminItemInfo";
+
+            const title =
+                document.createElement(
+                    "b"
+                );
+
+            title.textContent =
+                work.title ||
+                "بدون عنوان";
+
+            const author =
+                document.createElement(
+                    "small"
+                );
+
+            author.textContent =
+                work.Author ||
+                "نویسنده نامشخص";
+
+            const type =
+                document.createElement(
+                    "small"
+                );
+
+            type.textContent =
+                work.type === "book"
+                    ? "📖 کتاب"
+                    : work.type === "manga"
+                        ? "📚 مانگا"
+                        : "📕 مانهوا";
+
+            info.appendChild(title);
+            info.appendChild(author);
+            info.appendChild(type);
+
+
+            const actions =
+                document.createElement(
+                    "div"
+                );
+
+            actions.className =
+                "adminActions";
+
+
+            const edit =
+                document.createElement(
+                    "button"
+                );
+
+            edit.className =
+                "editBtn";
+
+            edit.textContent =
+                "✏️ ویرایش";
+
+            edit.type =
+                "button";
+
+            edit.addEventListener(
+                "click",
+                ()=>{
+                    openEditWork(
+                        work
+                    );
+                }
+            );
+
+
+            const del =
+                document.createElement(
+                    "button"
+                );
+
+            del.className =
+                "delete";
+
+            del.textContent =
+                "🗑 حذف";
+
+            del.type =
+                "button";
+
+            del.addEventListener(
+                "click",
+                ()=>{
+                    deleteWork(
+                        work
+                    );
+                }
+            );
+
+
+            actions.appendChild(edit);
+            actions.appendChild(del);
+
+            item.appendChild(info);
+            item.appendChild(actions);
+
+            box.appendChild(item);
+        }
+    );
+}
+
+
+/* =========================================================
+   DELETE WORK
+========================================================= */
+
+async function deleteWork(work){
+
+    if(!isAdminMode){
+
+        showToast(
+            "ابتدا وارد مدیریت شوید"
+        );
+
+        return;
+    }
+
+    if(
+        !appwriteReady ||
+        !databases
+    ){
+
+        showToast(
+            "Appwrite متصل نیست"
+        );
+
+        return;
+    }
+
+    if(
+        !confirm(
+            "این اثر حذف شود؟"
+        )
+    ){
+        return;
+    }
+
+    try{
+
+        if(
+            work.type !== "book"
+        ){
+
+            try{
+
+                const result =
+                    await databases.listDocuments(
+                        DATABASE_ID,
+                        COLLECTION_CHAPTERS,
+                        [
+                            appwriteQuery.equal(
+                                "workld",
+                                work.id
+                            ),
+                            appwriteQuery.limit(100)
+                        ]
+                    );
+
+                for(
+                    const chapter of
+                    result.documents
+                ){
+
+                    await databases.deleteDocument(
+                        DATABASE_ID,
+                        COLLECTION_CHAPTERS,
+                        chapter.$id
+                    );
+                }
+
+            }catch(chapterError){
+
+                console.warn(
+                    "Chapter cleanup failed:",
+                    chapterError
+                );
+            }
+        }
+
+
+        await databases.deleteDocument(
+            DATABASE_ID,
+            COLLECTION_WORKS,
+            work.id
+        );
+
+        if(
+            currentWork &&
+            currentWork.id === work.id
+        ){
+
+            currentWork =
+                null;
+        }
+
+        await loadWorks();
+
+        showToast(
+            "اثر با موفقیت حذف شد"
+        );
+
+    }catch(error){
+
+        showAppwriteError(
+            error,
+            "Delete work"
+        );
+    }
+}
+
+
+/* =========================================================
+   EDIT WORK
+========================================================= */
+
+async function openEditWork(work){
+
+    if(!isAdminMode){
+
+        showToast(
+            "ابتدا وارد مدیریت شوید"
+        );
+
+        return;
+    }
+
+    if(!work || !work.id){
+
+        showToast(
+            "اطلاعات اثر برای ویرایش معتبر نیست"
+        );
+
+        return;
+    }
+
+    editingWork =
+        work;
+
+    editingWorkld =
+        work.id;
+
+    editingWorkType =
+        String(
+            work.type || "book"
+        ).toLowerCase();
+
+    $("editTitle").value =
+        work.title || "";
+
+    $("editAuthor").value =
+        work.Author || "";
+
+    $("editDescription").value =
+        work.description || "";
+
+    if(
+        editingWorkType === "book"
+    ){
+
+        $("editBookLinkBox")
+            .style.display =
+            "block";
+
+        $("editChaptersBox")
+            .style.display =
+            "none";
+
+        $("editBookLink").value =
+            work.link || "";
+
+        editingChapters = [];
+
+    }else{
+
+        $("editBookLinkBox")
+            .style.display =
+            "none";
+
+        $("editChaptersBox")
+            .style.display =
+            "block";
+
+        await loadEditChapters(
+            editingWorkld
+        );
+    }
+
+    $("editWorkModal")
+        .classList.add("active");
+}
+
+
+async function loadEditChapters(workld){
+
+    editingChapters = [];
+
+    if(
+        !workld ||
+        !databases ||
+        !appwriteQuery
+    ){
+
+        renderEditChapters();
+
+        return;
+    }
+
+    try{
+
+        const res =
+            await databases.listDocuments(
+                DATABASE_ID,
+                COLLECTION_CHAPTERS,
+                [
+                    appwriteQuery.equal(
+                        "workld",
+                        workld
+                    ),
+                    appwriteQuery.orderAsc(
+                        "$createdAt"
+                    ),
+                    appwriteQuery.limit(100)
+                ]
+            );
+
+        editingChapters =
+            (res.documents || []).map(
+                chapter=>({
+
+                    id:
+                        chapter.$id,
+
+                    title:
+                        chapter.title || "",
+
+                    link:
+                        chapter.link || "",
+
+                    isNew:
+                        false
+                })
+            );
+
+        renderEditChapters();
+
+    }catch(error){
+
+        showAppwriteError(
+            error,
+            "Load chapters for edit"
+        );
+    }
+}
+
+
+function renderEditChapters(){
+
+    const box =
+        $("editChaptersList");
+
+    box.innerHTML = "";
+
+    if(!editingChapters.length){
+
+        const empty =
+            document.createElement(
+                "div"
+            );
+
+        empty.className =
+            "empty";
+
+        empty.textContent =
+            "چپتری وجود ندارد.";
+
+        box.appendChild(
+            empty
+        );
+
+        return;
+    }
+
+    editingChapters.forEach(
+        (chapter,index)=>{
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "editChapter";
+
+            const form =
+                document.createElement(
+                    "div"
+                );
+
+            form.className =
+                "form";
+
+
+            const title =
+                document.createElement(
+                    "input"
+                );
+
+            title.value =
+                chapter.title;
+
+            title.placeholder =
+                "عنوان چپتر";
+
+
+            const link =
+                document.createElement(
+                    "input"
+                );
+
+            link.type =
+                "url";
+
+            link.value =
+                chapter.link;
+
+            link.placeholder =
+                "لینک چپتر";
+
+
+            title.addEventListener(
+                "input",
+                ()=>{
+                    chapter.title =
+                        title.value;
+                }
+            );
+
+
+            link.addEventListener(
+                "input",
+                ()=>{
+                    chapter.link =
+                        link.value;
+                }
+            );
+
+
+            const remove =
+                document.createElement(
+                    "button"
+                );
+
+            remove.className =
+                "delete";
+
+            remove.type =
+                "button";
+
+            remove.textContent =
+                "حذف این چپتر";
+
+            remove.addEventListener(
+                "click",
+                ()=>{
+                    editingChapters.splice(
+                        index,
+                        1
+                    );
+
+                    renderEditChapters();
+                }
+            );
+
+
+            form.appendChild(title);
+            form.appendChild(link);
+            form.appendChild(remove);
+
+            div.appendChild(form);
+
+            box.appendChild(div);
+        }
+    );
+}
+
+
+$("addEditChapterBtn")
+.addEventListener(
+    "click",
+    ()=>{
+
+        editingChapters.push({
+
+            id:
+                null,
+
+            title:
+                "چپتر جدید",
+
+            link:
+                "",
+
+            isNew:
+                true
+        });
+
+        renderEditChapters();
+    }
+);
+
+
+/* =========================================================
+   SAVE EDIT
+========================================================= */
+
+$("saveEditWorkBtn")
+.addEventListener(
+    "click",
+    saveEditedWork
+);
+
+
+async function saveEditedWork(){
+
+    const work =
+        editingWork;
+
+    const workld =
+        editingWorkld ||
+        work?.id ||
+        null;
+
+    const workType =
+        editingWorkType ||
+        String(
+            work?.type || "book"
+        ).toLowerCase();
+
+    if(!workld){
+
+        showToast(
+            "اثری برای ویرایش انتخاب نشده"
+        );
+
+        return;
+    }
+
+    if(
+        !appwriteReady ||
+        !databases
+    ){
+
+        showToast(
+            "Appwrite متصل نیست"
+        );
+
+        return;
+    }
+
+    const title =
+        $("editTitle")
+            .value
+            .trim();
+
+    const Author =
+        $("editAuthor")
+            .value
+            .trim();
+
+    const description =
+        $("editDescription")
+            .value
+            .trim();
+
+    if(!title){
+
+        showToast(
+            "عنوان را وارد کنید"
+        );
+
+        return;
+    }
+
+    const saveButton =
+        $("saveEditWorkBtn");
+
+    const oldButtonText =
+        saveButton.textContent;
+
+    saveButton.disabled =
+        true;
+
+    saveButton.textContent =
+        "در حال ذخیره...";
+
+    try{
+
+        const updateData = {
+
+            title:
+                title,
+
+            Author:
+                Author,
+
+            description:
+                description
+        };
+
+        if(
+            workType === "book"
+        ){
+
+            const bookLink =
+                $("editBookLink")
+                    .value
+                    .trim();
+
+            if(!bookLink){
+
+                showToast(
+                    "لینک دانلود را وارد کنید"
+                );
+
+                return;
+            }
+
+            if(
+                !isValidUrl(
+                    bookLink
+                )
+            ){
+
+                showToast(
+                    "لینک دانلود معتبر نیست"
+                );
+
+                return;
+            }
+
+            updateData.bookLink =
+                bookLink;
+        }
+
+
+        await databases.updateDocument(
+
+            DATABASE_ID,
+
+            COLLECTION_WORKS,
+
+            workld,
+
+            updateData
+        );
+
+
+        if(
+            workType !== "book"
+        ){
+
+            await saveEditedChapters(
+                workld
+            );
+        }
+
+
+        $("editWorkModal")
+            .classList.remove(
+                "active"
+            );
+
+        editingWork =
+            null;
+
+        editingWorkType =
+            null;
+
+        editingWorkld =
+            null;
+
+        editingChapters = [];
+
+        await loadWorks();
+
+        showToast(
+            "ویرایش با موفقیت ذخیره شد"
+        );
+
+    }catch(error){
+
+        showAppwriteError(
+            error,
+            "Update work"
+        );
+
+    }finally{
+
+        saveButton.disabled =
+            false;
+
+        saveButton.textContent =
+            oldButtonText;
+    }
+}
+
+
+/* =========================================================
+   SAVE CHAPTER EDITS
+========================================================= */
+
+async function saveEditedChapters(workld){
+
+    if(
+        !workld ||
+        !databases ||
+        !appwriteQuery
+    ){
+
+        throw new Error(
+            "شناسه اثر برای ذخیره چپترها معتبر نیست."
+        );
+    }
+
+    const oldResult =
+        await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_CHAPTERS,
+            [
+                appwriteQuery.equal(
+                    "workld",
+                    workld
+                ),
+                appwriteQuery.limit(100)
+            ]
+        );
+
+    const oldIds =
+        (oldResult.documents || [])
+            .map(
+                chapter =>
+                    chapter.$id
+            );
+
+    const keptIds =
+        editingChapters
+            .filter(
+                chapter =>
+                    chapter.id
+            )
+            .map(
+                chapter =>
+                    chapter.id
+            );
+
+
+    for(
+        const oldId of oldIds
+    ){
+
+        if(
+            !keptIds.includes(
+                oldId
+            )
+        ){
+
+            await databases.deleteDocument(
+                DATABASE_ID,
+                COLLECTION_CHAPTERS,
+                oldId
+            );
+        }
+    }
+
+
+    for(
+        const chapter of
+        editingChapters
+    ){
+
+        const title =
+            String(
+                chapter.title || ""
+            ).trim();
+
+        const link =
+            String(
+                chapter.link || ""
+            ).trim();
+
+        if(!title){
+
+            throw new Error(
+                "عنوان یکی از چپترها خالی است."
+            );
+        }
+
+        if(
+            !isValidUrl(link)
+        ){
+
+            throw new Error(
+                "لینک یکی از چپترها معتبر نیست."
+            );
+        }
+
+
+        if(chapter.id){
+
+            await databases.updateDocument(
+
+                DATABASE_ID,
+
+                COLLECTION_CHAPTERS,
+
+                chapter.id,
+
+                {
+                    title:
+                        title,
+
+                    link:
+                        link
+                }
+            );
+
+        }else{
+
+            await databases.createDocument(
+
+                DATABASE_ID,
+
+                COLLECTION_CHAPTERS,
+
+                appwriteID.unique(),
+
+                {
+                    workld:
+                        workld,
+
+                    title:
+                        title,
+
+                    link:
+                        link
+                }
+            );
+        }
+    }
+}
+
+
+$("closeEditWorkModal")
+.addEventListener(
+    "click",
+    ()=>{
+        $("editWorkModal")
+            .classList.remove(
+                "active"
+            );
+
+        editingWork =
+            null;
+
+        editingWorkType =
+            null;
+
+        editingworkld =
+            null;
+
+        editingChapters = [];
+    }
+);
+
+
+/* =========================================================
+   GENRE ADMIN
+========================================================= */
+
+$("addGenreBtn")
+.addEventListener(
+    "click",
+    ()=>{
+
+        const input =
+            $("newGenre");
+
+        const genre =
+            input.value.trim();
+
+        if(!genre){
+
+            showToast(
+                "نام ژانر را وارد کنید"
+            );
+
+            return;
+        }
+
+        const genres =
+            getGenres();
+
+        if(
+            genres.includes(
+                genre
+            )
+        ){
+
+            showToast(
+                "این ژانر قبلاً وجود دارد"
+            );
+
+            return;
+        }
+
+        genres.push(
+            genre
+        );
+
+        saveGenres(
+            genres
+        );
+
+        input.value = "";
+
+        renderGenres();
+        fillGenreSelect();
+        renderGenreAdmin();
+
+        showToast(
+            "ژانر اضافه شد"
+        );
+    }
+);
+
+
+function renderGenreAdmin(){
+
+    const box =
+        $("genreAdminList");
+
+    box.innerHTML = "";
+
+    const genres =
+        getGenres();
+
+    if(!genres.length){
+
+        showEmpty(
+            box,
+            "هیچ ژانری وجود ندارد."
+        );
+
+        return;
+    }
+
+    genres.forEach(
+        (genre,index)=>{
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "genreAdminItem";
+
+            const name =
+                document.createElement(
+                    "span"
+                );
+
+            name.textContent =
+                genre;
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.className =
+                "delete";
+
+            button.type =
+                "button";
+
+            button.textContent =
+                "حذف";
+
+
+            button.addEventListener(
+                "click",
+                ()=>{
+
+                    if(
+                        !confirm(
+                            "ژانر «" +
+                            genre +
+                            "» حذف شود؟"
+                        )
+                    ){
+                        return;
+                    }
+
+                    const current =
+                        getGenres();
+
+                    current.splice(
+                        index,
+                        1
+                    );
+
+                    saveGenres(
+                        current
+                    );
+
+                    renderGenres();
+                    fillGenreSelect();
+                    renderGenreAdmin();
+
+                    showToast(
+                        "ژانر حذف شد"
+                    );
+                }
+            );
+
+
+            item.appendChild(name);
+            item.appendChild(button);
+
+            box.appendChild(item);
+        }
+    );
+}
+
+
+/* =========================================================
+   SUPPORT
+========================================================= */
+
+$("supportBtn")
+.addEventListener(
+    "click",
+    async ()=>{
+
+        try{
+
+            await navigator.clipboard.writeText(
+                RUBIKA_ID
+            );
+
+            showToast(
+                "آیدی روبیکای مدیر کپی شد"
+            );
+
+        }catch{
+
+            showToast(
+                "کپی انجام نشد"
+            );
+        }
+    }
+);
+
+
+$("copyDownloadBtn")
+.addEventListener(
+    "click",
+    async ()=>{
+
+        try{
+
+            await navigator.clipboard.writeText(
+                APP_DOWNLOAD_LINK
+            );
+
+            showToast(
+                "لینک دانلود کپی شد"
+            );
+
+        }catch{
+
+            showToast(
+                "کپی لینک انجام نشد"
+            );
+        }
+    }
+);
+
+
+/* =========================================================
+   ERROR MODAL
+========================================================= */
+
+$("closeErrorModal")
+.addEventListener(
+    "click",
+    ()=>{
+        $("errorModal")
+            .classList.remove(
+                "active"
+            );
+    }
+);
+
+
+$("copyErrorBtn")
+.addEventListener(
+    "click",
+    async ()=>{
+
+        if(!lastAppwriteError)
+            return;
+
+        try{
+
+            await navigator.clipboard.writeText(
+                lastAppwriteError
+            );
+
+            showToast(
+                "خطا کپی شد"
+            );
+
+        }catch{
+
+            showToast(
+                "کپی خطا انجام نشد"
+            );
+        }
+    }
+);
+
+
+/* =========================================================
+   INITIAL UI
+========================================================= */
+
+function initializeUI(){
+
+    updateProfile();
+
+    renderGenres();
+
+    fillGenreSelect();
+
+    renderGenreAdmin();
+
+    changePublishType();
+
+    renderPendingChapters();
+
+    renderHome();
+
+    renderSearch();
+
+    renderSaved();
+
+    renderPublishedWorks();
+}
+
+
+initializeUI();
+
+
+/* =========================================================
+   START
+========================================================= */
+
+/*
+   صبر کوتاه برای WebView و SDK.
+   دیگر import() استفاده نمی‌شود.
+*/
+
+setTimeout(
+    initAppwrite,
+    300
+);
+
+</script>
+
+</body>
+</html>
