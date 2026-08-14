@@ -134,11 +134,9 @@ button{
 .arrow{
     color:#8b745d;
     border:0;
-    background:transparent;
-    padding:2px 5px;
-    font-size:18px;
-    line-height:1;
-    cursor:pointer;
+    background:none;
+    padding:0;
+    font-size:16px;
 }
 
 .books{
@@ -859,22 +857,22 @@ button{
 </div>
 
 <div class="sectionHead">
-<h3 id="latestTitle">تازه‌ترین کتاب‌ها</h3>
-<button class="arrow" type="button" data-section-toggle="latestBooks">›</button>
+<h3 id="latestTitle">تازه انتشار شده</h3>
+<button class="arrow" id="latestArrow" type="button">›</button>
 </div>
 
 <div id="latestBooks" class="books"></div>
 
 <div class="sectionHead">
-<h3 id="newTitle">جدیدترین کتاب‌ها</h3>
-<button class="arrow" type="button" data-section-toggle="newBooks">›</button>
+<h3 id="newTitle">پیشنهادی</h3>
+<button class="arrow" id="newArrow" type="button">›</button>
 </div>
 
 <div id="newBooks" class="books"></div>
 
 <div class="sectionHead">
 <h3>برای شما</h3>
-<button class="arrow" type="button" data-section-toggle="forYou">›</button>
+<button class="arrow" id="forYouArrow" type="button">›</button>
 </div>
 
 <div id="forYou" class="books"></div>
@@ -1050,7 +1048,7 @@ style="display:none">
 <div id="chaptersBox" style="display:none">
 
 <h3 class="chapterTitle">
-چپترها
+جلد ها و چپتر ها
 </h3>
 
 <div
@@ -1062,7 +1060,7 @@ style="margin-bottom:12px">
 <input
 id="chapterSearchInput"
 type="text"
-placeholder="جست و جو جلد و چپتر">
+placeholder="جستوجوی جلد یا چپتر">
 
 <span
 id="clearChapterSearch"
@@ -1158,6 +1156,14 @@ placeholder="Author">
 <label>ژانر</label>
 
 <select id="adminGenre"></select>
+
+
+<label>لینک مستقیم جلد</label>
+
+<input
+id="adminCoverUrl"
+type="url"
+placeholder="https://example.com/cover.jpg">
 
 
 <label>توضیحات</label>
@@ -1465,13 +1471,6 @@ placeholder="نویسنده">
 
 
 <label>
-ژانر
-</label>
-
-<select id="editGenre"></select>
-
-
-<label>
 توضیحات
 </label>
 
@@ -1480,6 +1479,14 @@ id="editDescription"
 style="min-height:110px"
 placeholder="توضیحات">
 </textarea>
+
+
+<label>لینک مستقیم جلد</label>
+
+<input
+id="editCoverUrl"
+type="url"
+placeholder="https://example.com/cover.jpg">
 
 
 <div id="editBookLinkBox">
@@ -1620,12 +1627,6 @@ let allWorks = [];
 let currentWork = null;
 
 let currentCategory = "book";
-
-let homeSectionsExpanded = {
-    latestBooks: false,
-    newBooks: false,
-    forYou: false
-};
 
 let pendingChapters = [];
 
@@ -2031,10 +2032,10 @@ $("booksTab")
             .classList.remove("active");
 
         $("latestTitle").textContent =
-            "تازه‌ترین کتاب‌ها";
+            "تازه انتشار شده";
 
         $("newTitle").textContent =
-            "جدیدترین کتاب‌ها";
+            "پیشنهادی";
 
         renderHome();
     }
@@ -2055,10 +2056,10 @@ $("mangaTab")
             .classList.remove("active");
 
         $("latestTitle").textContent =
-            "تازه‌ترین مانگا و مانهوا";
+            "تازه انتشار شده";
 
         $("newTitle").textContent =
-            "جدیدترین آثار";
+            "پیشنهادی";
 
         renderHome();
     }
@@ -2263,6 +2264,29 @@ function showEmpty(container,text){
    HOME
 ========================================================= */
 
+function shuffleWorks(works){
+
+    const result =
+        [...works];
+
+    for(
+        let i = result.length - 1;
+        i > 0;
+        i--
+    ){
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [result[i], result[j]] =
+            [result[j], result[i]];
+    }
+
+    return result;
+}
+
+
 function renderHome(){
 
     const latest =
@@ -2273,6 +2297,10 @@ function renderHome(){
 
     const forYou =
         $("forYou");
+
+    latest.innerHTML = "";
+    newest.innerHTML = "";
+    forYou.innerHTML = "";
 
     const filtered =
         allWorks.filter(
@@ -2288,151 +2316,168 @@ function renderHome(){
             }
         );
 
+    if(!filtered.length){
+
+        showEmpty(
+            latest,
+            "هنوز اثری اضافه نشده است."
+        );
+
+        showEmpty(
+            newest,
+            "هنوز اثری اضافه نشده است."
+        );
+
+        showEmpty(
+            forYou,
+            "به‌زودی آثار جدید اضافه می‌شوند."
+        );
+
+        updateHomeArrows(false,false,false);
+        return;
+    }
+
+    const latestWorks =
+        [...filtered].sort(
+            (a,b)=>
+                new Date(b.createdAt || 0) -
+                new Date(a.createdAt || 0)
+        );
+
+    const suggestedPool =
+        shuffleWorks(filtered);
+
+    const suggested =
+        suggestedPool.slice(0,3);
+
+    const suggestedIds =
+        new Set(
+            suggested.map(work=>work.id)
+        );
+
+    const forYouPool =
+        shuffleWorks(
+            filtered.filter(
+                work=>!suggestedIds.has(work.id)
+            )
+        );
+
+    const personal =
+        forYouPool;
+
     renderHomeSection(
         latest,
-        filtered,
-        "latestBooks",
-        "هنوز اثری اضافه نشده است."
+        latestWorks,
+        "latest"
     );
 
-    /*
-       فقط بخش «جدیدترین» بر اساس ترتیب انتشار است.
-       دو بخش دیگر از کل آثار همان دسته استفاده می‌کنند.
-    */
     renderHomeSection(
         newest,
-        filtered,
-        "newBooks",
-        "هنوز اثری اضافه نشده است."
+        suggestedPool,
+        "suggested"
     );
 
     renderHomeSection(
         forYou,
-        filtered,
-        "forYou",
-        "به‌زودی آثار جدید اضافه می‌شوند."
+        personal,
+        "forYou"
+    );
+
+    updateHomeArrows(
+        latestWorks.length > 3,
+        suggestedPool.length > 3,
+        personal.length > 3
     );
 }
 
 
-function renderHomeSection(
-    container,
-    works,
-    sectionId,
-    emptyText
-){
-
-    if(!container)
-        return;
+function renderHomeSection(container,works,section){
 
     container.innerHTML = "";
 
-    if(!works.length){
-
-        showEmpty(
-            container,
-            emptyText
-        );
-
-        updateHomeSectionArrow(
-            sectionId,
-            0
-        );
-
-        return;
-    }
-
     const expanded =
-        Boolean(
-            homeSectionsExpanded[sectionId]
-        );
+        window.homeExpanded?.[section] === true;
 
-    const visibleWorks =
+    const visible =
         expanded
             ? works
             : works.slice(0,3);
 
-    visibleWorks.forEach(
+    visible.forEach(
         work=>{
             container.appendChild(
                 createBookCard(work)
             );
         }
     );
-
-    updateHomeSectionArrow(
-        sectionId,
-        works.length
-    );
 }
 
 
-function updateHomeSectionArrow(
-    sectionId,
-    total
-){
+function updateHomeArrows(latestHasMore,suggestedHasMore,forYouHasMore){
 
-    const button =
-        document.querySelector(
-            '[data-section-toggle="' +
-            sectionId +
-            '"]'
-        );
+    const state =
+        window.homeExpanded || {};
 
-    if(!button)
-        return;
+    const latestArrow = $("latestArrow");
+    const suggestedArrow = $("newArrow");
+    const forYouArrow = $("forYouArrow");
 
-    if(total <= 3){
+    if(latestArrow){
+        latestArrow.style.visibility =
+            latestHasMore ? "visible" : "hidden";
 
-        button.style.visibility =
-            "hidden";
-
-        return;
+        latestArrow.textContent =
+            state.latest ? "‹" : "›";
     }
 
-    button.style.visibility =
-        "visible";
+    if(suggestedArrow){
+        suggestedArrow.style.visibility =
+            suggestedHasMore ? "visible" : "hidden";
 
-    button.textContent =
-        homeSectionsExpanded[sectionId]
-            ? "‹"
-            : "›";
+        suggestedArrow.textContent =
+            state.suggested ? "‹" : "›";
+    }
+
+    if(forYouArrow){
+        forYouArrow.style.visibility =
+            forYouHasMore ? "visible" : "hidden";
+
+        forYouArrow.textContent =
+            state.forYou ? "‹" : "›";
+    }
 }
 
 
-document
-    .querySelectorAll(
-        "[data-section-toggle]"
-    )
-    .forEach(
-        button=>{
+window.homeExpanded = {
+    latest:false,
+    suggested:false,
+    forYou:false
+};
 
-            button.addEventListener(
-                "click",
-                event=>{
 
-                    event.stopPropagation();
+function toggleHomeSection(section){
 
-                    const sectionId =
-                        button.dataset.sectionToggle;
+    window.homeExpanded[section] =
+        !window.homeExpanded[section];
 
-                    if(
-                        !Object.prototype.hasOwnProperty.call(
-                            homeSectionsExpanded,
-                            sectionId
-                        )
-                    ){
-                        return;
-                    }
+    renderHome();
+}
 
-                    homeSectionsExpanded[sectionId] =
-                        !homeSectionsExpanded[sectionId];
 
-                    renderHome();
-                }
-            );
-        }
-    );
+$("latestArrow").addEventListener(
+    "click",
+    ()=>toggleHomeSection("latest")
+);
+
+$("newArrow").addEventListener(
+    "click",
+    ()=>toggleHomeSection("suggested")
+);
+
+$("forYouArrow").addEventListener(
+    "click",
+    ()=>toggleHomeSection("forYou")
+);
 
 
 /* =========================================================
@@ -3501,21 +3546,11 @@ $("chapterSearchInput")
         const results =
             chapters.filter(
                 chapter=>{
-
-                    const chapterTitle =
-                        String(
-                            chapter.title || ""
-                        ).toLowerCase();
-
-                    const volume =
-                        String(
-                            chapter.volume || ""
-                        ).toLowerCase();
-
-                    return (
-                        chapterTitle.includes(text) ||
-                        volume.includes(text)
-                    );
+                    return String(
+                        chapter.title || ""
+                    )
+                    .toLowerCase()
+                    .includes(text);
                 }
             );
 
@@ -4227,6 +4262,20 @@ async function publishWork(){
             .value
             .trim();
 
+    const coverUrl =
+        $("adminCoverUrl")
+            .value
+            .trim();
+
+    if(coverUrl && !isValidUrl(coverUrl)){
+
+        showToast(
+            "لینک جلد معتبر نیست"
+        );
+
+        return;
+    }
+
     if(!title){
 
         showToast(
@@ -4310,7 +4359,7 @@ async function publishWork(){
                 type,
 
             coverUrl:
-                "",
+                coverUrl,
 
             bookLink:
                 type === "book"
@@ -4401,6 +4450,7 @@ function clearAdminForm(){
     $("adminTitle").value = "";
     $("adminAuthor").value = "";
     $("adminDescription").value = "";
+    $("adminCoverUrl").value = "";
     $("bookLinkInput").value = "";
     $("chapterTitle").value = "";
     $("chapterLinkInput").value = "";
@@ -4766,12 +4816,11 @@ async function openEditWork(work){
     $("editAuthor").value =
         work.Author || "";
 
-    fillEditGenreSelect(
-        work.genre || ""
-    );
-
     $("editDescription").value =
         work.description || "";
+
+    $("editCoverUrl").value =
+        work.coverUrl || "";
 
     if(
         editingWorkType === "book"
@@ -5029,68 +5078,6 @@ $("addEditChapterBtn")
 );
 
 
-function fillEditGenreSelect(selectedGenre){
-
-    const select =
-        $("editGenre");
-
-    if(!select)
-        return;
-
-    const genres =
-        getGenres();
-
-    select.innerHTML = "";
-
-    genres.forEach(
-        genre=>{
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                genre;
-
-            option.textContent =
-                genre;
-
-            option.selected =
-                genre === selectedGenre;
-
-            select.appendChild(option);
-        }
-    );
-
-    /*
-       اگر ژانر اثر قبلاً در فهرست ژانرهای محلی نبوده،
-       آن را فقط برای همین ویرایش قابل انتخاب نگه می‌داریم.
-    */
-    if(
-        selectedGenre &&
-        !genres.includes(selectedGenre)
-    ){
-
-        const option =
-            document.createElement(
-                "option"
-            );
-
-        option.value =
-            selectedGenre;
-
-        option.textContent =
-            selectedGenre;
-
-        option.selected =
-            true;
-
-        select.appendChild(option);
-    }
-}
-
-
 /* =========================================================
    SAVE EDIT
 ========================================================= */
@@ -5154,10 +5141,19 @@ async function saveEditedWork(){
             .value
             .trim();
 
-    const genre =
-        $("editGenre")
+    const coverUrl =
+        $("editCoverUrl")
             .value
             .trim();
+
+    if(coverUrl && !isValidUrl(coverUrl)){
+
+        showToast(
+            "لینک جلد معتبر نیست"
+        );
+
+        return;
+    }
 
     if(!title){
 
@@ -5190,11 +5186,11 @@ async function saveEditedWork(){
             Author:
                 Author,
 
-            genre:
-                genre,
-
             description:
-                description
+                description,
+
+            coverUrl:
+                coverUrl
         };
 
         if(
