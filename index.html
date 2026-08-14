@@ -1471,6 +1471,13 @@ placeholder="نویسنده">
 
 
 <label>
+ژانر
+</label>
+
+<select id="editGenre"></select>
+
+
+<label>
 توضیحات
 </label>
 
@@ -1608,7 +1615,7 @@ const RUBIKA_ID =
     "@rraararar";
 
 const APP_DOWNLOAD_LINK =
-    "https://cafeketab.app/download";
+    "https://github.com/hotaro354-netizen/Cafe-ketab/releases/download/v1.0.0/Book_Cafe1.apk";
 
 
 /* =========================================================
@@ -2920,6 +2927,50 @@ function fillGenreSelect(){
             select.appendChild(option);
         }
     );
+}
+
+
+function fillEditGenreSelect(currentGenre){
+
+    const select =
+        $("editGenre");
+
+    if(!select) return;
+
+    select.innerHTML = "";
+
+    const genres =
+        getGenres();
+
+    if(
+        currentGenre &&
+        !genres.includes(currentGenre)
+    ){
+        genres.push(currentGenre);
+    }
+
+    genres.forEach(
+        genre=>{
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                genre;
+
+            option.textContent =
+                genre;
+
+            select.appendChild(option);
+        }
+    );
+
+    if(currentGenre){
+        select.value =
+            currentGenre;
+    }
 }
 
 
@@ -4816,6 +4867,10 @@ async function openEditWork(work){
     $("editAuthor").value =
         work.Author || "";
 
+    fillEditGenreSelect(
+        work.genre || ""
+    );
+
     $("editDescription").value =
         work.description || "";
 
@@ -5185,6 +5240,9 @@ async function saveEditedWork(){
 
             Author:
                 Author,
+
+            genre:
+                $("editGenre").value,
 
             description:
                 description,
