@@ -1142,11 +1142,13 @@ button{
 .cover .workTypeBadge{
     position:absolute;
     top:7px;
-    right:7px;
+    right:7px !important;
+    left:auto !important;
     z-index:4;
     min-width:42px;
     height:22px;
     padding:0 8px;
+    margin:0;
     border-radius:8px;
     background:rgba(25,15,10,.78);
     color:#e2c6a3;
@@ -1163,11 +1165,12 @@ button{
     position:absolute;
     top:7px;
     left:7px;
-    right:auto;
+    right:auto !important;
     z-index:5;
     width:30px;
     height:30px;
     padding:0;
+    margin:0;
     border-radius:50%;
     display:flex;
     align-items:center;
@@ -2237,6 +2240,23 @@ const deviceId =
 
 function showPage(id){
 
+    if(id === "savedPage"){
+
+        setTimeout(
+            ()=>{
+                if(
+                    $("savedHistoryTab") &&
+                    $("savedHistoryTab").classList.contains("active")
+                ){
+                    renderHistory();
+                }else{
+                    renderSaved();
+                }
+            },
+            0
+        );
+    }
+
     document
         .querySelectorAll(".page")
         .forEach(page=>{
@@ -2617,6 +2637,14 @@ function createCover(work){
 
     star.className =
         "star";
+
+    star.style.left = "7px";
+    star.style.right = "auto";
+    star.style.top = "7px";
+
+    workTypeBadge.style.right = "7px";
+    workTypeBadge.style.left = "auto";
+    workTypeBadge.style.top = "7px";
 
     star.type =
         "button";
@@ -3347,16 +3375,14 @@ function getHistoryIds(){
 
         const value =
             JSON.parse(
-                localStorage.getItem(
-                    HISTORY_KEY
-                ) || "[]"
+                localStorage.getItem(HISTORY_KEY) || "[]"
             );
 
         return Array.isArray(value)
             ? value
             : [];
 
-    }catch{
+    }catch(error){
 
         return [];
     }
@@ -3368,10 +3394,7 @@ function saveHistoryIds(ids){
     localStorage.setItem(
         HISTORY_KEY,
         JSON.stringify(
-            ids.slice(
-                0,
-                HISTORY_LIMIT
-            )
+            ids.slice(0,HISTORY_LIMIT)
         )
     );
 }
@@ -3382,14 +3405,9 @@ function addToHistory(id){
     if(!id) return;
 
     const ids =
-        getHistoryIds();
-
-    const index =
-        ids.indexOf(id);
-
-    if(index >= 0){
-        ids.splice(index,1);
-    }
+        getHistoryIds().filter(
+            historyId => historyId !== id
+        );
 
     ids.unshift(id);
 
@@ -3406,8 +3424,11 @@ function renderHistory(){
 
     box.innerHTML = "";
 
+    const historyIds =
+        getHistoryIds();
+
     const works =
-        getHistoryIds()
+        historyIds
             .map(
                 id =>
                     allWorks.find(
@@ -3416,7 +3437,8 @@ function renderHistory(){
                             work.type !== "author"
                     )
             )
-            .filter(Boolean);
+            .filter(Boolean)
+            .slice(0,HISTORY_LIMIT);
 
     if(!works.length){
 
@@ -3438,27 +3460,29 @@ function renderHistory(){
 }
 
 
-$("savedMarkedTab")
-.addEventListener(
+$("savedMarkedTab").addEventListener(
     "click",
     ()=>{
         $("savedMarkedTab").classList.add("active");
         $("savedHistoryTab").classList.remove("active");
+
         $("savedBooks").style.display = "grid";
         $("historyBooks").style.display = "none";
+
         renderSaved();
     }
 );
 
 
-$("savedHistoryTab")
-.addEventListener(
+$("savedHistoryTab").addEventListener(
     "click",
     ()=>{
         $("savedHistoryTab").classList.add("active");
         $("savedMarkedTab").classList.remove("active");
+
         $("savedBooks").style.display = "none";
         $("historyBooks").style.display = "grid";
+
         renderHistory();
     }
 );
@@ -4246,6 +4270,7 @@ async function loadWorks(){
         renderHome();
         renderSearch();
         renderSaved();
+        renderHistory();
         renderPublishedWorks();
         renderPublishedAuthors();
 
