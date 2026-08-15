@@ -1141,18 +1141,18 @@ button{
 /* ===== Work type corner badge ===== */
 .cover .workTypeBadge{
     position:absolute;
-    top:4px;
-    right:4px !important;
+    top:0;
+    right:0 !important;
     left:auto !important;
     z-index:4;
     min-width:0;
     height:20px;
-    padding:0 5px;
+    padding:0 4px;
     margin:0;
     border-radius:6px;
     background:rgba(25,15,10,.78);
     color:#e2c6a3;
-    font-size:7px;
+    font-size:6px;
     font-weight:600;
     line-height:20px;
     white-space:nowrap;
@@ -1163,12 +1163,12 @@ button{
 
 .cover .star{
     position:absolute;
-    top:4px;
-    left:4px;
+    top:0;
+    left:0;
     right:auto !important;
     z-index:5;
-    width:24px;
-    height:24px;
+    width:20px;
+    height:20px;
     padding:0;
     margin:0;
     border-radius:50%;
@@ -2620,13 +2620,13 @@ function createCover(work){
     star.className =
         "star";
 
-    star.style.left = "4px";
+    star.style.left = "0";
     star.style.right = "auto";
-    star.style.top = "4px";
+    star.style.top = "0";
 
-    workTypeBadge.style.right = "4px";
+    workTypeBadge.style.right = "0";
     workTypeBadge.style.left = "auto";
-    workTypeBadge.style.top = "4px";
+    workTypeBadge.style.top = "0";
 
     star.type =
         "button";
