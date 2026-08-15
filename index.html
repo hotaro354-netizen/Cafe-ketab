@@ -1065,9 +1065,10 @@ button{
 .detailCircleLabel{
     display:block;
     font-size:7px;
-    line-height:1.1;
+    line-height:1.15;
     color:#a98d70;
     white-space:nowrap;
+    font-weight:600;
 }
 .detailCenterInfo{
     min-width:0;
@@ -1644,7 +1645,7 @@ class="adminSection">
 
 <input
 id="publishedSearchInput"
-placeholder="جستجوی آثار منتشر شده...">
+placeholder="جستجوی کتاب یا نویسنده منتشر شده...">
 
 <span
 id="clearPublishedSearch"
@@ -3403,8 +3404,21 @@ function updateSaveButton(){
     const circle = $("detailSaveCircle");
 
     if(circle){
-        circle.textContent = saved ? "★" : "☆";
-        circle.setAttribute("aria-label", saved ? "حذف از ذخیره‌ها" : "ذخیره");
+        const icon = circle.querySelector(".detailCircleIcon");
+        const label = circle.querySelector(".detailCircleLabel");
+
+        if(icon){
+            icon.textContent = saved ? "★" : "☆";
+        }
+
+        if(label){
+            label.textContent = "ذخیره";
+        }
+
+        circle.setAttribute(
+            "aria-label",
+            saved ? "حذف از ذخیره‌ها" : "ذخیره"
+        );
     }
 
     const legacy = $("saveWorkBtn");
@@ -5429,8 +5443,12 @@ $("publishedSearchInput")
 .addEventListener(
     "input",
     ()=>{
-        renderPublishedWorks();
-        renderPublishedAuthors();
+        const authorsTab = $("publishedAuthorsTab");
+        if(authorsTab && authorsTab.classList.contains("active")){
+            renderPublishedAuthors();
+        }else{
+            renderPublishedWorks();
+        }
     }
 );
 
@@ -5439,11 +5457,14 @@ $("clearPublishedSearch")
 .addEventListener(
     "click",
     ()=>{
-        $("publishedSearchInput")
-            .value = "";
+        $("publishedSearchInput").value = "";
 
-        renderPublishedWorks();
-        renderPublishedAuthors();
+        const authorsTab = $("publishedAuthorsTab");
+        if(authorsTab && authorsTab.classList.contains("active")){
+            renderPublishedAuthors();
+        }else{
+            renderPublishedWorks();
+        }
     }
 );
 
