@@ -527,7 +527,7 @@ button{
 
 .adminTabs{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(4,1fr);
     background:#2b1d14;
     padding:4px;
     border-radius:13px;
@@ -911,6 +911,215 @@ button{
     line-height:1;
 }
 
+
+/* ===== Authors / Genre / New Detail Layout ===== */
+.authorGrid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px 10px;
+}
+.authorCard{
+    min-width:0;
+    cursor:pointer;
+    text-align:center;
+}
+.authorAvatar{
+    width:58px;
+    height:58px;
+    margin:0 auto;
+    border-radius:50%;
+    overflow:hidden;
+    background:#684126;
+    border:1px solid #8b552d;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#f2e4ca;
+    font-size:20px;
+    box-shadow:0 4px 12px rgba(0,0,0,.18);
+}
+.authorAvatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.authorName{
+    margin-top:7px;
+    font-size:9px;
+    color:#d9c4a7;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.authorStrip{
+    display:none;
+    margin-top:12px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 1px 8px;
+    scrollbar-width:none;
+}
+.authorStrip::-webkit-scrollbar{display:none}
+.authorStripTrack{
+    display:flex;
+    gap:12px;
+    min-width:max-content;
+}
+.authorStrip .authorCard{
+    width:66px;
+    flex:0 0 66px;
+}
+.authorStrip .authorAvatar{
+    width:54px;
+    height:54px;
+}
+.authorStrip .authorName{font-size:8px}
+.authorDetailAvatar{
+    width:92px;
+    height:92px;
+    margin:20px auto 12px;
+    border-radius:50%;
+    overflow:hidden;
+    background:#684126;
+    border:1px solid #8b552d;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#f2e4ca;
+    font-size:34px;
+}
+.authorDetailAvatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.authorDetailName{
+    text-align:center;
+    font-size:18px;
+    margin-bottom:10px;
+}
+.authorDetailDescription{
+    color:#a9937c;
+    line-height:2;
+    font-size:12px;
+    margin:0 0 22px;
+}
+.genreDetailBooks{margin-top:10px}
+.detailInfoTabs{
+    display:flex;
+    background:#201610;
+    border-radius:25px;
+    padding:4px;
+    margin:22px 0 18px;
+}
+.detailInfoTabs button{
+    flex:1;
+    border:0;
+    border-radius:22px;
+    height:39px;
+    background:transparent;
+    color:#8d7660;
+    font-size:11px;
+}
+.detailInfoTabs button.active{
+    background:var(--orange);
+    color:#21150e;
+}
+.detailPanel{display:none}
+.detailPanel.active{display:block}
+.detailActionRow{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    margin-top:4px;
+}
+.detailActionSide{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:58px;
+    flex:0 0 58px;
+}
+.detailCircleBtn{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:1px solid #4a3222;
+    background:#241912;
+    color:#d6b994;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+}
+.detailCenterInfo{
+    min-width:0;
+    flex:1;
+    text-align:center;
+}
+.detailCenterInfo h1{
+    font-size:19px;
+    margin:0 0 7px;
+}
+.detailCenterInfo .detailAuthorName{
+    color:#8d755d;
+    font-size:11px;
+}
+.detailGenreLine{
+    text-align:center;
+    color:#c37934;
+    font-size:10px;
+    margin-top:12px;
+}
+.similarBooks{margin-top:4px}
+.authorAdminAvatar{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    overflow:hidden;
+    background:#684126;
+    border:1px solid #8b552d;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#f2e4ca;
+    float:right;
+    margin-left:10px;
+}
+.authorAdminAvatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.adminPublishedTabs{
+    display:flex;
+    background:#201610;
+    border-radius:13px;
+    padding:4px;
+    margin-bottom:15px;
+}
+.adminPublishedTabs button{
+    flex:1;
+    border:0;
+    border-radius:10px;
+    height:37px;
+    background:transparent;
+    color:#8f775f;
+    font-size:10px;
+}
+.adminPublishedTabs button.active{
+    background:#a96631;
+    color:white;
+}
+.adminSubSection{display:none}
+.adminSubSection.active{display:block}
+@media(max-width:380px){
+    .authorAvatar{width:52px;height:52px}
+    .authorGrid{gap:12px 7px}
+    .detailActionSide{width:52px;flex-basis:52px}
+}
+
 </style>
 </head>
 
@@ -949,6 +1158,14 @@ button{
 </div>
 
 <div id="newBooks" class="books"></div>
+
+<div id="authorsHomeSection">
+<div class="sectionHead">
+<h3>نویسندگان</h3>
+<button class="arrow" id="authorsHomeArrow" type="button">›</button>
+</div>
+<div id="homeAuthors" class="authorGrid"></div>
+</div>
 
 <div class="sectionHead">
 <h3>برای شما</h3>
@@ -999,6 +1216,10 @@ aria-label="انتخاب یک کتاب تصادفی">
 </button>
 </div>
 
+<div id="searchAuthorsSection" class="authorStrip">
+<div id="searchAuthorsTrack" class="authorStripTrack"></div>
+</div>
+
 <div class="sectionHead">
 <h3>نتایج</h3>
 </div>
@@ -1016,6 +1237,35 @@ aria-label="انتخاب یک کتاب تصادفی">
 
 <div id="genres" class="genres"></div>
 
+</section>
+
+<section id="genreDetailPage" class="page">
+<div class="top">
+<button class="back" id="genreDetailBack">←</button>
+<h2 id="genreDetailTitle">ژانر</h2>
+</div>
+<div class="sectionHead">
+<h3 id="genreDetailCount">کتاب‌ها</h3>
+</div>
+<div id="genreDetailBooks" class="books genreDetailBooks"></div>
+</section>
+
+
+<section id="authorDetailPage" class="page">
+<div class="top">
+<button class="back" id="authorDetailBack">←</button>
+<h2>نویسنده</h2>
+</div>
+<div class="authorDetailAvatar" id="authorDetailAvatar">
+<span id="authorDetailAvatarIcon">♙</span>
+<img id="authorDetailAvatarImg" style="display:none" alt="نویسنده">
+</div>
+<div id="authorDetailName" class="authorDetailName"></div>
+<div id="authorDetailDescription" class="authorDetailDescription"></div>
+<div class="sectionHead">
+<h3>کتاب‌های این نویسنده</h3>
+</div>
+<div id="authorDetailBooks" class="books"></div>
 </section>
 
 
@@ -1102,79 +1352,68 @@ style="display:none">
 <section id="detailPage" class="page">
 
 <div class="top">
-
-<button class="back" id="detailBack">
-←
-</button>
-
+<button class="back" id="detailBack">←</button>
 <h2>جزئیات</h2>
-
 </div>
 
 <div class="detail">
 
 <div id="detailCover" class="detailCover">
-
-<img
-id="detailImage"
-alt="جلد"
-style="display:none">
-
-<div id="detailCoverType" class="detailCoverType">
-کافه‌کتاب
+<img id="detailImage" alt="جلد" style="display:none">
+<div id="detailCoverType" class="detailCoverType">کافه‌کتاب</div>
 </div>
 
+<div class="detailActionRow">
+<div class="detailActionSide">
+<button class="detailCircleBtn" id="detailSaveCircle" type="button" aria-label="ذخیره">☆</button>
 </div>
 
+<div class="detailCenterInfo">
 <h1 id="detailTitle"></h1>
+<div class="detailAuthorName" id="detailAuthorName"></div>
+</div>
 
-<div class="detailMeta" id="detailMeta"></div>
+<div class="detailActionSide">
+<button class="detailCircleBtn" id="downloadBtn" type="button" aria-label="دانلود">⬇</button>
+</div>
+</div>
 
+<div class="detailGenreLine" id="detailGenreLine"></div>
+
+<div class="detailInfoTabs" id="detailInfoTabs">
+<button id="detailTabDetails" class="active" type="button">جزئیات</button>
+<button id="detailTabSimilar" type="button">مشابه</button>
+<button id="detailTabChapters" type="button" style="display:none">چپتر</button>
+</div>
+
+<div id="detailPanelDetails" class="detailPanel active">
 <div class="description" id="detailDescription"></div>
 
-<div class="detailButtons">
-
-<button class="downloadBtn" id="downloadBtn">
-⬇ دانلود
-</button>
-
+<div id="detailAuthorBox" style="display:none">
+<div class="sectionHead">
+<h3>نویسنده</h3>
+</div>
+<div id="detailAuthorCard"></div>
+</div>
 </div>
 
-<button class="saveWorkBtn" id="saveWorkBtn">
-☆ افزودن به ذخیره‌ها
-</button>
+<div id="detailPanelSimilar" class="detailPanel">
+<div id="similarBooks" class="books similarBooks"></div>
+</div>
 
-<div id="chaptersBox" style="display:none">
-
-<h3 class="chapterTitle">
-جلد ها و چپتر ها
-</h3>
-
-<div
-class="searchBox"
-style="margin-bottom:12px">
-
+<div id="detailPanelChapters" class="detailPanel">
+<div id="chaptersBox">
+<h3 class="chapterTitle">چپتر ها</h3>
+<div class="searchBox" style="margin-bottom:12px">
 <span>🔍</span>
-
-<input
-id="chapterSearchInput"
-type="text"
-placeholder="جستوجوی جلد یا چپتر">
-
-<span
-id="clearChapterSearch"
-style="cursor:pointer">
-×
-</span>
-
+<input id="chapterSearchInput" type="text" placeholder="جستوجوی چپتر">
+<span id="clearChapterSearch" style="cursor:pointer">×</span>
 </div>
-
 <div id="chaptersList"></div>
-
+</div>
 </div>
 
 </div>
-
 </section>
 
 
@@ -1208,6 +1447,11 @@ data-admin-tab="genres">
 <button
 data-admin-tab="published">
 انتشار شده
+</button>
+
+<button
+data-admin-tab="author">
+انتشار نویسنده
 </button>
 
 </div>
@@ -1388,8 +1632,43 @@ style="cursor:pointer">
 
 </div>
 
-<div id="adminPublishedList"></div>
+<div class="adminPublishedTabs">
+<button id="publishedBooksTab" class="active" type="button">کتاب منتشر شده</button>
+<button id="publishedAuthorsTab" type="button">نویسنده منتشر شده</button>
+</div>
 
+<div id="adminPublishedBooks" class="adminSubSection active">
+<div id="adminPublishedList"></div>
+</div>
+
+<div id="adminPublishedAuthors" class="adminSubSection">
+<div class="searchBox adminSearch">
+<span>🔍</span>
+<input id="publishedAuthorSearchInput" placeholder="جستجوی نویسندگان منتشر شده...">
+<span id="clearPublishedAuthorSearch" style="cursor:pointer">×</span>
+</div>
+<div id="adminPublishedAuthorList"></div>
+</div>
+
+</div>
+
+<div id="adminAuthorPublish" class="adminSection">
+<div class="form">
+<label>نام نویسنده</label>
+<input id="adminAuthorName" placeholder="نام نویسنده">
+
+<label>لینک مستقیم عکس نویسنده</label>
+<input id="adminAuthorImageUrl" type="url" placeholder="https://example.com/author.jpg">
+
+<div id="adminAuthorPreview" class="avatarPreview">
+<span>♙</span>
+</div>
+
+<label>توضیحات درباره نویسنده</label>
+<textarea id="adminAuthorDescription" placeholder="توضیحات درباره نویسنده" style="min-height:130px"></textarea>
+
+<button class="addBtn" id="publishAuthorBtn" type="button">🚀 انتشار نویسنده</button>
+</div>
 </div>
 
 <button
@@ -1649,6 +1928,23 @@ style="background:#302119;color:#c8ad90">
 </div>
 
 
+<div id="editAuthorModal" class="modal">
+<div class="modalContent">
+<h3>ویرایش نویسنده</h3>
+<div class="form">
+<label>نام نویسنده</label>
+<input id="editAuthorName" placeholder="نام نویسنده">
+<label>لینک مستقیم عکس نویسنده</label>
+<input id="editAuthorImageUrl" type="url" placeholder="https://example.com/author.jpg">
+<label>توضیحات درباره نویسنده</label>
+<textarea id="editAuthorDescription" style="min-height:130px" placeholder="توضیحات درباره نویسنده"></textarea>
+</div>
+<button class="modalBtn" id="saveEditAuthorBtn">ذخیره ویرایش</button>
+<button class="modalBtn" id="closeEditAuthorModal" style="background:#302119;color:#c8ad90">انصراف</button>
+</div>
+</div>
+
+
 <div id="errorModal" class="modal">
 
 <div class="modalContent errorModalContent">
@@ -1731,6 +2027,8 @@ let appwriteQuery = null;
 
 let allWorks = [];
 let currentWork = null;
+let currentAuthor = null;
+let editingAuthor = null;
 
 let currentCategory = "book";
 
@@ -2268,6 +2566,157 @@ function createCover(work){
 
 
 /* =========================================================
+   AUTHORS
+========================================================= */
+
+function getAuthors(){
+    return allWorks.filter(
+        work => work && work.type === "author"
+    );
+}
+
+function normalizeText(value){
+    return String(value || "")
+        .toLowerCase()
+        .replace(/\u200c/g," ")
+        .trim();
+}
+
+function createAuthorAvatar(author, detail=false){
+    const avatar = document.createElement("div");
+    avatar.className = detail ? "authorDetailAvatar" : "authorAvatar";
+
+    if(author && author.coverUrl){
+        const img = document.createElement("img");
+        img.src = author.coverUrl;
+        img.alt = author.title || "نویسنده";
+        img.onerror = ()=>{ img.remove(); };
+        avatar.appendChild(img);
+    }else{
+        const icon = document.createElement("span");
+        icon.textContent = "♙";
+        avatar.appendChild(icon);
+    }
+    return avatar;
+}
+
+function createAuthorCard(author){
+    const card = document.createElement("div");
+    card.className = "authorCard";
+    card.appendChild(createAuthorAvatar(author));
+
+    const name = document.createElement("div");
+    name.className = "authorName";
+    name.textContent = author.title || "نویسنده";
+    card.appendChild(name);
+
+    card.addEventListener("click", ()=>openAuthorDetail(author));
+    return card;
+}
+
+function renderHomeAuthors(){
+    const box = $("homeAuthors");
+    const section = $("authorsHomeSection");
+    if(!box || !section) return;
+
+    if(currentCategory !== "book"){
+        section.style.display = "none";
+        return;
+    }
+
+    const authors = shuffleWorks(getAuthors());
+    box.innerHTML = "";
+
+    if(!authors.length){
+        section.style.display = "none";
+        return;
+    }
+
+    section.style.display = "block";
+
+    const expanded = window.homeExpanded?.authors === true;
+    const visible = expanded ? authors : authors.slice(0,4);
+
+    visible.forEach(author=>{
+        box.appendChild(createAuthorCard(author));
+    });
+
+    const arrow = $("authorsHomeArrow");
+    if(arrow){
+        arrow.style.visibility = authors.length > 4 ? "visible" : "hidden";
+        arrow.textContent = expanded ? "‹" : "›";
+    }
+}
+
+function renderSearchAuthors(text){
+    const section = $("searchAuthorsSection");
+    const track = $("searchAuthorsTrack");
+    if(!section || !track) return;
+
+    track.innerHTML = "";
+
+    if(!text){
+        section.style.display = "none";
+        return;
+    }
+
+    const authors = getAuthors();
+    if(!authors.length){
+        section.style.display = "none";
+        return;
+    }
+
+    const ranked = authors
+        .map(author=>{
+            const name = normalizeText(author.title);
+            let score = 0;
+            if(name === text) score = 1000;
+            else if(name.startsWith(text)) score = 700;
+            else if(name.includes(text)) score = 500;
+            else score = 100 - Math.min(100, Math.abs(name.length - text.length));
+            return {author,score};
+        })
+        .sort((a,b)=>b.score-a.score || normalizeText(a.author.title).localeCompare(normalizeText(b.author.title)));
+
+    section.style.display = "block";
+    ranked.forEach(item=>track.appendChild(createAuthorCard(item.author)));
+}
+
+function openAuthorDetail(author){
+    currentAuthor = author;
+
+    const avatar = $("authorDetailAvatar");
+    avatar.innerHTML = "";
+    avatar.appendChild(createAuthorAvatar(author,true).firstChild || document.createTextNode("♙"));
+
+    $("authorDetailName").textContent = author.title || "نویسنده";
+    $("authorDetailDescription").textContent =
+        author.description || "توضیحاتی برای این نویسنده ثبت نشده است.";
+
+    const box = $("authorDetailBooks");
+    box.innerHTML = "";
+
+    const name = normalizeText(author.title);
+    const books = allWorks.filter(work =>
+        work.type === "book" &&
+        normalizeText(work.Author) === name
+    );
+
+    if(!books.length){
+        showEmpty(box,"هنوز کتابی از این نویسنده منتشر نشده است.");
+    }else{
+        books.forEach(work=>box.appendChild(createBookCard(work)));
+    }
+
+    showPage("authorDetailPage");
+}
+
+function toggleAuthorSection(){
+    window.homeExpanded.authors = !window.homeExpanded.authors;
+    renderHomeAuthors();
+}
+
+/* =========================================================
    CARD
 ========================================================= */
 
@@ -2439,6 +2888,7 @@ function renderHome(){
             "به‌زودی آثار جدید اضافه می‌شوند."
         );
 
+        renderHomeAuthors();
         updateHomeArrows(false,false,false);
         return;
     }
@@ -2488,6 +2938,8 @@ function renderHome(){
         personal,
         "forYou"
     );
+
+    renderHomeAuthors();
 
     updateHomeArrows(
         latestWorks.length > 3,
@@ -2557,7 +3009,8 @@ function updateHomeArrows(latestHasMore,suggestedHasMore,forYouHasMore){
 window.homeExpanded = {
     latest:false,
     suggested:false,
-    forYou:false
+    forYou:false,
+    authors:false
 };
 
 
@@ -2585,6 +3038,11 @@ $("forYouArrow").addEventListener(
     ()=>toggleHomeSection("forYou")
 );
 
+$("authorsHomeArrow").addEventListener(
+    "click",
+    toggleAuthorSection
+);
+
 
 /* =========================================================
    SEARCH
@@ -2609,64 +3067,53 @@ $("clearSearch")
 
 function renderSearch(){
 
-    const box =
-        $("searchResults");
-
-    const text =
-        $("searchInput")
-            .value
-            .trim()
-            .toLowerCase();
+    const box = $("searchResults");
+    const text = normalizeText($("searchInput").value);
 
     box.innerHTML = "";
 
+    renderSearchAuthors(text);
+
+    let works = allWorks.filter(
+        work => work.type === "book" ||
+                work.type === "manga" ||
+                work.type === "manhwa"
+    );
+
     if(!text){
-
-        showEmpty(
-            box,
-            "نام کتاب یا اثر را جستجو کنید."
-        );
-
+        works.forEach(work=>box.appendChild(createBookCard(work)));
+        if(!works.length) showEmpty(box,"هنوز اثری منتشر نشده است.");
         return;
     }
 
-    const results =
-        allWorks.filter(
-            work=>{
+    const results = works
+        .map(work=>{
+            const title = normalizeText(work.title);
+            const author = normalizeText(work.Author);
+            const genre = normalizeText(work.genre);
+            let score = -1;
 
-                const value =
-                    (
-                        (work.title || "") +
-                        " " +
-                        (work.Author || "") +
-                        " " +
-                        (work.genre || "")
-                    )
-                    .toLowerCase();
+            if(title === text) score = 1000;
+            else if(title.startsWith(text)) score = 850;
+            else if(title.includes(text)) score = 700;
+            else if(author === text) score = 650;
+            else if(author.startsWith(text)) score = 600;
+            else if(author.includes(text)) score = 550;
+            else if(genre === text) score = 500;
+            else if(genre.includes(text)) score = 450;
 
-                return value.includes(text);
-            }
-        );
+            return {work,score};
+        })
+        .filter(item=>item.score >= 0)
+        .sort((a,b)=>b.score-a.score);
 
     if(!results.length){
-
-        showEmpty(
-            box,
-            "نتیجه‌ای پیدا نشد."
-        );
-
+        showEmpty(box,"نتیجه‌ای پیدا نشد.");
         return;
     }
 
-    results.forEach(
-        work=>{
-            box.appendChild(
-                createBookCard(work)
-            );
-        }
-    );
+    results.forEach(item=>box.appendChild(createBookCard(item.work)));
 }
-
 
 
 /* =========================================================
@@ -2792,7 +3239,7 @@ function renderSaved(){
 
     const works =
         allWorks.filter(
-            work=>ids.includes(work.id)
+            work=>ids.includes(work.id) && work.type !== "author"
         );
 
     if(!works.length){
@@ -2819,120 +3266,159 @@ function renderSaved(){
    DETAIL
 ========================================================= */
 
-function openDetail(work){
+function setDetailTab(tab){
+    const tabs = {
+        details: ["detailTabDetails","detailPanelDetails"],
+        similar: ["detailTabSimilar","detailPanelSimilar"],
+        chapters: ["detailTabChapters","detailPanelChapters"]
+    };
 
-    currentWork =
-        work;
+    Object.values(tabs).forEach(pair=>{
+        $(pair[0])?.classList.remove("active");
+        $(pair[1])?.classList.remove("active");
+    });
 
-    const cover =
-        $("detailCover");
+    if(tabs[tab]){
+        $(tabs[tab][0])?.classList.add("active");
+        $(tabs[tab][1])?.classList.add("active");
+    }
+}
 
-    cover.className =
-        "detailCover " +
-        getCoverClass(work.type);
+function renderSimilarWorks(work){
+    const box = $("similarBooks");
+    box.innerHTML = "";
 
-    const image =
-        $("detailImage");
+    const genre = normalizeText(work.genre);
+    const similar = allWorks.filter(item =>
+        item.id !== work.id &&
+        (item.type === work.type) &&
+        genre &&
+        normalizeText(item.genre) === genre
+    );
 
-    const type =
-        $("detailCoverType");
-
-    if(work.coverUrl){
-
-        image.src =
-            work.coverUrl;
-
-        image.style.display =
-            "block";
-
-        type.style.display =
-            "none";
-
-    }else{
-
-        image.style.display =
-            "none";
-
-        type.textContent =
-            getCoverText(
-                work.type
-            );
-
-        type.style.display =
-            "block";
+    if(!similar.length){
+        showEmpty(box,"اثر مشابهی در این ژانر پیدا نشد.");
+        return;
     }
 
-    $("detailTitle")
-        .textContent =
-        work.title || "";
+    similar.forEach(item=>box.appendChild(createBookCard(item)));
+}
 
-    $("detailMeta")
-        .textContent =
-        (
-            work.Author ||
-            "نامشخص"
-        ) +
-        " • " +
-        (
-            work.genre ||
-            "بدون ژانر"
-        );
+function renderDetailAuthor(work){
+    const box = $("detailAuthorBox");
+    const cardBox = $("detailAuthorCard");
+    const authorName = normalizeText(work.Author);
 
-    $("detailDescription")
-        .textContent =
-        work.description ||
-        "توضیحاتی برای این اثر ثبت نشده است.";
+    box.style.display = "none";
+    cardBox.innerHTML = "";
 
-    $("downloadBtn")
-        .textContent =
-        work.type === "book"
-            ? "⬇ دانلود"
-            : "⬇ دانلود کل چپترها";
+    if(work.type !== "book" || !authorName) return;
+
+    const author = getAuthors().find(
+        item => normalizeText(item.title) === authorName
+    );
+
+    if(!author) return;
+
+    box.style.display = "block";
+    cardBox.appendChild(createAuthorCard(author));
+}
+
+function openDetail(work){
+
+    currentWork = work;
+
+    const cover = $("detailCover");
+    cover.className = "detailCover " + getCoverClass(work.type);
+
+    const image = $("detailImage");
+    const type = $("detailCoverType");
+
+    if(work.coverUrl){
+        image.src = work.coverUrl;
+        image.style.display = "block";
+        type.style.display = "none";
+    }else{
+        image.style.display = "none";
+        type.textContent = getCoverText(work.type);
+        type.style.display = "block";
+    }
+
+    $("detailTitle").textContent = work.title || "";
+    $("detailAuthorName").textContent = work.Author || "نامشخص";
+    $("detailGenreLine").textContent = work.genre || "بدون ژانر";
+    $("detailDescription").textContent =
+        work.description || "توضیحاتی برای این اثر ثبت نشده است.";
+
+    const chaptersTab = $("detailTabChapters");
+    if(work.type === "book"){
+        chaptersTab.style.display = "none";
+    }else{
+        chaptersTab.style.display = "block";
+    }
+
+    renderSimilarWorks(work);
+    renderDetailAuthor(work);
+    setDetailTab("details");
+
+    $("downloadBtn").setAttribute(
+        "aria-label",
+        work.type === "book" ? "دانلود کتاب" : "دانلود چپترها"
+    );
 
     updateSaveButton();
 
     if(work.type !== "book"){
-
-        loadChapters(
-            work.id
-        );
-
+        loadChapters(work.id);
     }else{
-
-        $("chaptersBox")
-            .style.display =
-            "none";
+        window.currentChapters = [];
     }
 
-    showPage(
-        "detailPage"
-    );
+    showPage("detailPage");
 }
 
 
 function updateSaveButton(){
 
-    if(!currentWork)
-        return;
+    if(!currentWork) return;
 
-    $("saveWorkBtn")
-        .textContent =
-        isSaved(currentWork.id)
+    const saved = isSaved(currentWork.id);
+    const circle = $("detailSaveCircle");
+
+    if(circle){
+        circle.textContent = saved ? "★" : "☆";
+        circle.setAttribute("aria-label", saved ? "حذف از ذخیره‌ها" : "ذخیره");
+    }
+
+    const legacy = $("saveWorkBtn");
+    if(legacy){
+        legacy.textContent = saved
             ? "★ حذف از ذخیره‌ها"
             : "☆ افزودن به ذخیره‌ها";
+    }
 }
 
 
-$("saveWorkBtn")
-.addEventListener(
+$("saveWorkBtn")?.addEventListener(
     "click",
     ()=>{
-        if(currentWork)
-            toggleSaveById(
-                currentWork.id
-            );
+        if(currentWork) toggleSaveById(currentWork.id);
     }
 );
+
+$("detailSaveCircle").addEventListener(
+    "click",
+    ()=>{
+        if(currentWork) toggleSaveById(currentWork.id);
+    }
+);
+
+$("detailTabDetails").addEventListener("click",()=>setDetailTab("details"));
+$("detailTabSimilar").addEventListener("click",()=>setDetailTab("similar"));
+$("detailTabChapters").addEventListener("click",()=>setDetailTab("chapters"));
+
+$("genreDetailBack").addEventListener("click",()=>showPage("genresPage"));
+$("authorDetailBack").addEventListener("click",()=>showPage("homePage"));
 
 
 $("detailBack")
@@ -3022,15 +3508,7 @@ function renderGenres(){
             button.addEventListener(
                 "click",
                 ()=>{
-                    $("searchInput")
-                        .value =
-                        genre;
-
-                    renderSearch();
-
-                    showPage(
-                        "searchPage"
-                    );
+                    openGenreDetail(genre);
                 }
             );
 
@@ -3039,6 +3517,28 @@ function renderGenres(){
     );
 }
 
+
+function openGenreDetail(genre){
+    $("genreDetailTitle").textContent = genre;
+    const box = $("genreDetailBooks");
+    box.innerHTML = "";
+
+    const books = allWorks.filter(
+        work => work.type === "book" &&
+                normalizeText(work.genre) === normalizeText(genre)
+    );
+
+    $("genreDetailCount").textContent =
+        books.length + " کتاب";
+
+    if(!books.length){
+        showEmpty(box,"هنوز کتابی در این ژانر منتشر نشده است.");
+    }else{
+        books.forEach(work=>box.appendChild(createBookCard(work)));
+    }
+
+    showPage("genreDetailPage");
+}
 
 function fillGenreSelect(){
 
@@ -3530,6 +4030,7 @@ async function loadWorks(){
         renderSearch();
         renderSaved();
         renderPublishedWorks();
+        renderPublishedAuthors();
 
     }catch(error){
 
@@ -4220,6 +4721,11 @@ document
 
                 renderPublishedWorks();
             }
+
+            if(tab === "author"){
+                $("adminAuthorPublish")
+                    .classList.add("active");
+            }
         }
     );
 });
@@ -4386,6 +4892,259 @@ function renderPendingChapters(){
     );
 }
 
+
+/* =========================================================
+   AUTHOR PUBLISH / MANAGEMENT
+========================================================= */
+
+$("adminAuthorImageUrl").addEventListener("input",()=>{
+    const url = $("adminAuthorImageUrl").value.trim();
+    const preview = $("adminAuthorPreview");
+    preview.innerHTML = "";
+    if(url && isValidUrl(url)){
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = "نویسنده";
+        img.onerror = ()=>{
+            preview.innerHTML = "<span>♙</span>";
+        };
+        preview.appendChild(img);
+    }else{
+        preview.innerHTML = "<span>♙</span>";
+    }
+});
+
+$("publishAuthorBtn").addEventListener("click",publishAuthor);
+
+async function publishAuthor(){
+    if(!isAdminMode){
+        showToast("ابتدا وارد مدیریت شوید");
+        return;
+    }
+    if(!appwriteReady || !databases || !appwriteID){
+        showToast("Appwrite متصل نیست");
+        return;
+    }
+
+    const name = $("adminAuthorName").value.trim();
+    const image = $("adminAuthorImageUrl").value.trim();
+    const description = $("adminAuthorDescription").value.trim();
+
+    if(!name){
+        showToast("نام نویسنده را وارد کنید");
+        return;
+    }
+    if(image && !isValidUrl(image)){
+        showToast("لینک عکس نویسنده معتبر نیست");
+        return;
+    }
+
+    const exists = getAuthors().some(
+        author => normalizeText(author.title) === normalizeText(name)
+    );
+    if(exists){
+        showToast("این نویسنده قبلاً منتشر شده است");
+        return;
+    }
+
+    const button = $("publishAuthorBtn");
+    const oldText = button.textContent;
+    button.disabled = true;
+    button.textContent = "در حال انتشار...";
+
+    try{
+        await databases.createDocument(
+            DATABASE_ID,
+            COLLECTION_WORKS,
+            appwriteID.unique(),
+            {
+                title:name,
+                Author:"",
+                genre:"",
+                description:description,
+                type:"author",
+                coverUrl:image,
+                bookLink:"",
+                createdByDevice:deviceId
+            }
+        );
+
+        $("adminAuthorName").value = "";
+        $("adminAuthorImageUrl").value = "";
+        $("adminAuthorDescription").value = "";
+        $("adminAuthorPreview").innerHTML = "<span>♙</span>";
+
+        await loadWorks();
+        showToast("نویسنده با موفقیت منتشر شد");
+    }catch(error){
+        showAppwriteError(error,"Publish author");
+    }finally{
+        button.disabled = false;
+        button.textContent = oldText;
+    }
+}
+
+$("publishedBooksTab").addEventListener("click",()=>{
+    $("publishedBooksTab").classList.add("active");
+    $("publishedAuthorsTab").classList.remove("active");
+    $("adminPublishedBooks").classList.add("active");
+    $("adminPublishedAuthors").classList.remove("active");
+});
+
+$("publishedAuthorsTab").addEventListener("click",()=>{
+    $("publishedAuthorsTab").classList.add("active");
+    $("publishedBooksTab").classList.remove("active");
+    $("adminPublishedAuthors").classList.add("active");
+    $("adminPublishedBooks").classList.remove("active");
+    renderPublishedAuthors();
+});
+
+$("publishedAuthorSearchInput").addEventListener("input",renderPublishedAuthors);
+$("clearPublishedAuthorSearch").addEventListener("click",()=>{
+    $("publishedAuthorSearchInput").value = "";
+    renderPublishedAuthors();
+});
+
+function renderPublishedAuthors(){
+    const box = $("adminPublishedAuthorList");
+    if(!box || !isAdminMode) return;
+    box.innerHTML = "";
+
+    const text = normalizeText($("publishedAuthorSearchInput")?.value);
+    let authors = getAuthors();
+
+    if(text){
+        authors = authors.filter(author =>
+            normalizeText(author.title).includes(text) ||
+            normalizeText(author.description).includes(text)
+        );
+    }
+
+    if(!authors.length){
+        showEmpty(box,text ? "نویسنده‌ای با این مشخصات پیدا نشد." : "هنوز نویسنده‌ای منتشر نشده است.");
+        return;
+    }
+
+    authors.forEach(author=>{
+        const item = document.createElement("div");
+        item.className = "adminItem";
+
+        const info = document.createElement("div");
+        info.className = "adminItemInfo";
+
+        const avatar = createAuthorAvatar(author);
+        avatar.className = "authorAdminAvatar";
+        info.appendChild(avatar);
+
+        const title = document.createElement("b");
+        title.textContent = author.title || "بدون نام";
+        info.appendChild(title);
+
+        const desc = document.createElement("small");
+        desc.textContent = author.description || "بدون توضیحات";
+        info.appendChild(desc);
+
+        const actions = document.createElement("div");
+        actions.className = "adminActions";
+
+        const edit = document.createElement("button");
+        edit.className = "editBtn";
+        edit.type = "button";
+        edit.textContent = "✏️ ویرایش";
+        edit.addEventListener("click",()=>openEditAuthor(author));
+
+        const del = document.createElement("button");
+        del.className = "delete";
+        del.type = "button";
+        del.textContent = "🗑 حذف";
+        del.addEventListener("click",()=>deleteAuthor(author));
+
+        actions.appendChild(edit);
+        actions.appendChild(del);
+
+        item.appendChild(info);
+        item.appendChild(actions);
+        box.appendChild(item);
+    });
+}
+
+function openEditAuthor(author){
+    editingAuthor = author;
+    $("editAuthorName").value = author.title || "";
+    $("editAuthorImageUrl").value = author.coverUrl || "";
+    $("editAuthorDescription").value = author.description || "";
+    $("editAuthorModal").classList.add("active");
+}
+
+$("closeEditAuthorModal").addEventListener("click",()=>{
+    $("editAuthorModal").classList.remove("active");
+});
+
+$("saveEditAuthorBtn").addEventListener("click",async()=>{
+    if(!editingAuthor || !appwriteReady || !databases){
+        showToast("نویسنده برای ویرایش انتخاب نشده است");
+        return;
+    }
+
+    const name = $("editAuthorName").value.trim();
+    const image = $("editAuthorImageUrl").value.trim();
+    const description = $("editAuthorDescription").value.trim();
+
+    if(!name){
+        showToast("نام نویسنده را وارد کنید");
+        return;
+    }
+    if(image && !isValidUrl(image)){
+        showToast("لینک عکس نویسنده معتبر نیست");
+        return;
+    }
+
+    const button = $("saveEditAuthorBtn");
+    const oldText = button.textContent;
+    button.disabled = true;
+    button.textContent = "در حال ذخیره...";
+
+    try{
+        await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTION_WORKS,
+            editingAuthor.id,
+            {
+                title:name,
+                description:description,
+                coverUrl:image
+            }
+        );
+
+        $("editAuthorModal").classList.remove("active");
+        editingAuthor = null;
+        await loadWorks();
+        showToast("ویرایش نویسنده ذخیره شد");
+    }catch(error){
+        showAppwriteError(error,"Edit author");
+    }finally{
+        button.disabled = false;
+        button.textContent = oldText;
+    }
+});
+
+async function deleteAuthor(author){
+    if(!isAdminMode || !appwriteReady || !databases) return;
+
+    if(!confirm("نویسنده «" + (author.title || "") + "» حذف شود؟")) return;
+
+    try{
+        await databases.deleteDocument(
+            DATABASE_ID,
+            COLLECTION_WORKS,
+            author.id
+        );
+        await loadWorks();
+        showToast("نویسنده حذف شد");
+    }catch(error){
+        showAppwriteError(error,"Delete author");
+    }
+}
 
 /* =========================================================
    PUBLISH
@@ -4693,7 +5452,7 @@ function renderPublishedWorks(){
             ?.toLowerCase() || "";
 
     let works =
-        [...allWorks];
+        allWorks.filter(work => work.type !== "author");
 
     if(text){
 
