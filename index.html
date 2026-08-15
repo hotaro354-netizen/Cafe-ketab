@@ -2630,6 +2630,7 @@ function createCover(work){
             : "☆";
 
     wrapper.appendChild(star);
+    wrapper.appendChild(workTypeBadge);
 
     return wrapper;
 }
@@ -3410,7 +3411,9 @@ function renderHistory(){
             .map(
                 id =>
                     allWorks.find(
-                        work => work.id === id
+                        work =>
+                            work.id === id &&
+                            work.type !== "author"
                     )
             )
             .filter(Boolean);
