@@ -1714,7 +1714,7 @@ const RUBIKA_ID =
     "@rraararar";
 
 const APP_DOWNLOAD_LINK =
-    "https://bucket.appilix.com/app-apk-9361248a6693474bbc8e0e5cf5ec68b8-1786796598.apk";
+    "https://github.com/hotaro354-netizen/Cafe-ketab/releases/download/v1.0.0/Book_Cafe1.apk";
 
 
 /* =========================================================
@@ -3893,20 +3893,19 @@ async function forceDownload(url,filename){
     const safeName =
         sanitizeFilename(
             filename
-        ) || "download";
+        );
 
     /*
-       Android WebView safe:
-       فایل مستقیماً با fetch دریافت می‌شود و سپس
-       با Blob و ویژگی download ذخیره می‌شود.
-       در صورت خطا، URL اصلی باز نمی‌شود؛ بنابراین
-       صفحه سایت PDF داخل اپ یا مرورگر باز نخواهد شد.
+       APK / Android WebView:
+       به‌جای target="_blank" که می‌تواند یک صفحه سفید
+       داخل WebView باز کند، ابتدا فایل را به Blob تبدیل
+       می‌کنیم و سپس دانلود را با یک لینک موقت انجام می‌دهیم.
     */
 
     try{
 
         showToast(
-            "در حال دانلود..."
+            "در حال آماده‌سازی دانلود..."
         );
 
         const response =
@@ -3915,8 +3914,7 @@ async function forceDownload(url,filename){
                 {
                     method:"GET",
                     mode:"cors",
-                    credentials:"omit",
-                    cache:"no-store"
+                    credentials:"omit"
                 }
             );
 
@@ -3949,9 +3947,6 @@ async function forceDownload(url,filename){
         a.download =
             safeName;
 
-        a.rel =
-            "noopener";
-
         a.style.display =
             "none";
 
@@ -3967,7 +3962,7 @@ async function forceDownload(url,filename){
                     blobUrl
                 );
             },
-            10000
+            5000
         );
 
         showToast(
@@ -3976,24 +3971,56 @@ async function forceDownload(url,filename){
 
     }catch(error){
 
-        console.error(
-            "Download failed:",
+        console.warn(
+            "Blob download failed:",
             error
         );
 
         /*
-           عمداً URL اصلی را باز نمی‌کنیم.
-           این کار جلوی باز شدن صفحه سایت را می‌گیرد.
-           اگر سرور CORS را ببندد، مرورگر/WebView اجازه
-           دریافت فایل توسط JavaScript را نمی‌دهد و باید
-           لینک فایل/سرور از CORS پشتیبانی کند.
+           اگر سرور CORS را اجازه ندهد،
+           فایل را مستقیماً باز می‌کنیم.
+           مهم: دیگر target="_blank" استفاده نمی‌شود
+           تا WebView صفحه سفید جدید نسازد.
         */
 
-        showToast(
-            "دانلود انجام نشد؛ سرور اجازه دانلود داخل اپ را نداد"
-        );
+        try{
+
+            const a =
+                document.createElement("a");
+
+            a.href =
+                url;
+
+            a.download =
+                safeName;
+
+            a.style.display =
+                "none";
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            a.remove();
+
+            showToast(
+                "درخواست دانلود ارسال شد"
+            );
+
+        }catch(fallbackError){
+
+            console.error(
+                "Download fallback failed:",
+                fallbackError
+            );
+
+            showToast(
+                "دانلود در این WebView پشتیبانی نمی‌شود"
+            );
+        }
     }
 }
+
 
 function sanitizeFilename(name){
 
