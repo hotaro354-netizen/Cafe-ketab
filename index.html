@@ -1137,6 +1137,43 @@ button{
     .detailActionSide{width:52px;flex-basis:52px}
 }
 
+
+/* ===== Work type corner badge ===== */
+.cover .workTypeBadge{
+    position:absolute;
+    top:7px;
+    right:7px;
+    z-index:4;
+    min-width:42px;
+    height:22px;
+    padding:0 8px;
+    border-radius:8px;
+    background:rgba(25,15,10,.78);
+    color:#e2c6a3;
+    font-size:8px;
+    font-weight:600;
+    line-height:22px;
+    white-space:nowrap;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.cover .star{
+    position:absolute;
+    top:7px;
+    left:7px;
+    right:auto;
+    z-index:5;
+    width:30px;
+    height:30px;
+    padding:0;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
 </style>
 </head>
 
@@ -1294,17 +1331,19 @@ aria-label="انتخاب یک کتاب تصادفی">
 
 <div class="segment">
 
-<button class="active">
+<button id="savedMarkedTab" class="active" type="button">
 نشان‌گذاری شده
 </button>
 
-<button disabled>
+<button id="savedHistoryTab" type="button">
 تاریخچه
 </button>
 
 </div>
 
 <div id="savedBooks" class="books"></div>
+
+<div id="historyBooks" class="books" style="display:none"></div>
 
 </section>
 
@@ -2563,6 +2602,19 @@ function createCover(work){
     const star =
         document.createElement("button");
 
+    const workTypeBadge =
+        document.createElement("span");
+
+    workTypeBadge.className =
+        "workTypeBadge";
+
+    workTypeBadge.textContent =
+        work.type === "manga"
+            ? "مانگا"
+            : work.type === "manhwa"
+                ? "مانهوا"
+                : "کتاب";
+
     star.className =
         "star";
 
@@ -3280,6 +3332,135 @@ function renderSaved(){
 }
 
 
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+const HISTORY_KEY = "cafeketab_history";
+const HISTORY_LIMIT = 9;
+
+function getHistoryIds(){
+
+    try{
+
+        const value =
+            JSON.parse(
+                localStorage.getItem(
+                    HISTORY_KEY
+                ) || "[]"
+            );
+
+        return Array.isArray(value)
+            ? value
+            : [];
+
+    }catch{
+
+        return [];
+    }
+}
+
+
+function saveHistoryIds(ids){
+
+    localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(
+            ids.slice(
+                0,
+                HISTORY_LIMIT
+            )
+        )
+    );
+}
+
+
+function addToHistory(id){
+
+    if(!id) return;
+
+    const ids =
+        getHistoryIds();
+
+    const index =
+        ids.indexOf(id);
+
+    if(index >= 0){
+        ids.splice(index,1);
+    }
+
+    ids.unshift(id);
+
+    saveHistoryIds(ids);
+}
+
+
+function renderHistory(){
+
+    const box =
+        $("historyBooks");
+
+    if(!box) return;
+
+    box.innerHTML = "";
+
+    const works =
+        getHistoryIds()
+            .map(
+                id =>
+                    allWorks.find(
+                        work => work.id === id
+                    )
+            )
+            .filter(Boolean);
+
+    if(!works.length){
+
+        showEmpty(
+            box,
+            "هنوز اثری را بازدید نکرده‌اید."
+        );
+
+        return;
+    }
+
+    works.forEach(
+        work=>{
+            box.appendChild(
+                createBookCard(work)
+            );
+        }
+    );
+}
+
+
+$("savedMarkedTab")
+.addEventListener(
+    "click",
+    ()=>{
+        $("savedMarkedTab").classList.add("active");
+        $("savedHistoryTab").classList.remove("active");
+        $("savedBooks").style.display = "grid";
+        $("historyBooks").style.display = "none";
+        renderSaved();
+    }
+);
+
+
+$("savedHistoryTab")
+.addEventListener(
+    "click",
+    ()=>{
+        $("savedHistoryTab").classList.add("active");
+        $("savedMarkedTab").classList.remove("active");
+        $("savedBooks").style.display = "none";
+        $("historyBooks").style.display = "grid";
+        renderHistory();
+    }
+);
+
+
 /* =========================================================
    DETAIL
 ========================================================= */
@@ -3343,6 +3524,8 @@ function renderDetailAuthor(work){
 }
 
 function openDetail(work){
+
+    addToHistory(work.id);
 
     currentWork = work;
 
