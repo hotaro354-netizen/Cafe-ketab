@@ -1049,9 +1049,25 @@ button{
     background:#241912;
     color:#d6b994;
     display:flex;
+    flex-direction:column;
     align-items:center;
     justify-content:center;
-    font-size:19px;
+    gap:1px;
+    padding:3px 2px;
+    font-size:18px;
+    line-height:1;
+}
+.detailCircleIcon{
+    display:block;
+    font-size:17px;
+    line-height:1;
+} 
+.detailCircleLabel{
+    display:block;
+    font-size:7px;
+    line-height:1.1;
+    color:#a98d70;
+    white-space:nowrap;
 }
 .detailCenterInfo{
     min-width:0;
@@ -1365,7 +1381,10 @@ style="display:none">
 
 <div class="detailActionRow">
 <div class="detailActionSide">
-<button class="detailCircleBtn" id="detailSaveCircle" type="button" aria-label="ذخیره">☆</button>
+<button class="detailCircleBtn" id="downloadBtn" type="button" aria-label="دانلود">
+<span class="detailCircleIcon">⬇</span>
+<span class="detailCircleLabel">دانلود</span>
+</button>
 </div>
 
 <div class="detailCenterInfo">
@@ -1374,7 +1393,10 @@ style="display:none">
 </div>
 
 <div class="detailActionSide">
-<button class="detailCircleBtn" id="downloadBtn" type="button" aria-label="دانلود">⬇</button>
+<button class="detailCircleBtn" id="detailSaveCircle" type="button" aria-label="ذخیره">
+<span class="detailCircleIcon">☆</span>
+<span class="detailCircleLabel">ذخیره</span>
+</button>
 </div>
 </div>
 
@@ -1642,11 +1664,6 @@ style="cursor:pointer">
 </div>
 
 <div id="adminPublishedAuthors" class="adminSubSection">
-<div class="searchBox adminSearch">
-<span>🔍</span>
-<input id="publishedAuthorSearchInput" placeholder="جستجوی نویسندگان منتشر شده...">
-<span id="clearPublishedAuthorSearch" style="cursor:pointer">×</span>
-</div>
 <div id="adminPublishedAuthorList"></div>
 </div>
 
@@ -4999,18 +5016,12 @@ $("publishedAuthorsTab").addEventListener("click",()=>{
     renderPublishedAuthors();
 });
 
-$("publishedAuthorSearchInput").addEventListener("input",renderPublishedAuthors);
-$("clearPublishedAuthorSearch").addEventListener("click",()=>{
-    $("publishedAuthorSearchInput").value = "";
-    renderPublishedAuthors();
-});
-
 function renderPublishedAuthors(){
     const box = $("adminPublishedAuthorList");
     if(!box || !isAdminMode) return;
     box.innerHTML = "";
 
-    const text = normalizeText($("publishedAuthorSearchInput")?.value);
+    const text = normalizeText($("publishedSearchInput")?.value);
     let authors = getAuthors();
 
     if(text){
@@ -5417,7 +5428,10 @@ function clearAdminForm(){
 $("publishedSearchInput")
 .addEventListener(
     "input",
-    renderPublishedWorks
+    ()=>{
+        renderPublishedWorks();
+        renderPublishedAuthors();
+    }
 );
 
 
@@ -5429,6 +5443,7 @@ $("clearPublishedSearch")
             .value = "";
 
         renderPublishedWorks();
+        renderPublishedAuthors();
     }
 );
 
