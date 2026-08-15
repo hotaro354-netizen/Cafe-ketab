@@ -831,6 +831,86 @@ button{
         box-shadow:0 0 50px rgba(0,0,0,.4);
     }
 }
+
+/* ===== Random Book — added feature only ===== */
+.randomBookBox{
+    width:100%;
+    margin-top:11px;
+}
+
+.randomBookBtn{
+    width:100%;
+    min-height:62px;
+    padding:9px 12px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    direction:rtl;
+    text-align:right;
+    border:1px solid rgba(195,121,52,.24);
+    border-radius:15px;
+    background:
+        linear-gradient(135deg,rgba(82,50,29,.96),rgba(36,25,18,.98));
+    color:#ead5b7;
+    box-shadow:
+        0 6px 18px rgba(0,0,0,.16),
+        inset 0 1px 0 rgba(255,255,255,.025);
+    -webkit-tap-highlight-color:transparent;
+    transition:transform .12s ease,filter .12s ease,border-color .12s ease;
+}
+
+.randomBookBtn:active{
+    transform:scale(.985);
+    filter:brightness(.94);
+    border-color:rgba(195,121,52,.42);
+}
+
+.randomBookDice{
+    width:40px;
+    height:40px;
+    flex:0 0 40px;
+    display:grid;
+    place-items:center;
+    border-radius:12px;
+    background:rgba(195,121,52,.12);
+    border:1px solid rgba(195,121,52,.18);
+    font-size:20px;
+}
+
+.randomBookText{
+    min-width:0;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.randomBookText strong{
+    font-size:12px;
+    line-height:1.45;
+    font-weight:700;
+    color:#e7cfad;
+}
+
+.randomBookText small{
+    font-size:9px;
+    line-height:1.4;
+    color:#927d67;
+}
+
+.randomBookGo{
+    width:27px;
+    height:27px;
+    flex:0 0 27px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:rgba(255,255,255,.035);
+    color:#c37934;
+    font-size:18px;
+    line-height:1;
+}
+
 </style>
 </head>
 
@@ -898,6 +978,25 @@ placeholder="نام کتاب، مانگا یا مانهوا">
 ×
 </span>
 
+</div>
+
+<div class="randomBookBox">
+<button
+id="randomBookBtn"
+type="button"
+class="randomBookBtn"
+aria-label="انتخاب یک کتاب تصادفی">
+
+<span class="randomBookDice" aria-hidden="true">🎲</span>
+
+<span class="randomBookText">
+<strong>کتاب تصادفی</strong>
+<small>بذار شانس انتخاب کنه!</small>
+</span>
+
+<span class="randomBookGo" aria-hidden="true">‹</span>
+
+</button>
 </div>
 
 <div class="sectionHead">
@@ -1615,7 +1714,7 @@ const RUBIKA_ID =
     "@rraararar";
 
 const APP_DOWNLOAD_LINK =
-     "https://github.com/hotaro354-netizen/Cafe-ketab/releases/download/v1.0.0/Book_Cafe1.apk";
+    "https://github.com/hotaro354-netizen/Cafe-ketab/releases/download/v1.0.0/Book_Cafe1.apk";
 
 
 /* =========================================================
@@ -2568,6 +2667,46 @@ function renderSearch(){
     );
 }
 
+
+
+/* =========================================================
+   RANDOM BOOK
+========================================================= */
+
+$("randomBookBtn")
+.addEventListener(
+    "click",
+    ()=>{
+
+        const books =
+            allWorks.filter(
+                work =>
+                    work &&
+                    work.type === "book"
+            );
+
+        if(!books.length){
+
+            showToast(
+                "هنوز کتابی برای انتخاب وجود ندارد"
+            );
+
+            return;
+        }
+
+        const randomBook =
+            books[
+                Math.floor(
+                    Math.random() *
+                    books.length
+                )
+            ];
+
+        openDetail(
+            randomBook
+        );
+    }
+);
 
 /* =========================================================
    SAVED
