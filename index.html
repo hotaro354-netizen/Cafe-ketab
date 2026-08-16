@@ -690,6 +690,49 @@ button{
     font-size:18px;
     margin-bottom:4px;
 }
+.navIconWrap{
+    position:relative;
+    display:inline-block;
+}
+.navChatBadge{
+    position:absolute;
+    top:-7px;
+    left:-10px;
+    min-width:16px;
+    height:16px;
+    padding:0 4px;
+    border-radius:10px;
+    background:#c0392b;
+    color:#fff;
+    font-size:9px;
+    font-weight:700;
+    line-height:16px;
+    text-align:center;
+    box-shadow:0 1px 4px rgba(0,0,0,.35);
+    pointer-events:none;
+}
+.chatLimitNotice{
+    position:fixed;
+    left:50%;
+    bottom:90px;
+    transform:translateX(-50%);
+    width:calc(100% - 28px);
+    max-width:480px;
+    background:#2b1d14;
+    border:1px solid #5b3028;
+    color:#e7d6bf;
+    border-radius:14px;
+    padding:12px 14px;
+    font-size:11px;
+    line-height:1.9;
+    text-align:center;
+    z-index:9500;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+    display:none;
+}
+.chatLimitNotice.show{
+    display:block;
+}
 
 .modal{
     position:fixed;
@@ -1656,6 +1699,121 @@ button{
 }
 
 
+
+/* ===== User Books / Reader ===== */
+.cover.userBookCover{
+    background:linear-gradient(145deg,#b86f1d,#e0a23b);
+}
+.detailCover.userBookCover{
+    background:linear-gradient(145deg,#b86f1d,#e0a23b);
+}
+.userAuthorIdBox{
+    margin:18px auto 2px;
+    display:flex;
+    justify-content:center;
+}
+.userAuthorIdCircle{
+    width:82px;
+    height:82px;
+    border-radius:50%;
+    border:1px solid rgba(224,169,78,.45);
+    background:radial-gradient(circle at 35% 30%,#4a301b,#241912 72%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    padding:8px;
+    text-align:center;
+    box-shadow:0 5px 16px rgba(0,0,0,.18);
+}
+.userAuthorIdIcon{
+    font-size:16px;
+    color:#e0a94e;
+    line-height:1;
+}
+.userAuthorIdEmail{
+    width:100%;
+    color:#d8c09f;
+    font-size:7px;
+    line-height:1.35;
+    word-break:break-all;
+    overflow:hidden;
+    max-height:31px;
+}
+.readerPage{
+    background:#17100c;
+    padding:16px 16px 90px;
+}
+.readerTop{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    margin-bottom:14px;
+}
+.readerBack{
+    width:38px;
+    height:38px;
+    border:1px solid #3a291e;
+    border-radius:50%;
+    background:#241912;
+    color:#d6b994;
+    font-size:18px;
+}
+.readerText{
+    white-space:pre-wrap;
+    word-break:break-word;
+    line-height:2.15;
+    color:#eadbc4;
+    font-size:14px;
+    text-align:right;
+    direction:rtl;
+    min-height:70vh;
+}
+.readerText:empty:before{
+    content:"متن این بخش خالی است.";
+    color:#796655;
+}
+.userBookEditHint{
+    color:#8d7660;
+    font-size:9px;
+    line-height:1.7;
+    margin:-3px 3px 10px;
+}
+.editChapterText{
+    width:100%;
+    min-height:150px;
+    border:0;
+    outline:0;
+    background:#1e1510;
+    color:#e7d6bf;
+    padding:13px;
+    border-radius:10px;
+    resize:vertical;
+    line-height:1.9;
+    font-size:11px;
+}
+.unreadSenderBadge{
+    min-width:18px;
+    height:18px;
+    padding:0 5px;
+    border-radius:10px;
+    background:#c0392b;
+    color:#fff;
+    font-size:9px;
+    font-weight:700;
+    line-height:18px;
+    text-align:center;
+    flex-shrink:0;
+    box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.accountItem .accountChatBtnWrap{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-shrink:0;
+}
+
 /* ===== Authors / Genre / New Detail Layout ===== */
 .authorGrid{
     display:grid;
@@ -1747,6 +1905,15 @@ button{
     line-height:2;
     font-size:12px;
     margin:0 0 22px;
+}
+.authorDetailChatBtn{
+    width:100%;
+}
+.userAuthorIdBox{
+    cursor:pointer;
+}
+.userAuthorIdBox:active{
+    opacity:.75;
 }
 .genreDetailBooks{margin-top:10px}
 .detailInfoTabs{
@@ -1944,6 +2111,10 @@ button{
 📚 مانگا و مانهوا
 </button>
 
+<button id="userBooksTab">
+✍️ قلم کاربران
+</button>
+
 </div>
 
 <div class="sectionHead">
@@ -1974,6 +2145,14 @@ button{
 </div>
 
 <div id="forYou" class="books"></div>
+
+<div id="userRandomBookBox" class="randomBookBox" style="display:none;margin-top:28px;margin-bottom:8px">
+<button id="userRandomBookBtn" type="button" class="randomBookBtn" aria-label="انتخاب تصادفی از کتاب‌های کاربران">
+<span class="randomBookDice" aria-hidden="true">🎲</span>
+<span class="randomBookText"><strong>کتاب کاربران تصادفی</strong><small>یکی از کتاب‌های کاربران را شانسی انتخاب کن!</small></span>
+<span class="randomBookGo" aria-hidden="true">‹</span>
+</button>
+</div>
 
 </section>
 
@@ -2063,10 +2242,23 @@ aria-label="انتخاب یک کتاب تصادفی">
 </div>
 <div id="authorDetailName" class="authorDetailName"></div>
 <div id="authorDetailDescription" class="authorDetailDescription"></div>
+
+<div class="detailInfoTabs" id="authorDetailTabs">
+<button id="authorDetailBooksTab" class="active" type="button">کتاب‌ها</button>
+<button id="authorDetailChatTab" type="button">چت</button>
+</div>
+
+<div id="authorDetailBooksPanel" class="detailPanel active">
 <div class="sectionHead">
-<h3>کتاب‌های این نویسنده</h3>
+<h3 id="authorDetailBooksTitle">کتاب‌های این نویسنده</h3>
 </div>
 <div id="authorDetailBooks" class="books"></div>
+</div>
+
+<div id="authorDetailChatPanel" class="detailPanel">
+<div class="description" id="authorDetailChatDescription"></div>
+<button class="saveWorkBtn" id="authorDetailChatBtn" type="button">💬 چت با نویسنده</button>
+</div>
 </section>
 
 
@@ -2271,6 +2463,13 @@ style="display:none">
 <div id="detailPanelDetails" class="detailPanel active">
 <div class="description" id="detailDescription"></div>
 
+<div id="userAuthorIdBox" class="userAuthorIdBox" style="display:none">
+<div class="userAuthorIdCircle" aria-label="آیدی نویسنده">
+<span class="userAuthorIdIcon">✉</span>
+<span id="userAuthorIdEmail" class="userAuthorIdEmail"></span>
+</div>
+</div>
+
 <div id="detailAuthorBox" style="display:none">
 <div class="sectionHead">
 <h3>نویسنده</h3>
@@ -2305,6 +2504,13 @@ style="display:none">
 </div>
 
 </div>
+</section>
+
+<section id="readerPage" class="page readerPage">
+<div class="readerTop">
+<button class="readerBack" id="readerBack" type="button" aria-label="بازگشت">←</button>
+</div>
+<div id="readerText" class="readerText"></div>
 </section>
 
 
@@ -2352,6 +2558,10 @@ class="adminSection active">
 📕 مانهوا
 </option>
 
+<option value="userbook">
+✍️ کتاب کاربران
+</option>
+
 </select>
 
 
@@ -2368,6 +2578,14 @@ placeholder="عنوان">
 id="adminAuthor"
 placeholder="Author">
 
+<div id="userBookAuthorIdBox" style="display:none">
+<label>آیدی نویسنده (ایمیل)</label>
+<input
+id="adminAuthorId"
+type="email"
+autocomplete="off"
+placeholder="ایمیل نویسنده">
+</div>
 
 <label>ژانر</label>
 
@@ -2408,7 +2626,7 @@ placeholder="https://example.com/book.pdf">
 id="chapterPublishBox"
 style="display:none">
 
-<label>
+<label id="chapterTitleLabel">
 عنوان چپتر
 </label>
 
@@ -2417,9 +2635,11 @@ id="chapterTitle"
 placeholder="مثلاً چپتر ۱">
 
 
-<label>
+<div id="chapterLinkLabelWrap">
+<label id="chapterLinkLabel">
 لینک مستقیم چپتر
 </label>
+</div>
 
 <input
 id="chapterLinkInput"
@@ -2588,9 +2808,12 @@ class="active">
 
 </button>
 
-<button data-page="profilePage">
+<button data-page="profilePage" id="navProfileBtn">
 
+<span class="navIconWrap">
 <span class="navIcon">♙</span>
+<span id="navChatBadge" class="navChatBadge" style="display:none">0</span>
+</span>
 پروفایل
 
 </button>
@@ -2799,6 +3022,14 @@ placeholder="عنوان">
 id="editAuthor"
 placeholder="نویسنده">
 
+<div id="editUserBookAuthorIdBox" style="display:none">
+<label>آیدی نویسنده (ایمیل)</label>
+<input
+id="editAuthorId"
+type="email"
+autocomplete="off"
+placeholder="ایمیل نویسنده">
+</div>
 
 <label>
 ژانر
@@ -2844,9 +3075,13 @@ placeholder="https://example.com/book.pdf">
 id="editChaptersBox"
 style="display:none">
 
-<label>
+<label id="editChaptersLabel">
 چپترها
 </label>
+
+<div id="editUserBookHint" class="userBookEditHint" style="display:none">
+متن هر فصل یا پارت را مستقیماً در کادر زیر وارد یا ویرایش کنید.
+</div>
 
 <div id="editChaptersList"></div>
 
@@ -2931,6 +3166,8 @@ style="background:#302119;color:#c8ad90">
 
 </div>
 
+
+<div id="chatLimitNotice" class="chatLimitNotice"></div>
 
 <div id="toast" class="toast">
 انجام شد
@@ -3021,6 +3258,15 @@ let chatMenuMessage = null;   // پیام انتخاب‌شده برای منو�
 let chatMessagesCache = [];
 let allUsersCache = [];
 let accountsSubTab = "chats"; // chats | accounts
+let unreadPollTimer = null;
+let unreadTotalCache = 0;
+let unreadBySenderCache = {};
+
+const CHAT_SEND_LIMIT = 18;
+const CHAT_LIMIT_HOURS = 5;
+const CHAT_LIMIT_MS = CHAT_LIMIT_HOURS * 60 * 60 * 1000;
+const CHAT_SEEN_KEY = "cafeketab_chat_seen";
+const CHAT_LIMIT_TEXT = "کاربر عزیز ارسال پیامک برای این کاربر تا ۵ ساعت دیگر محدود شد ، دقت کنید قسمت چت فقط برای پیدا کردن کاربر دیگر و گرفتن آیدی یه پلتفرم دیگر اوست ممنون از همراهی شما";
 
 
 /* =========================================================
@@ -3530,6 +3776,43 @@ $("registerTabBtn")?.addEventListener("click", ()=>{
     $("loginPanel").classList.remove("active");
 });
 
+function isValidEmail(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
+}
+
+function authErrorMessage(error, mode){
+    const code = Number(error?.code || 0);
+    const type = String(error?.type || "").toLowerCase();
+    const msg = String(error?.message || "").toLowerCase();
+
+    if(code === 401 || type.includes("user_invalid_credentials") || msg.includes("invalid credentials")){
+        return "ایمیل یا رمز عبور اشتباه است. اگر حساب ندارید ابتدا ثبت‌نام کنید.";
+    }
+    if(code === 409 || type.includes("user_already_exists") || msg.includes("already exists")){
+        return "این ایمیل قبلاً ثبت شده است. از بخش ورود وارد شوید.";
+    }
+    if(code === 429){
+        return "تعداد تلاش زیاد بود. کمی بعد دوباره امتحان کنید.";
+    }
+    if(msg.includes("password") && (msg.includes("8") || msg.includes("least"))){
+        return "رمز عبور باید حداقل ۸ کاراکتر باشد.";
+    }
+    if(msg.includes("email") && msg.includes("valid")){
+        return "فرمت ایمیل معتبر نیست.";
+    }
+    if(mode === "register"){
+        return "ثبت‌نام انجام نشد. لطفاً اطلاعات را بررسی کنید.";
+    }
+    return "ورود انجام نشد. فقط با حساب ثبت‌شده می‌توانید وارد شوید.";
+}
+
+async function clearAuthSessionQuietly(){
+    if(!account) return;
+    try{
+        await account.deleteSession("current");
+    }catch(e){}
+}
+
 async function doLogin(){
     if(!account || !appwriteReady){
         showToast("Appwrite هنوز آماده نیست");
@@ -3543,6 +3826,10 @@ async function doLogin(){
         showToast("ایمیل و رمز عبور را وارد کنید");
         return;
     }
+    if(!isValidEmail(email)){
+        showToast("ایمیل معتبر وارد کنید");
+        return;
+    }
 
     const btn = $("doLoginBtn");
     const old = btn.textContent;
@@ -3550,8 +3837,20 @@ async function doLogin(){
     btn.textContent = "در حال ورود...";
 
     try{
+        // اگر نشست قبلی باز باشد، اول پاک شود تا تداخل ایجاد نشود
+        await clearAuthSessionQuietly();
+
         await account.createEmailPasswordSession(email, password);
         const user = await account.get();
+
+        if(!user || !user.$id || !user.email){
+            await clearAuthSessionQuietly();
+            currentUser = null;
+            isAdminMode = false;
+            updateProfile();
+            showToast("ورود نامعتبر بود");
+            return;
+        }
 
         currentUser = {
             id: user.$id,
@@ -3559,20 +3858,25 @@ async function doLogin(){
             email: user.email || ""
         };
 
-        // همگام‌سازی نام با پروفایل محلی
         const profile = getProfile();
         if(currentUser.name){
             profile.name = currentUser.name;
             saveProfileData(profile);
         }
 
-        syncUserDoc(user);
+        await syncUserDoc(user);
 
         $("loginModal").classList.remove("active");
         updateProfile();
+        startUnreadPolling();
+        updateUnreadBadge();
         showToast("خوش آمدید " + (currentUser.name || ""));
     }catch(error){
-        showAppwriteError(error, "User login");
+        currentUser = null;
+        isAdminMode = false;
+        updateProfile();
+        showToast(authErrorMessage(error, "login"));
+        console.warn("User login:", error);
     }finally{
         btn.disabled = false;
         btn.textContent = old;
@@ -3604,6 +3908,10 @@ async function doRegister(){
         showToast("ایمیل را وارد کنید");
         return;
     }
+    if(!isValidEmail(email)){
+        showToast("ایمیل معتبر وارد کنید");
+        return;
+    }
     if(password.length < 8){
         showToast("رمز عبور باید حداقل ۸ کاراکتر باشد");
         return;
@@ -3619,7 +3927,11 @@ async function doRegister(){
     btn.textContent = "در حال ثبت‌نام...";
 
     try{
-        // ساخت حساب
+        // اگر کاربر از قبل لاگین بوده، نشست را ببند تا ثبت‌نام خطا ندهد
+        await clearAuthSessionQuietly();
+        currentUser = null;
+        isAdminMode = false;
+
         await account.create(
             appwriteID.unique(),
             email,
@@ -3627,9 +3939,12 @@ async function doRegister(){
             name
         );
 
-        // ورود خودکار بعد از ثبت‌نام
         await account.createEmailPasswordSession(email, password);
         const user = await account.get();
+
+        if(!user || !user.$id){
+            throw new Error("ثبت‌نام کامل نشد");
+        }
 
         currentUser = {
             id: user.$id,
@@ -3637,18 +3952,23 @@ async function doRegister(){
             email: user.email || email
         };
 
-        // ذخیره نام در پروفایل محلی
         const profile = getProfile();
         profile.name = currentUser.name;
         saveProfileData(profile);
 
-        syncUserDoc(user);
+        await syncUserDoc(user);
 
         $("loginModal").classList.remove("active");
         updateProfile();
+        startUnreadPolling();
+        updateUnreadBadge();
         showToast("حساب شما با موفقیت ساخته شد");
     }catch(error){
-        showAppwriteError(error, "User register");
+        currentUser = null;
+        isAdminMode = false;
+        updateProfile();
+        showToast(authErrorMessage(error, "register"));
+        console.warn("User register:", error);
     }finally{
         btn.disabled = false;
         btn.textContent = old;
@@ -3660,6 +3980,9 @@ $("doRegisterBtn")?.addEventListener("click", doRegister);
 async function doLogout(){
     if(!account){
         currentUser = null;
+        isAdminMode = false;
+        stopUnreadPolling();
+        updateUnreadBadge();
         updateProfile();
         return;
     }
@@ -3670,7 +3993,9 @@ async function doLogout(){
         console.warn("Logout:", e);
     }finally{
         currentUser = null;
-        isAdminMode = false; // اگر ادمین هم بود خارج شود
+        isAdminMode = false;
+        stopUnreadPolling();
+        updateUnreadBadge();
         updateProfile();
         showToast("از حساب خارج شدید");
         showPage("profilePage");
@@ -3684,57 +4009,34 @@ $("logoutBtn")?.addEventListener("click", doLogout);
    CATEGORY
 ========================================================= */
 
-$("booksTab")
-.addEventListener(
-    "click",
-    ()=>{
+function setHomeCategory(category){
+    currentCategory = category;
 
-        currentCategory = "book";
+    $("booksTab")?.classList.toggle("active", category === "book");
+    $("mangaTab")?.classList.toggle("active", category === "manga");
+    $("userBooksTab")?.classList.toggle("active", category === "userbook");
 
-        $("booksTab")
-            .classList.add("active");
-
-        $("mangaTab")
-            .classList.remove("active");
-
-        $("latestTitle").textContent =
-            "تازه انتشار شده";
-
-        $("newTitle").textContent =
-            "پیشنهادی";
-
-        renderHome();
+    if(category === "userbook"){
+        $("latestTitle").textContent = "قلم کاربران";
+        $("newTitle").textContent = "پیشنهادی";
+    }else{
+        $("latestTitle").textContent = "تازه انتشار شده";
+        $("newTitle").textContent = "پیشنهادی";
     }
-);
 
+    renderHome();
+}
 
-$("mangaTab")
-.addEventListener(
-    "click",
-    ()=>{
-
-        currentCategory = "manga";
-
-        $("mangaTab")
-            .classList.add("active");
-
-        $("booksTab")
-            .classList.remove("active");
-
-        $("latestTitle").textContent =
-            "تازه انتشار شده";
-
-        $("newTitle").textContent =
-            "پیشنهادی";
-
-        renderHome();
-    }
-);
+$("booksTab").addEventListener("click",()=>setHomeCategory("book"));
+$("mangaTab").addEventListener("click",()=>setHomeCategory("manga"));
+$("userBooksTab").addEventListener("click",()=>setHomeCategory("userbook"));
 
 
 /* =========================================================
    COVER
 ========================================================= */
+
+
 
 function getCoverClass(type){
 
@@ -3743,6 +4045,9 @@ function getCoverClass(type){
 
     if(type === "manhwa")
         return "manhwaCover";
+
+    if(type === "userbook")
+        return "userBookCover";
 
     return "bookCover";
 }
@@ -3755,6 +4060,9 @@ function getCoverText(type){
 
     if(type === "manhwa")
         return "📕 مانهوا";
+
+    if(type === "userbook")
+        return "✍️ کتاب کاربران";
 
     return "📖 کتاب";
 }
@@ -3818,7 +4126,9 @@ function createCover(work){
             ? "مانگا"
             : work.type === "manhwa"
                 ? "مانهوا"
-                : "کتاب";
+                : work.type === "userbook"
+                    ? "کتاب کاربران"
+                    : "کتاب";
 
     star.className =
         "star";
@@ -3966,7 +4276,142 @@ function renderSearchAuthors(text){
     ranked.forEach(item=>track.appendChild(createAuthorCard(item.author)));
 }
 
+function setAuthorDetailTab(tab){
+    const booksTab = $("authorDetailBooksTab");
+    const chatTab = $("authorDetailChatTab");
+    const booksPanel = $("authorDetailBooksPanel");
+    const chatPanel = $("authorDetailChatPanel");
+
+    const isChat = tab === "chat";
+
+    booksTab?.classList.toggle("active", !isChat);
+    chatTab?.classList.toggle("active", isChat);
+    booksPanel?.classList.toggle("active", !isChat);
+    chatPanel?.classList.toggle("active", isChat);
+}
+
+async function openUserAuthorPage(email){
+
+    const authorEmail = String(email || "").trim();
+    if(!authorEmail){
+        showToast("ایمیل نویسنده موجود نیست");
+        return;
+    }
+
+    const userBooks = allWorks.filter(work =>
+        work &&
+        work.type === "userbook" &&
+        String(work.authorEmail || work.createdByDevice || "").trim().toLowerCase() ===
+            authorEmail.toLowerCase()
+    );
+
+    /* اگر این کاربر هیچ کتاب قلم کاربری ندارد،
+       از همان‌جا مستقیم وارد چت او شو. */
+    if(!userBooks.length){
+        if(!currentUser){
+            showToast("ابتدا وارد حساب شوید");
+            openLoginModal();
+            return;
+        }
+
+        try{
+            await fetchAllUsers();
+            const user = (allUsersCache || []).find(u =>
+                normalizeText(u.email) === normalizeText(authorEmail)
+            );
+
+            if(user){
+                openChat({
+                    id: user.id,
+                    name: user.name || authorEmail,
+                    email: user.email || authorEmail
+                });
+                return;
+            }
+        }catch(error){
+            console.warn("Find account for direct chat:", error);
+        }
+
+        showToast("اکانت این کاربر در چت‌ها پیدا نشد");
+        return;
+    }
+
+    const authorName =
+        userBooks.find(work => work.Author)?.Author ||
+        authorEmail;
+
+    currentAuthor = {
+        id: "userauthor:" + authorEmail.toLowerCase(),
+        title: authorName,
+        description: "ایمیل نویسنده: " + authorEmail,
+        email: authorEmail,
+        isUserAuthor: true
+    };
+
+    const avatar = $("authorDetailAvatar");
+    if(avatar){
+        avatar.innerHTML = "<span>✉</span>";
+    }
+
+    $("authorDetailName").textContent = authorName;
+    $("authorDetailDescription").textContent =
+        "ایمیل نویسنده: " + authorEmail;
+
+    $("authorDetailBooksTitle").textContent = "کتاب‌های این نویسنده";
+    $("authorDetailChatDescription").textContent =
+        "برای گفتگو با این نویسنده، گزینه چت را انتخاب کنید.";
+
+    const box = $("authorDetailBooks");
+    box.innerHTML = "";
+
+    if(!userBooks.length){
+        showEmpty(box,"هنوز کتابی از این نویسنده منتشر نشده است.");
+    }else{
+        userBooks
+            .sort((a,b)=>new Date(b.createdAt || 0)-new Date(a.createdAt || 0))
+            .forEach(work=>box.appendChild(createBookCard(work)));
+    }
+
+    const chatBtn = $("authorDetailChatBtn");
+    if(chatBtn){
+        chatBtn.style.display = "block";
+        chatBtn.onclick = async ()=>{
+            if(!currentUser){
+                showToast("ابتدا وارد حساب شوید");
+                openLoginModal();
+                return;
+            }
+
+            try{
+                await fetchAllUsers();
+            }catch(error){
+                showAppwriteError(error,"Find author account");
+                return;
+            }
+
+            const user = (allUsersCache || []).find(u =>
+                normalizeText(u.email) === normalizeText(authorEmail)
+            );
+
+            if(!user){
+                showToast("اکانت این ایمیل در چت‌ها پیدا نشد");
+                return;
+            }
+
+            openChat({
+                id: user.id,
+                name: user.name || authorName,
+                email: user.email || authorEmail
+            });
+        };
+    }
+
+    setAuthorDetailTab("books");
+    showPage("authorDetailPage");
+}
+
 function openAuthorDetail(author){
+
     currentAuthor = author;
 
     const avatar = $("authorDetailAvatar");
@@ -3976,6 +4421,12 @@ function openAuthorDetail(author){
     $("authorDetailName").textContent = author.title || "نویسنده";
     $("authorDetailDescription").textContent =
         author.description || "توضیحاتی برای این نویسنده ثبت نشده است.";
+
+    $("authorDetailBooksTitle").textContent = "کتاب‌های این نویسنده";
+    $("authorDetailChatDescription").textContent =
+        author.email
+            ? "برای گفتگو با این نویسنده، گزینه چت را انتخاب کنید."
+            : "برای این نویسنده ایمیل قابل چت ثبت نشده است.";
 
     const box = $("authorDetailBooks");
     box.innerHTML = "";
@@ -3992,6 +4443,42 @@ function openAuthorDetail(author){
         books.forEach(work=>box.appendChild(createBookCard(work)));
     }
 
+    const chatBtn = $("authorDetailChatBtn");
+    if(chatBtn){
+        chatBtn.style.display = author.email ? "block" : "none";
+        chatBtn.onclick = async ()=>{
+            if(!author.email) return;
+            if(!currentUser){
+                showToast("ابتدا وارد حساب شوید");
+                openLoginModal();
+                return;
+            }
+
+            try{
+                await fetchAllUsers();
+            }catch(error){
+                showAppwriteError(error,"Find author account");
+                return;
+            }
+
+            const user = (allUsersCache || []).find(u =>
+                normalizeText(u.email) === normalizeText(author.email)
+            );
+
+            if(!user){
+                showToast("اکانت این ایمیل در چت‌ها پیدا نشد");
+                return;
+            }
+
+            openChat({
+                id: user.id,
+                name: user.name || author.title || "نویسنده",
+                email: user.email || author.email
+            });
+        };
+    }
+
+    setAuthorDetailTab("books");
     showPage("authorDetailPage");
 }
 
@@ -4128,55 +4615,81 @@ function shuffleWorks(works){
 
 function renderHome(){
 
-    const latest =
-        $("latestBooks");
-
-    const newest =
-        $("newBooks");
-
-    const forYou =
-        $("forYou");
+    const latest = $("latestBooks");
+    const newest = $("newBooks");
+    const forYou = $("forYou");
+    const newSection = newest?.closest(".sectionHead");
+    const forYouSection = forYou?.closest(".sectionHead");
+    const authorsSection = $("authorsHomeSection");
 
     latest.innerHTML = "";
     newest.innerHTML = "";
     forYou.innerHTML = "";
 
+    /*
+       هر دسته همان ساختار سه‌بخشی صفحه اصلی را دارد:
+       تازه انتشار شده / پیشنهادی / برای شما
+       در قلم کاربران فقط آثار userbook وارد این سه بخش می‌شوند.
+    */
     const filtered =
-        allWorks.filter(
-            work=>{
+        allWorks.filter(work=>{
+            if(currentCategory === "userbook")
+                return work.type === "userbook";
 
-                if(currentCategory === "book")
-                    return work.type === "book";
+            if(currentCategory === "book")
+                return work.type === "book";
 
-                return (
-                    work.type === "manga" ||
-                    work.type === "manhwa"
-                );
-            }
-        );
+            return work.type === "manga" || work.type === "manhwa";
+        });
+
+    if(currentCategory === "userbook"){
+        if(authorsSection) authorsSection.style.display = "none";
+    }else{
+        if(authorsSection) authorsSection.style.display = "";
+    }
+
+    if(newSection) newSection.style.display = "";
+    if(forYouSection) forYouSection.style.display = "";
+
+    const userRandomBox = $("userRandomBookBox");
+    if(userRandomBox){
+        userRandomBox.style.display = currentCategory === "userbook" ? "block" : "none";
+    }
+
+    $("latestTitle").textContent = "تازه انتشار شده";
+    $("newTitle").textContent = "پیشنهادی";
 
     if(!filtered.length){
 
         showEmpty(
             latest,
-            "هنوز اثری اضافه نشده است."
+            currentCategory === "userbook"
+                ? "هنوز کتابی از کاربران منتشر نشده است."
+                : "هنوز اثری اضافه نشده است."
         );
 
         showEmpty(
             newest,
-            "هنوز اثری اضافه نشده است."
+            currentCategory === "userbook"
+                ? "هنوز کتابی برای پیشنهاد وجود ندارد."
+                : "هنوز اثری اضافه نشده است."
         );
 
         showEmpty(
             forYou,
-            "به‌زودی آثار جدید اضافه می‌شوند."
+            currentCategory === "userbook"
+                ? "هنوز کتابی برای شما وجود ندارد."
+                : "به‌زودی آثار جدید اضافه می‌شوند."
         );
 
-        renderHomeAuthors();
+        if(currentCategory !== "userbook")
+            renderHomeAuthors();
+
         updateHomeArrows(false,false,false);
         return;
     }
 
+    /* تازه انتشار شده: فقط بر اساس زمان انتشار */
     const latestWorks =
         [...filtered].sort(
             (a,b)=>
@@ -4184,46 +4697,18 @@ function renderHome(){
                 new Date(a.createdAt || 0)
         );
 
-    const suggestedPool =
-        shuffleWorks(filtered);
+    /* پیشنهادی: هر بار چند اثر با ترتیب تصادفی جدید */
+    const suggestedPool = shuffleWorks(filtered);
 
-    const suggested =
-        suggestedPool.slice(0,3);
+    /* برای شما: مستقل از پیشنهادی و همیشه دارای محتوا */
+    const personal = shuffleWorks(filtered);
 
-    const suggestedIds =
-        new Set(
-            suggested.map(work=>work.id)
-        );
+    renderHomeSection(latest,latestWorks,"latest");
+    renderHomeSection(newest,suggestedPool,"suggested");
+    renderHomeSection(forYou,personal,"forYou");
 
-    const forYouPool =
-        shuffleWorks(
-            filtered.filter(
-                work=>!suggestedIds.has(work.id)
-            )
-        );
-
-    const personal =
-        forYouPool;
-
-    renderHomeSection(
-        latest,
-        latestWorks,
-        "latest"
-    );
-
-    renderHomeSection(
-        newest,
-        suggestedPool,
-        "suggested"
-    );
-
-    renderHomeSection(
-        forYou,
-        personal,
-        "forYou"
-    );
-
-    renderHomeAuthors();
+    if(currentCategory !== "userbook")
+        renderHomeAuthors();
 
     updateHomeArrows(
         latestWorks.length > 3,
@@ -4231,7 +4716,6 @@ function renderHome(){
         personal.length > 3
     );
 }
-
 
 function renderHomeSection(container,works,section){
 
@@ -4358,15 +4842,24 @@ function renderSearch(){
 
     renderSearchAuthors(text);
 
-    let works = allWorks.filter(
-        work => work.type === "book" ||
-                work.type === "manga" ||
-                work.type === "manhwa"
+    /* آثار اصلی همیشه قبل از قلم کاربران نمایش داده می‌شوند. */
+    const works = allWorks.filter(
+        work =>
+            work.type === "book" ||
+            work.type === "manga" ||
+            work.type === "manhwa" ||
+            work.type === "userbook"
     );
 
     if(!text){
-        works.forEach(work=>box.appendChild(createBookCard(work)));
-        if(!works.length) showEmpty(box,"هنوز اثری منتشر نشده است.");
+        const ordered = [
+            ...works.filter(work => work.type !== "userbook"),
+            ...works.filter(work => work.type === "userbook")
+        ];
+
+        ordered.forEach(work=>box.appendChild(createBookCard(work)));
+
+        if(!ordered.length) showEmpty(box,"هنوز اثری منتشر نشده است.");
         return;
     }
 
@@ -4389,7 +4882,13 @@ function renderSearch(){
             return {work,score};
         })
         .filter(item=>item.score >= 0)
-        .sort((a,b)=>b.score-a.score);
+        .sort((a,b)=>{
+            const aUser = a.work.type === "userbook" ? 1 : 0;
+            const bUser = b.work.type === "userbook" ? 1 : 0;
+
+            if(aUser !== bUser) return aUser - bUser;
+            return b.score - a.score;
+        });
 
     if(!results.length){
         showEmpty(box,"نتیجه‌ای پیدا نشد.");
@@ -4438,6 +4937,22 @@ $("randomBookBtn")
         );
     }
 );
+
+/* =========================================================
+   RANDOM USER BOOK
+========================================================= */
+
+$("userRandomBookBtn")?.addEventListener("click",()=>{
+    const books = allWorks.filter(work => work && work.type === "userbook");
+
+    if(!books.length){
+        showToast("هنوز کتابی از کاربران منتشر نشده است");
+        return;
+    }
+
+    const randomBook = books[Math.floor(Math.random() * books.length)];
+    openDetail(randomBook);
+});
 
 /* =========================================================
    SAVED
@@ -4769,10 +5284,31 @@ function openDetail(work){
         work.description || "توضیحاتی برای این اثر ثبت نشده است.";
 
     const chaptersTab = $("detailTabChapters");
+    const isUserBook = work.type === "userbook";
+
     if(work.type === "book"){
         chaptersTab.style.display = "none";
     }else{
         chaptersTab.style.display = "block";
+        chaptersTab.textContent = isUserBook ? "پارت‌ها" : "چپتر";
+    }
+
+    const userAuthorIdBox = $("userAuthorIdBox");
+    const userAuthorIdEmail = $("userAuthorIdEmail");
+
+    if(userAuthorIdBox && userAuthorIdEmail){
+        const email = work.authorEmail || work.createdByDevice || "";
+        userAuthorIdBox.style.display =
+            isUserBook && email ? "flex" : "none";
+        userAuthorIdEmail.textContent = email;
+
+        userAuthorIdBox.onclick = null;
+        if(isUserBook && email){
+            userAuthorIdBox.onclick = ()=>{
+                openUserAuthorPage(email);
+            };
+            userAuthorIdBox.title = "مشاهده کتاب‌ها و چت با نویسنده";
+        }
     }
 
     renderSimilarWorks(work);
@@ -4784,17 +5320,36 @@ function openDetail(work){
     updateCommentsBadge(0);
     loadCommentCount(work.id);
 
-    $("downloadBtn").setAttribute(
-        "aria-label",
-        work.type === "book" ? "دانلود کتاب" : "دانلود چپترها"
-    );
+    const downloadButton = $("downloadBtn");
+
+    if(downloadButton){
+        downloadButton.style.display =
+            isUserBook ? "none" : "flex";
+
+        downloadButton.setAttribute(
+            "aria-label",
+            work.type === "book"
+                ? "دانلود کتاب"
+                : "دانلود چپترها"
+        );
+    }
 
     updateSaveButton();
+
+    const chapterSearch = $("chapterSearchInput");
+    if(chapterSearch){
+        chapterSearch.placeholder =
+            isUserBook
+                ? "جست و جو فصل یا پارت"
+                : "جستوجوی چپتر";
+    }
 
     if(work.type !== "book"){
         loadChapters(work.id);
     }else{
         window.currentChapters = [];
+        $("chaptersList").innerHTML = "";
+        $("chaptersBox").style.display = "none";
     }
 
     showPage("detailPage");
@@ -4882,6 +5437,9 @@ $("detailTabSimilar").addEventListener("click",()=>setDetailTab("similar"));
 $("detailTabComments").addEventListener("click",()=>setDetailTab("comments"));
 $("detailTabChapters").addEventListener("click",()=>setDetailTab("chapters"));
 
+$("authorDetailBooksTab")?.addEventListener("click",()=>setAuthorDetailTab("books"));
+$("authorDetailChatTab")?.addEventListener("click",()=>setAuthorDetailTab("chat"));
+
 $("genreDetailBack").addEventListener("click",()=>showPage("genresPage"));
 $("authorDetailBack").addEventListener("click",()=>showPage("homePage"));
 
@@ -4891,6 +5449,14 @@ $("detailBack")
     "click",
     ()=>{
         showPage("homePage");
+    }
+);
+
+$("readerBack")?.addEventListener(
+    "click",
+    ()=>{
+        showPage("detailPage");
+        setDetailTab("chapters");
     }
 );
 
@@ -5299,12 +5865,16 @@ async function checkExistingAdminSession(){
             syncUserDoc(user);
 
             updateProfile();
+            startUnreadPolling();
+            updateUnreadBadge();
         }
 
     }catch(error){
 
         currentUser = null;
         isAdminMode = false;
+        stopUnreadPolling();
+        updateUnreadBadge();
 
         console.log(
             "No active Appwrite session."
@@ -5532,6 +6102,9 @@ async function loadWorks(){
                         doc.coverUrl || "",
 
                     createdByDevice:
+                        doc.createdByDevice || "",
+
+                    authorEmail:
                         doc.createdByDevice || "",
 
                     createdAt:
@@ -6066,16 +6639,41 @@ function renderAccountItem(user, listEl){
 
     const item = document.createElement("div");
     item.className = "accountItem";
+    const unread = Number(user.unreadCount || unreadBySenderCache[user.id] || 0);
+
     item.innerHTML = `
         <div class="accountAvatar">${escapeHtml(avatarInitial(user.name))}</div>
         <div class="accountInfo">
             <div class="accountName">${escapeHtml(user.name || "کاربر")}</div>
             <div class="accountSub">${escapeHtml(user.email || user.sub || "")}</div>
         </div>
-        <button type="button" class="accountChatBtn">چت</button>
+        <div class="accountChatBtnWrap">
+            ${unread > 0 ? `<span class="unreadSenderBadge">${unread > 99 ? "99+" : unread}</span>` : ""}
+            <button type="button" class="accountChatBtn">چت</button>
+        </div>
     `;
-    item.querySelector(".accountChatBtn")?.addEventListener("click", ()=>{
-        openChat({ id: user.id, name: user.name || "کاربر" });
+    /* کلیک روی خود کاربر: اگر کتاب قلم کاربری دارد، صفحه کتاب‌های او؛
+       اگر ندارد، مستقیم چت. */
+    item.addEventListener("click", ()=>{
+        const email = String(user.email || "").trim();
+        if(email){
+            openUserAuthorPage(email);
+        }else{
+            openChat({
+                id: user.id,
+                name: user.name || "کاربر",
+                email: user.email || ""
+            });
+        }
+    });
+
+    item.querySelector(".accountChatBtn")?.addEventListener("click", (event)=>{
+        event.stopPropagation();
+        openChat({
+            id: user.id,
+            name: user.name || "کاربر",
+            email: user.email || ""
+        });
     });
     listEl.appendChild(item);
 }
@@ -6208,7 +6806,8 @@ async function loadChatsList(){
                 name: user?.name || "کاربر",
                 email: user?.email || "",
                 sub: p.lastText,
-                lastAt: p.lastAt
+                lastAt: p.lastAt,
+                unreadCount: unreadBySenderCache[p.id] || 0
             };
         }).sort((a,b) => new Date(b.lastAt || 0) - new Date(a.lastAt || 0));
 
@@ -6507,21 +7106,30 @@ function openChat(otherUser){
     $("chatMessages").innerHTML = `<div class="chatEmpty">در حال بارگذاری...</div>`;
     if($("chatInput")) $("chatInput").value = "";
 
+    markChatSeen(otherUser.id);
     showPage("chatPage");
     loadChatMessages();
 
     clearInterval(chatPollTimer);
-    chatPollTimer = setInterval(loadChatMessages, 4000);
+    chatPollTimer = setInterval(()=>{
+        loadChatMessages();
+        markChatSeen(otherUser.id);
+        updateUnreadBadge();
+    }, 4000);
 }
 
 function closeChat(){
     clearInterval(chatPollTimer);
     chatPollTimer = null;
+    if(chatWithUser && chatWithUser.id){
+        markChatSeen(chatWithUser.id);
+    }
     chatWithUser = null;
     cancelChatReply();
     cancelChatEdit();
     closeChatMsgMenu();
     hideEmojiBar();
+    updateUnreadBadge();
     showPage("profilePage");
     setProfileTab("accounts");
 }
@@ -6564,6 +7172,168 @@ function initEmojiBar(){
     });
 }
 
+function getChatSeenMap(){
+    try{
+        const raw = JSON.parse(localStorage.getItem(CHAT_SEEN_KEY) || "{}");
+        return (raw && typeof raw === "object") ? raw : {};
+    }catch{
+        return {};
+    }
+}
+
+function saveChatSeenMap(map){
+    localStorage.setItem(CHAT_SEEN_KEY, JSON.stringify(map || {}));
+}
+
+function markChatSeen(otherUserId){
+    if(!currentUser || !otherUserId) return;
+    const key = pairKeyFor(currentUser.id, otherUserId);
+    const map = getChatSeenMap();
+    map[key] = new Date().toISOString();
+    saveChatSeenMap(map);
+    updateUnreadBadge();
+}
+
+function showChatLimitNotice(){
+    const el = $("chatLimitNotice");
+    if(!el){
+        showToast(CHAT_LIMIT_TEXT);
+        return;
+    }
+    el.textContent = CHAT_LIMIT_TEXT;
+    el.classList.add("show");
+    clearTimeout(window.__chatLimitTimer);
+    window.__chatLimitTimer = setTimeout(()=>{
+        el.classList.remove("show");
+    }, 7000);
+}
+
+async function countMyMessagesInWindow(otherUserId){
+    if(!databases || !appwriteQuery || !currentUser || !otherUserId) return 0;
+
+    const since = new Date(Date.now() - CHAT_LIMIT_MS).toISOString();
+    try{
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_MESSAGES,
+            [
+                appwriteQuery.equal("senderId", currentUser.id),
+                appwriteQuery.equal("receiverId", otherUserId),
+                appwriteQuery.greaterThanEqual("$createdAt", since),
+                appwriteQuery.limit(100)
+            ]
+        );
+        return (res.documents || []).length;
+    }catch(error){
+        console.warn("countMyMessagesInWindow:", error);
+        // fallback: pairKey + filter client-side
+        try{
+            const key = pairKeyFor(currentUser.id, otherUserId);
+            const res = await databases.listDocuments(
+                DATABASE_ID,
+                COLLECTION_MESSAGES,
+                [
+                    appwriteQuery.equal("pairKey", key),
+                    appwriteQuery.equal("senderId", currentUser.id),
+                    appwriteQuery.limit(100)
+                ]
+            );
+            const sinceMs = Date.now() - CHAT_LIMIT_MS;
+            return (res.documents || []).filter(d => {
+                const t = new Date(d.$createdAt).getTime();
+                return t >= sinceMs;
+            }).length;
+        }catch(e2){
+            return 0;
+        }
+    }
+}
+
+async function canSendChatTo(otherUserId){
+    const count = await countMyMessagesInWindow(otherUserId);
+    return count < CHAT_SEND_LIMIT;
+}
+
+function updateNavChatBadge(count){
+    const badge = $("navChatBadge");
+    if(!badge) return;
+    unreadTotalCache = count || 0;
+    if(count > 0){
+        badge.textContent = count > 99 ? "99+" : String(count);
+        badge.style.display = "inline-block";
+    }else{
+        badge.style.display = "none";
+    }
+}
+
+async function updateUnreadBadge(){
+    if(!currentUser || !appwriteReady || !databases || !appwriteQuery){
+        updateNavChatBadge(0);
+        return;
+    }
+
+    try{
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_MESSAGES,
+            [
+                appwriteQuery.equal("receiverId", currentUser.id),
+                appwriteQuery.orderDesc("$createdAt"),
+                appwriteQuery.limit(200)
+            ]
+        );
+
+        const seen = getChatSeenMap();
+        const openKey = (chatWithUser && chatWithUser.id)
+            ? pairKeyFor(currentUser.id, chatWithUser.id)
+            : null;
+        let total = 0;
+        const bySender = {};
+
+        (res.documents || []).forEach(doc => {
+            const sender = doc.senderId || "";
+            if(!sender || sender === currentUser.id) return;
+
+            const key = pairKeyFor(currentUser.id, sender);
+            if(openKey && key === openKey) return;
+
+            const lastSeen = seen[key] ? new Date(seen[key]).getTime() : 0;
+            const created = new Date(doc.$createdAt).getTime();
+
+            if(created > lastSeen){
+                total++;
+                bySender[sender] = (bySender[sender] || 0) + 1;
+            }
+        });
+
+        unreadBySenderCache = bySender;
+        updateNavChatBadge(total);
+
+        if(
+            $("profilePage")?.classList.contains("active") &&
+            accountsSubTab === "chats"
+        ){
+            loadChatsList();
+        }
+    }catch(error){
+        console.warn("updateUnreadBadge:", error);
+    }
+}
+
+function startUnreadPolling(){
+    stopUnreadPolling();
+    if(!currentUser) return;
+    updateUnreadBadge();
+    unreadPollTimer = setInterval(updateUnreadBadge, 8000);
+}
+
+function stopUnreadPolling(){
+    if(unreadPollTimer){
+        clearInterval(unreadPollTimer);
+        unreadPollTimer = null;
+    }
+}
+
 async function sendChatMessage(){
     if(!currentUser || !chatWithUser) return;
 
@@ -6594,6 +7364,13 @@ async function sendChatMessage(){
             hideEmojiBar();
             showToast("پیام ویرایش شد");
             await loadChatMessages();
+            return;
+        }
+
+        // محدودیت ۱۸ پیام در ۵ ساعت برای هر مخاطب
+        const allowed = await canSendChatTo(chatWithUser.id);
+        if(!allowed){
+            showChatLimitNotice();
             return;
         }
 
@@ -6831,8 +7608,8 @@ function renderChapters(chapters){
                     "span"
                 );
 
-            icon.textContent =
-                "⬇";
+            const isUserBook = currentWork?.type === "userbook";
+            icon.textContent = isUserBook ? "›" : "⬇";
 
             item.appendChild(title);
             item.appendChild(icon);
@@ -6840,20 +7617,28 @@ function renderChapters(chapters){
             item.addEventListener(
                 "click",
                 ()=>{
-                    const link =
+                    const content =
                         chapter.link || "";
 
-                    if(!link){
+                    if(!content){
 
                         showToast(
-                            "لینک این چپتر موجود نیست"
+                            isUserBook
+                                ? "متن این فصل / پارت موجود نیست"
+                                : "لینک این چپتر موجود نیست"
                         );
 
                         return;
                     }
 
+                    if(isUserBook){
+                        $("readerText").textContent = content;
+                        showPage("readerPage");
+                        return;
+                    }
+
                     forceDownload(
-                        link,
+                        content,
                         chapter.title ||
                         "chapter"
                     );
@@ -6935,6 +7720,10 @@ $("downloadBtn")
 
         if(!currentWork)
             return;
+
+        if(currentWork.type === "userbook"){
+            return;
+        }
 
         if(currentWork.type === "book"){
 
@@ -7405,25 +8194,52 @@ function changePublishType(){
     const type =
         $("adminType").value;
 
-    if(type === "book"){
+    const isUserBook = type === "userbook";
+    const isChapterWork = type === "manga" || type === "manhwa" || isUserBook;
 
-        $("bookLinkBox")
-            .style.display =
-            "block";
+    $("bookLinkBox").style.display =
+        type === "book" ? "block" : "none";
 
-        $("chapterPublishBox")
-            .style.display =
-            "none";
+    $("chapterPublishBox").style.display =
+        isChapterWork ? "block" : "none";
 
-    }else{
+    if($("userBookAuthorIdBox")){
+        $("userBookAuthorIdBox").style.display =
+            isUserBook ? "block" : "none";
+    }
 
-        $("bookLinkBox")
-            .style.display =
-            "none";
+    if($("chapterTitleLabel")){
+        $("chapterTitleLabel").textContent =
+            isUserBook ? "اسم فصل یا پارت" : "عنوان چپتر";
+    }
 
-        $("chapterPublishBox")
-            .style.display =
-            "block";
+    if($("chapterTitle")){
+        $("chapterTitle").placeholder =
+            isUserBook ? "اسم فصل یا پارت" : "مثلاً چپتر ۱";
+    }
+
+    if($("chapterLinkLabel")){
+        $("chapterLinkLabel").textContent =
+            isUserBook ? "متن فصل / پارت" : "لینک مستقیم چپتر";
+    }
+
+    if($("chapterLinkInput")){
+        $("chapterLinkInput").type =
+            isUserBook ? "text" : "url";
+        $("chapterLinkInput").placeholder =
+            isUserBook
+                ? "متن فصل یا پارت را اینجا وارد کنید..."
+                : "https://example.com/chapter1";
+    }
+
+    if($("addChapterBtn")){
+        $("addChapterBtn").textContent =
+            isUserBook ? "+ افزودن فصل / پارت" : "+ افزودن چپتر";
+    }
+
+    if($("pendingChapters")){
+        $("pendingChapters").dataset.userbook =
+            isUserBook ? "1" : "0";
     }
 }
 
@@ -7455,6 +8271,9 @@ function addChapter(){
             .value
             .trim();
 
+    const type = $("adminType").value;
+    const isUserBook = type === "userbook";
+
     const link =
         $("chapterLinkInput")
             .value
@@ -7463,13 +8282,15 @@ function addChapter(){
     if(!title || !link){
 
         showToast(
-            "عنوان و لینک چپتر را وارد کنید"
+            isUserBook
+                ? "عنوان و متن فصل / پارت را وارد کنید"
+                : "عنوان و لینک چپتر را وارد کنید"
         );
 
         return;
     }
 
-    if(!isValidUrl(link)){
+    if(!isUserBook && !isValidUrl(link)){
 
         showToast(
             "لینک واردشده معتبر نیست"
@@ -8054,6 +8875,21 @@ async function publishWork(){
     }
 
     let bookLink = "";
+    const authorEmail =
+        type === "userbook"
+            ? $("adminAuthorId").value.trim()
+            : "";
+
+    if(type === "userbook"){
+        if(!authorEmail){
+            showToast("آیدی نویسنده (ایمیل) را وارد کنید");
+            return;
+        }
+        if(!/^\S+@\S+\.\S+$/.test(authorEmail)){
+            showToast("ایمیل آیدی نویسنده معتبر نیست");
+            return;
+        }
+    }
 
     if(type === "book"){
 
@@ -8085,7 +8921,9 @@ async function publishWork(){
         if(!pendingChapters.length){
 
             showToast(
-                "حداقل یک چپتر اضافه کنید"
+                type === "userbook"
+                    ? "حداقل یک فصل یا پارت اضافه کنید"
+                    : "حداقل یک چپتر اضافه کنید"
             );
 
             return;
@@ -8135,7 +8973,9 @@ async function publishWork(){
                     : "",
 
             createdByDevice:
-                deviceId
+                type === "userbook"
+                    ? authorEmail
+                    : deviceId
         };
 
         const workDoc =
@@ -8219,11 +9059,15 @@ function clearAdminForm(){
     $("adminAuthor").value = "";
     $("adminDescription").value = "";
     $("adminCoverUrl").value = "";
+    $("adminAuthorId").value = "";
     $("bookLinkInput").value = "";
     $("chapterTitle").value = "";
     $("chapterLinkInput").value = "";
 
     pendingChapters = [];
+
+    $("adminType").value = "book";
+    changePublishType();
 
     renderPendingChapters();
 }
@@ -8371,7 +9215,9 @@ function renderPublishedWorks(){
                     ? "📖 کتاب"
                     : work.type === "manga"
                         ? "📚 مانگا"
-                        : "📕 مانهوا";
+                        : work.type === "manhwa"
+                            ? "📕 مانهوا"
+                            : "✍️ کتاب کاربران";
 
             info.appendChild(title);
             info.appendChild(author);
@@ -8597,6 +9443,11 @@ async function openEditWork(work){
     $("editAuthor").value =
         work.Author || "";
 
+    if($("editAuthorId")){
+        $("editAuthorId").value =
+            work.authorEmail || work.createdByDevice || "";
+    }
+
     fillEditGenreSelect(
         work.genre || ""
     );
@@ -8607,36 +9458,40 @@ async function openEditWork(work){
     $("editCoverUrl").value =
         work.coverUrl || "";
 
-    if(
-        editingWorkType === "book"
-    ){
+    const isUserBook = editingWorkType === "userbook";
 
-        $("editBookLinkBox")
-            .style.display =
-            "block";
+    $("editBookLinkBox").style.display =
+        editingWorkType === "book" ? "block" : "none";
 
-        $("editChaptersBox")
-            .style.display =
-            "none";
+    $("editChaptersBox").style.display =
+        editingWorkType !== "book" ? "block" : "none";
 
+    if($("editUserBookAuthorIdBox")){
+        $("editUserBookAuthorIdBox").style.display =
+            isUserBook ? "block" : "none";
+    }
+
+    if($("editChaptersLabel")){
+        $("editChaptersLabel").textContent =
+            isUserBook ? "فصل‌ها / پارت‌ها" : "چپترها";
+    }
+
+    if($("addEditChapterBtn")){
+        $("addEditChapterBtn").textContent =
+            isUserBook ? "+ افزودن فصل / پارت" : "+ افزودن چپتر";
+    }
+
+    if($("editUserBookHint")){
+        $("editUserBookHint").style.display =
+            isUserBook ? "block" : "none";
+    }
+
+    if(editingWorkType === "book"){
         $("editBookLink").value =
             work.link || "";
-
         editingChapters = [];
-
     }else{
-
-        $("editBookLinkBox")
-            .style.display =
-            "none";
-
-        $("editChaptersBox")
-            .style.display =
-            "block";
-
-        await loadEditChapters(
-            editingWorkld
-        );
+        await loadEditChapters(editingWorkld);
     }
 
     $("editWorkModal")
@@ -8725,7 +9580,9 @@ function renderEditChapters(){
             "empty";
 
         empty.textContent =
-            "چپتری وجود ندارد.";
+            editingWorkType === "userbook"
+                ? "فصل یا پارتی وجود ندارد."
+                : "چپتری وجود ندارد.";
 
         box.appendChild(
             empty
@@ -8733,6 +9590,8 @@ function renderEditChapters(){
 
         return;
     }
+
+    const isUserBook = editingWorkType === "userbook";
 
     editingChapters.forEach(
         (chapter,index)=>{
@@ -8753,7 +9612,6 @@ function renderEditChapters(){
             form.className =
                 "form";
 
-
             const title =
                 document.createElement(
                     "input"
@@ -8763,23 +9621,9 @@ function renderEditChapters(){
                 chapter.title;
 
             title.placeholder =
-                "عنوان چپتر";
-
-
-            const link =
-                document.createElement(
-                    "input"
-                );
-
-            link.type =
-                "url";
-
-            link.value =
-                chapter.link;
-
-            link.placeholder =
-                "لینک چپتر";
-
+                isUserBook
+                    ? "عنوان فصل / پارت"
+                    : "عنوان چپتر";
 
             title.addEventListener(
                 "input",
@@ -8789,15 +9633,56 @@ function renderEditChapters(){
                 }
             );
 
+            let contentInput;
 
-            link.addEventListener(
-                "input",
-                ()=>{
-                    chapter.link =
-                        link.value;
-                }
-            );
+            if(isUserBook){
 
+                contentInput =
+                    document.createElement(
+                        "textarea"
+                    );
+
+                contentInput.className =
+                    "editChapterText";
+
+                contentInput.value =
+                    chapter.link || "";
+
+                contentInput.placeholder =
+                    "متن فصل یا پارت را اینجا وارد کنید...";
+
+                contentInput.addEventListener(
+                    "input",
+                    ()=>{
+                        chapter.link =
+                            contentInput.value;
+                    }
+                );
+
+            }else{
+
+                contentInput =
+                    document.createElement(
+                        "input"
+                    );
+
+                contentInput.type =
+                    "url";
+
+                contentInput.value =
+                    chapter.link || "";
+
+                contentInput.placeholder =
+                    "لینک چپتر";
+
+                contentInput.addEventListener(
+                    "input",
+                    ()=>{
+                        chapter.link =
+                            contentInput.value;
+                    }
+                );
+            }
 
             const remove =
                 document.createElement(
@@ -8811,7 +9696,9 @@ function renderEditChapters(){
                 "button";
 
             remove.textContent =
-                "حذف این چپتر";
+                isUserBook
+                    ? "حذف این فصل / پارت"
+                    : "حذف این چپتر";
 
             remove.addEventListener(
                 "click",
@@ -8825,23 +9712,22 @@ function renderEditChapters(){
                 }
             );
 
-
             form.appendChild(title);
-            form.appendChild(link);
+            form.appendChild(contentInput);
             form.appendChild(remove);
 
             div.appendChild(form);
-
             box.appendChild(div);
         }
     );
 }
 
-
 $("addEditChapterBtn")
 .addEventListener(
     "click",
     ()=>{
+
+        const isUserBook = editingWorkType === "userbook";
 
         editingChapters.push({
 
@@ -8849,7 +9735,9 @@ $("addEditChapterBtn")
                 null,
 
             title:
-                "چپتر جدید",
+                isUserBook
+                    ? "فصل / پارت جدید"
+                    : "چپتر جدید",
 
             link:
                 "",
@@ -8980,6 +9868,25 @@ async function saveEditedWork(){
             coverUrl:
                 coverUrl
         };
+
+        if(workType === "userbook"){
+
+            const authorEmail =
+                $("editAuthorId").value.trim();
+
+            if(!authorEmail){
+                showToast("آیدی نویسنده (ایمیل) را وارد کنید");
+                return;
+            }
+
+            if(!/^\S+@\S+\.\S+$/.test(authorEmail)){
+                showToast("ایمیل آیدی نویسنده معتبر نیست");
+                return;
+            }
+
+            updateData.createdByDevice =
+                authorEmail;
+        }
 
         if(
             workType === "book"
@@ -9170,6 +10077,7 @@ async function saveEditedChapters(workld){
         }
 
         if(
+            editingWorkType !== "userbook" &&
             !isValidUrl(link)
         ){
 
