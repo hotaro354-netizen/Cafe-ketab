@@ -826,6 +826,63 @@ button{
     color:#e3b8a5 !important;
 }
 
+/* ===== Auth / Login ===== */
+.authTabs{
+    display:flex;
+    background:#201610;
+    border-radius:25px;
+    padding:4px;
+    margin-bottom:20px;
+}
+.authTabs button{
+    flex:1;
+    border:0;
+    border-radius:22px;
+    height:39px;
+    background:transparent;
+    color:#8d7660;
+    font-size:12px;
+}
+.authTabs button.active{
+    background:var(--orange);
+    color:#21150e;
+}
+.authPanel{display:none}
+.authPanel.active{display:block}
+.authHint{
+    font-size:10px;
+    color:#8d7660;
+    text-align:center;
+    margin-top:12px;
+    line-height:1.8;
+}
+.logoutBtn{
+    background:transparent;
+    color:#e3b8a5;
+    border:1px solid #5b3028;
+    padding:10px 18px;
+    border-radius:18px;
+    margin-top:12px;
+    font-size:11px;
+}
+.loginBtnMain{
+    background:var(--orange);
+    color:#21150e;
+    border:0;
+    padding:12px 22px;
+    border-radius:18px;
+    margin-top:14px;
+    font-size:12px;
+    font-weight:600;
+}
+.profileLoggedOut .editProfileBtn,
+.profileLoggedIn .loginBtnMain{
+    display:none;
+}
+.profileLoggedOut .logoutBtn{
+    display:none;
+}
+
 @media(min-width:700px){
     .app{
         box-shadow:0 0 50px rgba(0,0,0,.4);
@@ -1357,7 +1414,7 @@ aria-label="انتخاب یک کتاب تصادفی">
 <h2>پروفایل</h2>
 </div>
 
-<div class="profileCenter">
+<div class="profileCenter" id="profileCenter">
 
 <div class="avatar">
 
@@ -1382,6 +1439,14 @@ style="display:none">
 
 <button class="outlineBtn" id="editProfileBtn">
 ✏️ ویرایش پروفایل
+</button>
+
+<button class="loginBtnMain" id="openLoginBtn" style="display:none">
+ورود / ثبت‌نام
+</button>
+
+<button class="logoutBtn" id="logoutBtn" style="display:none">
+خروج از حساب
 </button>
 
 </div>
@@ -1862,6 +1927,85 @@ style="background:#302119;color:#c8ad90">
 </div>
 
 
+<!-- ===== Login / Register Modal ===== -->
+<div id="loginModal" class="modal">
+<div class="modalContent">
+
+<div class="authTabs">
+<button id="loginTabBtn" class="active" type="button">ورود</button>
+<button id="registerTabBtn" type="button">ثبت‌نام</button>
+</div>
+
+<!-- Login Panel -->
+<div id="loginPanel" class="authPanel active">
+<input
+id="loginEmail"
+class="modalInput"
+type="email"
+autocomplete="username"
+placeholder="ایمیل">
+
+<input
+id="loginPassword"
+class="modalInput"
+type="password"
+autocomplete="current-password"
+placeholder="رمز عبور">
+
+<button class="modalBtn" id="doLoginBtn" type="button">
+ورود به حساب
+</button>
+</div>
+
+<!-- Register Panel -->
+<div id="registerPanel" class="authPanel">
+<input
+id="registerName"
+class="modalInput"
+type="text"
+placeholder="نام شما">
+
+<input
+id="registerEmail"
+class="modalInput"
+type="email"
+autocomplete="username"
+placeholder="ایمیل">
+
+<input
+id="registerPassword"
+class="modalInput"
+type="password"
+autocomplete="new-password"
+placeholder="رمز عبور (حداقل ۸ کاراکتر)">
+
+<input
+id="registerPassword2"
+class="modalInput"
+type="password"
+autocomplete="new-password"
+placeholder="تکرار رمز عبور">
+
+<button class="modalBtn" id="doRegisterBtn" type="button">
+ایجاد حساب کاربری
+</button>
+</div>
+
+<p class="authHint">
+با ورود یا ثبت‌نام می‌تونی کتاب‌هات رو همگام کنی و تجربه‌ی بهتری داشته باشی.
+</p>
+
+<button
+class="modalBtn"
+id="closeLoginModal"
+style="background:#302119;color:#c8ad90;margin-top:10px">
+بستن
+</button>
+
+</div>
+</div>
+
+
 <div id="editWorkModal" class="modal">
 
 <div class="modalContent">
@@ -2071,6 +2215,7 @@ let allWorks = [];
 let currentWork = null;
 let currentAuthor = null;
 let editingAuthor = null;
+let currentUser = null;          // کاربر لاگین‌شده (Appwrite)
 
 let currentCategory = "book";
 
@@ -2317,35 +2462,42 @@ function saveProfileData(profile){
 
 function updateProfile(){
 
-    const profile =
-        getProfile();
+    const profile = getProfile();
+    const openLoginBtn = $("openLoginBtn");
+    const logoutBtn = $("logoutBtn");
+    const editBtn = $("editProfileBtn");
 
-    $("profileName")
-        .textContent =
-        profile.name || "کاربر";
+    if(currentUser){
+        // کاربر لاگین کرده
+        $("profileName").textContent =
+            currentUser.name || profile.name || "کاربر";
 
-    $("profileEmail")
-        .textContent =
-        "کاربر مهمان";
+        $("profileEmail").textContent =
+            currentUser.email || "";
+
+        if(openLoginBtn) openLoginBtn.style.display = "none";
+        if(logoutBtn) logoutBtn.style.display = "inline-block";
+        if(editBtn) editBtn.style.display = "inline-block";
+    }else{
+        // مهمان
+        $("profileName").textContent =
+            profile.name || "کاربر";
+
+        $("profileEmail").textContent =
+            "کاربر مهمان";
+
+        if(openLoginBtn) openLoginBtn.style.display = "inline-block";
+        if(logoutBtn) logoutBtn.style.display = "none";
+        if(editBtn) editBtn.style.display = "inline-block";
+    }
 
     if(profile.avatar){
-
-        $("avatarImg").src =
-            profile.avatar;
-
-        $("avatarImg").style.display =
-            "block";
-
-        $("avatarEmpty").style.display =
-            "none";
-
+        $("avatarImg").src = profile.avatar;
+        $("avatarImg").style.display = "block";
+        $("avatarEmpty").style.display = "none";
     }else{
-
-        $("avatarImg").style.display =
-            "none";
-
-        $("avatarEmpty").style.display =
-            "flex";
+        $("avatarImg").style.display = "none";
+        $("avatarEmpty").style.display = "flex";
     }
 }
 
@@ -2475,6 +2627,193 @@ $("closeProfileModal")
             .classList.remove("active");
     }
 );
+
+
+/* =========================================================
+   USER AUTH (Login / Register)
+========================================================= */
+
+function openLoginModal(){
+    $("loginEmail").value = "";
+    $("loginPassword").value = "";
+    $("registerName").value = "";
+    $("registerEmail").value = "";
+    $("registerPassword").value = "";
+    $("registerPassword2").value = "";
+
+    // default to login tab
+    $("loginTabBtn").classList.add("active");
+    $("registerTabBtn").classList.remove("active");
+    $("loginPanel").classList.add("active");
+    $("registerPanel").classList.remove("active");
+
+    $("loginModal").classList.add("active");
+}
+
+$("openLoginBtn")?.addEventListener("click", openLoginModal);
+
+$("closeLoginModal")?.addEventListener("click", ()=>{
+    $("loginModal").classList.remove("active");
+});
+
+$("loginTabBtn")?.addEventListener("click", ()=>{
+    $("loginTabBtn").classList.add("active");
+    $("registerTabBtn").classList.remove("active");
+    $("loginPanel").classList.add("active");
+    $("registerPanel").classList.remove("active");
+});
+
+$("registerTabBtn")?.addEventListener("click", ()=>{
+    $("registerTabBtn").classList.add("active");
+    $("loginTabBtn").classList.remove("active");
+    $("registerPanel").classList.add("active");
+    $("loginPanel").classList.remove("active");
+});
+
+async function doLogin(){
+    if(!account || !appwriteReady){
+        showToast("Appwrite هنوز آماده نیست");
+        return;
+    }
+
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
+
+    if(!email || !password){
+        showToast("ایمیل و رمز عبور را وارد کنید");
+        return;
+    }
+
+    const btn = $("doLoginBtn");
+    const old = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "در حال ورود...";
+
+    try{
+        await account.createEmailPasswordSession(email, password);
+        const user = await account.get();
+
+        currentUser = {
+            id: user.$id,
+            name: user.name || "",
+            email: user.email || ""
+        };
+
+        // همگام‌سازی نام با پروفایل محلی
+        const profile = getProfile();
+        if(currentUser.name){
+            profile.name = currentUser.name;
+            saveProfileData(profile);
+        }
+
+        $("loginModal").classList.remove("active");
+        updateProfile();
+        showToast("خوش آمدید " + (currentUser.name || ""));
+    }catch(error){
+        showAppwriteError(error, "User login");
+    }finally{
+        btn.disabled = false;
+        btn.textContent = old;
+    }
+}
+
+$("doLoginBtn")?.addEventListener("click", doLogin);
+
+$("loginPassword")?.addEventListener("keydown", e=>{
+    if(e.key === "Enter") doLogin();
+});
+
+async function doRegister(){
+    if(!account || !appwriteReady){
+        showToast("Appwrite هنوز آماده نیست");
+        return;
+    }
+
+    const name = $("registerName").value.trim();
+    const email = $("registerEmail").value.trim();
+    const password = $("registerPassword").value;
+    const password2 = $("registerPassword2").value;
+
+    if(!name){
+        showToast("نام خود را وارد کنید");
+        return;
+    }
+    if(!email){
+        showToast("ایمیل را وارد کنید");
+        return;
+    }
+    if(password.length < 8){
+        showToast("رمز عبور باید حداقل ۸ کاراکتر باشد");
+        return;
+    }
+    if(password !== password2){
+        showToast("رمز عبور و تکرار آن یکسان نیستند");
+        return;
+    }
+
+    const btn = $("doRegisterBtn");
+    const old = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "در حال ثبت‌نام...";
+
+    try{
+        // ساخت حساب
+        await account.create(
+            appwriteID.unique(),
+            email,
+            password,
+            name
+        );
+
+        // ورود خودکار بعد از ثبت‌نام
+        await account.createEmailPasswordSession(email, password);
+        const user = await account.get();
+
+        currentUser = {
+            id: user.$id,
+            name: user.name || name,
+            email: user.email || email
+        };
+
+        // ذخیره نام در پروفایل محلی
+        const profile = getProfile();
+        profile.name = currentUser.name;
+        saveProfileData(profile);
+
+        $("loginModal").classList.remove("active");
+        updateProfile();
+        showToast("حساب شما با موفقیت ساخته شد");
+    }catch(error){
+        showAppwriteError(error, "User register");
+    }finally{
+        btn.disabled = false;
+        btn.textContent = old;
+    }
+}
+
+$("doRegisterBtn")?.addEventListener("click", doRegister);
+
+async function doLogout(){
+    if(!account){
+        currentUser = null;
+        updateProfile();
+        return;
+    }
+
+    try{
+        await account.deleteSession("current");
+    }catch(e){
+        console.warn("Logout:", e);
+    }finally{
+        currentUser = null;
+        isAdminMode = false; // اگر ادمین هم بود خارج شود
+        updateProfile();
+        showToast("از حساب خارج شدید");
+        showPage("profilePage");
+    }
+}
+
+$("logoutBtn")?.addEventListener("click", doLogout);
 
 
 /* =========================================================
@@ -3993,19 +4332,29 @@ async function checkExistingAdminSession(){
 
         if(user && user.$id){
 
-            isAdminMode =
-                true;
+            // کاربر عادی لاگین است
+            currentUser = {
+                id: user.$id,
+                name: user.name || "",
+                email: user.email || ""
+            };
+
+            // فعلاً هر کاربری که لاگین باشد می‌تواند به پنل ادمین دسترسی داشته باشد
+            // (اگر بعداً خواستی فقط ایمیل‌های خاص ادمین باشند اینجا فیلتر بگذار)
+            isAdminMode = true;
 
             console.log(
-                "Appwrite admin session:",
+                "Appwrite session:",
                 user.$id
             );
+
+            updateProfile();
         }
 
     }catch(error){
 
-        isAdminMode =
-            false;
+        currentUser = null;
+        isAdminMode = false;
 
         console.log(
             "No active Appwrite session."
@@ -4086,32 +4435,25 @@ async function loginAdmin(){
             );
         }
 
+        currentUser = {
+            id: user.$id,
+            name: user.name || "",
+            email: user.email || ""
+        };
 
-        isAdminMode =
-            true;
+        isAdminMode = true;
 
+        $("adminPasswordInput").value = "";
 
-        $("adminPasswordInput")
-            .value = "";
+        $("adminModal").classList.remove("active");
 
+        updateProfile();
 
-        $("adminModal")
-            .classList.remove(
-                "active"
-            );
-
-
-        showPage(
-            "adminPage"
-        );
-
+        showPage("adminPage");
 
         renderPublishedWorks();
 
-
-        showToast(
-            "ورود به حساب مدیریت موفق بود"
-        );
+        showToast("ورود به حساب مدیریت موفق بود");
 
 
     }catch(error){
@@ -4140,13 +4482,10 @@ async function logoutAdmin(){
 
     if(!account){
 
-        isAdminMode =
-            false;
-
-        showPage(
-            "profilePage"
-        );
-
+        isAdminMode = false;
+        currentUser = null;
+        updateProfile();
+        showPage("profilePage");
         return;
     }
 
@@ -4165,14 +4504,13 @@ async function logoutAdmin(){
 
     }finally{
 
-        isAdminMode =
-            false;
+        isAdminMode = false;
+        currentUser = null;
 
-        $("adminEmailInput")
-            .value = "";
+        $("adminEmailInput").value = "";
+        $("adminPasswordInput").value = "";
 
-        $("adminPasswordInput")
-            .value = "";
+        updateProfile();
 
         showPage(
             "profilePage"
