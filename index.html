@@ -1151,7 +1151,49 @@ button{
     display:flex;
     flex-direction:column;
     gap:8px;
-    margin-top:14px;
+    margin-top:12px;
+}
+.accountsSubTabs{
+    display:flex;
+    background:#201610;
+    border-radius:13px;
+    padding:4px;
+    margin-bottom:12px;
+}
+.accountsSubTabs button{
+    flex:1;
+    border:0;
+    border-radius:10px;
+    height:36px;
+    background:transparent;
+    color:#8f775f;
+    font-size:11px;
+}
+.accountsSubTabs button.active{
+    background:#a96631;
+    color:#fff;
+}
+.accountsSearchBox{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    height:42px;
+    background:#241912;
+    border-radius:12px;
+    padding:0 12px;
+    border:1px solid #302219;
+    margin-bottom:10px;
+}
+.accountsSearchBox input{
+    width:100%;
+    border:0;
+    outline:0;
+    background:none;
+    color:#e7d6bf;
+    font-size:12px;
+}
+.accountsSearchBox input::placeholder{
+    color:#806c59;
 }
 .accountItem{
     display:flex;
@@ -1210,79 +1252,265 @@ button{
 .chatWrap{
     display:flex;
     flex-direction:column;
-    height:calc(100vh - 130px);
+    height:calc(100vh - 110px);
 }
 .chatMessages{
     flex:1;
     overflow-y:auto;
     display:flex;
     flex-direction:column;
-    gap:8px;
-    padding:10px 4px 16px;
+    align-items:flex-start;
+    gap:5px;
+    padding:12px 10px 14px;
 }
 .chatBubble{
     max-width:78%;
-    padding:9px 12px;
-    border-radius:14px;
-    font-size:12px;
-    line-height:1.7;
+    width:max-content;
+    padding:4px 8px 2px;
+    border-radius:12px;
+    font-size:12.5px;
+    line-height:1.35;
     word-break:break-word;
     white-space:pre-wrap;
+    position:relative;
+    display:inline-flex;
+    flex-direction:column;
+    box-sizing:border-box;
 }
 .chatBubbleMine{
     align-self:flex-start;
     background:#bd7232;
     color:#fff;
-    border-bottom-left-radius:4px;
+    border-bottom-left-radius:3px;
+    cursor:pointer;
+    -webkit-user-select:none;
+    user-select:none;
 }
 .chatBubbleTheirs{
     align-self:flex-end;
+    margin-inline-start:auto;
     background:#241912;
     color:#e7d6bf;
     border:1px solid #302219;
-    border-bottom-right-radius:4px;
+    border-bottom-right-radius:3px;
+}
+.chatBubbleReplyPreview{
+    font-size:9px;
+    opacity:.85;
+    border-right:2px solid rgba(255,255,255,.35);
+    padding:1px 5px 1px 0;
+    margin-bottom:2px;
+    line-height:1.3;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+.chatBubbleTheirs .chatBubbleReplyPreview{
+    border-right-color:#c37934;
+    color:#c9b59a;
+}
+.chatBubbleText{
+    display:block;
+}
+.chatBubbleMeta{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:4px;
+    margin-top:1px;
+    line-height:1;
 }
 .chatBubbleTime{
+    font-size:7.5px;
+    opacity:.55;
+    line-height:1;
+}
+.chatBubbleReplyBtn{
+    background:none;
+    border:0;
+    color:inherit;
+    opacity:.45;
+    font-size:9px;
+    padding:0;
+    cursor:pointer;
+    line-height:1;
+}
+.chatBubbleReplyBtn:active{
+    opacity:1;
+}
+.chatBubble.menuOpen{
+    outline:1px solid rgba(195,121,52,.55);
+}
+.chatMsgMenu{
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    background:rgba(0,0,0,.45);
+}
+.chatMsgMenu.active{
+    display:flex;
+}
+.chatMsgMenuSheet{
+    width:100%;
+    max-width:520px;
+    background:#211710;
+    border-radius:18px 18px 0 0;
+    padding:10px 12px 18px;
+}
+.chatMsgMenuSheet button{
+    width:100%;
+    height:46px;
+    border:0;
+    border-radius:12px;
+    margin-top:8px;
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+.chatMsgMenuEdit{
+    background:#2b1d15;
+    color:#e2c6a3;
+    border:1px solid #3a2a1c !important;
+}
+.chatMsgMenuDelete{
+    background:#5b3028;
+    color:#e3b8a5;
+}
+.chatMsgMenuCancel{
+    background:#241912;
+    color:#a68d6e;
+    border:1px solid #302219 !important;
+}
+.chatInputArea{
+    border-top:1px solid #302219;
+    background:#150f0a;
+    padding:8px 8px 10px;
+}
+.chatReplyBar{
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:#241912;
+    border:1px solid #302219;
+    border-radius:10px;
+    padding:7px 10px;
+    margin-bottom:8px;
+    font-size:10.5px;
+    color:#c9b59a;
+}
+.chatReplyBar.active{
+    display:flex;
+}
+.chatReplyBarInfo{
+    min-width:0;
+    flex:1;
+    overflow:hidden;
+}
+.chatReplyBarInfo b{
+    color:#e2c6a3;
     display:block;
-    font-size:8.5px;
-    opacity:.65;
-    margin-top:4px;
+    margin-bottom:2px;
+}
+.chatReplyBarInfo span{
+    display:block;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    opacity:.85;
+}
+.chatReplyBarClose{
+    background:none;
+    border:0;
+    color:#c37934;
+    font-size:16px;
+    line-height:1;
+    flex-shrink:0;
+}
+.chatEmojiBar{
+    display:none;
+    flex-wrap:wrap;
+    gap:4px;
+    padding:6px 2px 8px;
+    max-height:110px;
+    overflow-y:auto;
+}
+.chatEmojiBar.active{
+    display:flex;
+}
+.chatEmojiBar button{
+    width:34px;
+    height:34px;
+    border:0;
+    border-radius:8px;
+    background:#241912;
+    font-size:18px;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.chatEmojiBar button:active{
+    background:#2b1d15;
 }
 .chatInputRow{
     display:flex;
-    gap:8px;
-    padding:10px 4px;
-    border-top:1px solid #302219;
-    background:#150f0a;
+    align-items:flex-end;
+    gap:6px;
 }
 .chatInputRow textarea{
     flex:1;
     resize:none;
-    min-height:40px;
-    max-height:100px;
+    min-height:38px;
+    max-height:90px;
     border:0;
     outline:0;
     background:#2b1d15;
     color:#e7d6bf;
-    padding:10px 12px;
-    border-radius:12px;
-    font-size:12px;
+    padding:9px 11px;
+    border-radius:18px;
+    font-size:12.5px;
+    line-height:1.45;
 }
+.chatEmojiToggle,
 .chatSendBtn{
-    width:44px;
-    height:44px;
+    width:38px;
+    height:38px;
     border-radius:50%;
     border:0;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.chatEmojiToggle{
+    background:#241912;
+    color:#c9b59a;
+    font-size:18px;
+    border:1px solid #302219;
+}
+.chatSendBtn{
     background:#bd7232;
     color:#fff;
-    font-size:16px;
-    flex-shrink:0;
+    font-size:15px;
 }
 .chatEmpty{
     text-align:center;
     padding:40px 15px;
     color:#796655;
     font-size:12px;
+}
+.commentAvatar{
+    cursor:pointer;
+}
+.commentAvatar.clickable:active{
+    opacity:.75;
 }
 
 /* ===== Auth / Login ===== */
@@ -1939,7 +2167,21 @@ style="display:none">
 </div>
 
 <div id="profileAccountsContent" style="display:none">
+<div class="accountsSubTabs">
+<button type="button" class="active" id="accountsSubChats">چت‌ها</button>
+<button type="button" id="accountsSubAll">اکانت‌ها</button>
+</div>
+<div id="accountsChatsPanel">
+<div class="accountsList" id="chatsList"></div>
+</div>
+<div id="accountsAllPanel" style="display:none">
+<div class="accountsSearchBox">
+<span>🔍</span>
+<input id="accountsSearchInput" type="text" placeholder="جستجو با نام یا ایمیل...">
+<span id="clearAccountsSearch" style="cursor:pointer">×</span>
+</div>
 <div class="accountsList" id="accountsList"></div>
+</div>
 </div>
 
 </section>
@@ -1954,9 +2196,28 @@ style="display:none">
 
 <div class="chatWrap">
 <div class="chatMessages" id="chatMessages"></div>
+<div class="chatInputArea">
+<div class="chatReplyBar" id="chatReplyBar">
+<div class="chatReplyBarInfo">
+<b id="chatReplyName">پاسخ</b>
+<span id="chatReplyPreview"></span>
+</div>
+<button type="button" class="chatReplyBarClose" id="chatReplyClose">✕</button>
+</div>
+<div class="chatEmojiBar" id="chatEmojiBar"></div>
 <div class="chatInputRow">
+<button type="button" class="chatEmojiToggle" id="chatEmojiToggle" aria-label="شکلک">😊</button>
 <textarea id="chatInput" placeholder="پیام خود را بنویسید..." rows="1"></textarea>
 <button class="chatSendBtn" id="chatSendBtn" type="button">➤</button>
+</div>
+</div>
+</div>
+
+<div id="chatMsgMenu" class="chatMsgMenu">
+<div class="chatMsgMenuSheet">
+<button type="button" class="chatMsgMenuEdit" id="chatMsgMenuEdit">✏️ ویرایش</button>
+<button type="button" class="chatMsgMenuDelete" id="chatMsgMenuDelete">🗑 حذف برای هر دو</button>
+<button type="button" class="chatMsgMenuCancel" id="chatMsgMenuCancel">انصراف</button>
 </div>
 </div>
 
@@ -2754,6 +3015,12 @@ let allCommentsForWork = [];  // آخرین لیست نظرات لود شده ب
 
 let chatWithUser = null;      // {id, name}
 let chatPollTimer = null;
+let chatReplyTo = null;       // {id, text, senderName}
+let chatEditingId = null;     // id پیام در حال ویرایش
+let chatMenuMessage = null;   // پیام انتخاب‌شده برای منوی ویرایش/حذف
+let chatMessagesCache = [];
+let allUsersCache = [];
+let accountsSubTab = "chats"; // chats | accounts
 
 
 /* =========================================================
@@ -5439,9 +5706,11 @@ function renderCommentItem(c, isReply){
     const repliesForThis = isReply ? [] : allCommentsForWork.filter(x => x.parentId === c.id);
     const isOwner = !!(currentUser && c.userId && currentUser.id === c.userId);
 
+    const canChat = !!(c.userId && currentUser && c.userId !== currentUser.id);
+
     item.innerHTML = `
         <div class="commentHeader">
-            <div class="commentAvatar">${escapeHtml(avatarInitial(c.userName))}</div>
+            <div class="commentAvatar${canChat ? " clickable" : ""}" title="${canChat ? "شروع گفتگو" : ""}">${escapeHtml(avatarInitial(c.userName))}</div>
             <div class="commentHeadInfo">
                 <div class="commentUserRow">
                     <span class="commentUser">${escapeHtml(c.userName || "کاربر")}</span>
@@ -5459,6 +5728,12 @@ function renderCommentItem(c, isReply){
         </div>
         ${repliesForThis.length ? `<div class="commentRepliesBox collapsed" id="replies-${c.id}"></div>` : ""}
     `;
+
+    if(canChat){
+        item.querySelector(".commentAvatar")?.addEventListener("click", ()=>{
+            openChat({ id: c.userId, name: c.userName || "کاربر" });
+        });
+    }
 
     item.querySelector(".commentReplyBtn")?.addEventListener("click", ()=>{
         startReply(c.id, c.userName);
@@ -5742,19 +6017,90 @@ async function postComment(){
    ACCOUNTS / CHAT
 ========================================================= */
 
+const CHAT_EMOJIS = [
+    "😀","😂","🥹","😍","😘","😎","🤔","😢","😡","🔥",
+    "👍","👎","👏","🙏","❤️","💔","✨","🎉","📚","☕",
+    "🤣","😊","🙂","😴","🤝","💪","🌟","💯","✅","❌"
+];
+
 function setProfileTab(tab){
     if(tab === "accounts"){
         $("profileTabAccounts")?.classList.add("active");
         $("profileTabMain")?.classList.remove("active");
         $("profileMainContent").style.display = "none";
         $("profileAccountsContent").style.display = "block";
-        loadAccounts();
+        setAccountsSubTab(accountsSubTab || "chats");
     }else{
         $("profileTabMain")?.classList.add("active");
         $("profileTabAccounts")?.classList.remove("active");
         $("profileMainContent").style.display = "block";
         $("profileAccountsContent").style.display = "none";
     }
+}
+
+function setAccountsSubTab(tab){
+    accountsSubTab = tab;
+
+    const chatsBtn = $("accountsSubChats");
+    const allBtn = $("accountsSubAll");
+    const chatsPanel = $("accountsChatsPanel");
+    const allPanel = $("accountsAllPanel");
+
+    if(tab === "accounts"){
+        chatsBtn?.classList.remove("active");
+        allBtn?.classList.add("active");
+        if(chatsPanel) chatsPanel.style.display = "none";
+        if(allPanel) allPanel.style.display = "block";
+        loadAccounts();
+    }else{
+        allBtn?.classList.remove("active");
+        chatsBtn?.classList.add("active");
+        if(allPanel) allPanel.style.display = "none";
+        if(chatsPanel) chatsPanel.style.display = "block";
+        loadChatsList();
+    }
+}
+
+function renderAccountItem(user, listEl){
+    if(!listEl || !user) return;
+
+    const item = document.createElement("div");
+    item.className = "accountItem";
+    item.innerHTML = `
+        <div class="accountAvatar">${escapeHtml(avatarInitial(user.name))}</div>
+        <div class="accountInfo">
+            <div class="accountName">${escapeHtml(user.name || "کاربر")}</div>
+            <div class="accountSub">${escapeHtml(user.email || user.sub || "")}</div>
+        </div>
+        <button type="button" class="accountChatBtn">چت</button>
+    `;
+    item.querySelector(".accountChatBtn")?.addEventListener("click", ()=>{
+        openChat({ id: user.id, name: user.name || "کاربر" });
+    });
+    listEl.appendChild(item);
+}
+
+async function fetchAllUsers(){
+    if(!appwriteReady || !databases || !appwriteQuery || !currentUser){
+        allUsersCache = [];
+        return [];
+    }
+
+    const res = await databases.listDocuments(
+        DATABASE_ID,
+        COLLECTION_USERS,
+        [ appwriteQuery.limit(100) ]
+    );
+
+    allUsersCache = (res.documents || [])
+        .filter(doc => doc.$id !== currentUser.id)
+        .map(doc => ({
+            id: doc.$id,
+            name: doc.name || "کاربر",
+            email: doc.email || ""
+        }));
+
+    return allUsersCache;
 }
 
 async function loadAccounts(){
@@ -5774,41 +6120,110 @@ async function loadAccounts(){
     list.innerHTML = `<div class="accountsEmpty">در حال بارگذاری...</div>`;
 
     try{
-        const res = await databases.listDocuments(
-            DATABASE_ID,
-            COLLECTION_USERS,
-            [ appwriteQuery.limit(100) ]
-        );
-
-        const users = (res.documents || []).filter(doc => doc.$id !== currentUser.id);
-
-        if(!users.length){
-            list.innerHTML = `<div class="accountsEmpty">هنوز کاربر دیگری ثبت‌نام نکرده است.</div>`;
-            return;
-        }
-
-        list.innerHTML = "";
-
-        users.forEach(doc=>{
-            const item = document.createElement("div");
-            item.className = "accountItem";
-            item.innerHTML = `
-                <div class="accountAvatar">${escapeHtml(avatarInitial(doc.name))}</div>
-                <div class="accountInfo">
-                    <div class="accountName">${escapeHtml(doc.name || "کاربر")}</div>
-                    <div class="accountSub">${escapeHtml(doc.email || "")}</div>
-                </div>
-                <button type="button" class="accountChatBtn">چت</button>
-            `;
-            item.querySelector(".accountChatBtn").addEventListener("click", ()=>{
-                openChat({ id: doc.$id, name: doc.name || "کاربر" });
-            });
-            list.appendChild(item);
-        });
-
+        await fetchAllUsers();
+        renderAccountsFiltered();
     }catch(error){
         list.innerHTML = `<div class="accountsEmpty">خطا در دریافت لیست کاربران.</div>`;
         showAppwriteError(error, "Load accounts");
+    }
+}
+
+function renderAccountsFiltered(){
+    const list = $("accountsList");
+    if(!list) return;
+
+    const q = normalizeText($("accountsSearchInput")?.value || "");
+    let users = allUsersCache || [];
+
+    if(q){
+        users = users.filter(u =>
+            normalizeText(u.name).includes(q) ||
+            normalizeText(u.email).includes(q)
+        );
+    }
+
+    list.innerHTML = "";
+
+    if(!users.length){
+        list.innerHTML = `<div class="accountsEmpty">${q ? "کاربری پیدا نشد." : "هنوز کاربر دیگری ثبت‌نام نکرده است."}</div>`;
+        return;
+    }
+
+    users.forEach(u => renderAccountItem(u, list));
+}
+
+async function loadChatsList(){
+    const list = $("chatsList");
+    if(!list) return;
+
+    if(!currentUser){
+        list.innerHTML = `<div class="accountsEmpty">برای مشاهده چت‌ها ابتدا وارد حساب شوید.</div>`;
+        return;
+    }
+
+    if(!appwriteReady || !databases || !appwriteQuery){
+        list.innerHTML = `<div class="accountsEmpty">اتصال برقرار نیست.</div>`;
+        return;
+    }
+
+    list.innerHTML = `<div class="accountsEmpty">در حال بارگذاری...</div>`;
+
+    try{
+        if(!allUsersCache.length){
+            await fetchAllUsers();
+        }
+
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_MESSAGES,
+            [
+                appwriteQuery.orderDesc("$createdAt"),
+                appwriteQuery.limit(200)
+            ]
+        );
+
+        const partnerMap = new Map();
+
+        (res.documents || []).forEach(doc => {
+            const sender = doc.senderId || "";
+            const receiver = doc.receiverId || "";
+            if(sender !== currentUser.id && receiver !== currentUser.id) return;
+
+            const partnerId = sender === currentUser.id ? receiver : sender;
+            if(!partnerId || partnerId === currentUser.id) return;
+
+            if(!partnerMap.has(partnerId)){
+                partnerMap.set(partnerId, {
+                    id: partnerId,
+                    lastText: doc.text || "",
+                    lastAt: doc.$createdAt
+                });
+            }
+        });
+
+        const chats = [...partnerMap.values()].map(p => {
+            const user = allUsersCache.find(u => u.id === p.id);
+            return {
+                id: p.id,
+                name: user?.name || "کاربر",
+                email: user?.email || "",
+                sub: p.lastText,
+                lastAt: p.lastAt
+            };
+        }).sort((a,b) => new Date(b.lastAt || 0) - new Date(a.lastAt || 0));
+
+        list.innerHTML = "";
+
+        if(!chats.length){
+            list.innerHTML = `<div class="accountsEmpty">هنوز با کسی چت نکرده‌اید.</div>`;
+            return;
+        }
+
+        chats.forEach(u => renderAccountItem(u, list));
+
+    }catch(error){
+        list.innerHTML = `<div class="accountsEmpty">خطا در دریافت چت‌ها.</div>`;
+        showAppwriteError(error, "Load chats list");
     }
 }
 
@@ -5816,28 +6231,220 @@ function pairKeyFor(idA, idB){
     return [idA, idB].sort().join("_");
 }
 
+function cancelChatReply(){
+    chatReplyTo = null;
+    if(!chatEditingId){
+        const bar = $("chatReplyBar");
+        if(bar) bar.classList.remove("active");
+    }
+}
+
+function cancelChatEdit(){
+    chatEditingId = null;
+    const bar = $("chatReplyBar");
+    if(bar) bar.classList.remove("active");
+    const input = $("chatInput");
+    if(input){
+        input.value = "";
+        input.placeholder = "پیام خود را بنویسید...";
+    }
+    const sendBtn = $("chatSendBtn");
+    if(sendBtn) sendBtn.textContent = "➤";
+}
+
+function startChatReply(message){
+    if(!message) return;
+    cancelChatEdit();
+    chatReplyTo = {
+        id: message.id,
+        text: message.text || "",
+        senderName: message.senderId === currentUser?.id
+            ? (currentUser.name || "شما")
+            : (chatWithUser?.name || "کاربر")
+    };
+
+    const bar = $("chatReplyBar");
+    if(bar){
+        $("chatReplyName").textContent = "پاسخ به " + chatReplyTo.senderName;
+        $("chatReplyPreview").textContent = chatReplyTo.text;
+        bar.classList.add("active");
+    }
+
+    $("chatInput")?.focus();
+}
+
+function closeChatMsgMenu(){
+    chatMenuMessage = null;
+    $("chatMsgMenu")?.classList.remove("active");
+    document.querySelectorAll(".chatBubble.menuOpen").forEach(el=>{
+        el.classList.remove("menuOpen");
+    });
+}
+
+function openChatMsgMenu(message, bubbleEl){
+    if(!message || message.senderId !== currentUser?.id) return;
+    chatMenuMessage = message;
+    document.querySelectorAll(".chatBubble.menuOpen").forEach(el=>{
+        el.classList.remove("menuOpen");
+    });
+    if(bubbleEl) bubbleEl.classList.add("menuOpen");
+    $("chatMsgMenu")?.classList.add("active");
+}
+
+function startChatEdit(message){
+    if(!message || !currentUser || message.senderId !== currentUser.id) return;
+
+    cancelChatReply();
+    chatEditingId = message.id;
+    chatMenuMessage = null;
+    closeChatMsgMenu();
+
+    const input = $("chatInput");
+    if(input){
+        input.value = message.text || "";
+        input.placeholder = "ویرایش پیام...";
+        input.focus();
+        try{
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        }catch{}
+    }
+
+    const bar = $("chatReplyBar");
+    if(bar){
+        $("chatReplyName").textContent = "ویرایش پیام";
+        $("chatReplyPreview").textContent = (message.text || "").slice(0, 80);
+        bar.classList.add("active");
+    }
+
+    const sendBtn = $("chatSendBtn");
+    if(sendBtn) sendBtn.textContent = "✓";
+}
+
+async function deleteChatMessage(message){
+    if(!message || !currentUser || message.senderId !== currentUser.id) return;
+    if(!appwriteReady || !databases){
+        showToast("اتصال برقرار نیست");
+        return;
+    }
+
+    if(!confirm("این پیام برای هر دو طرف حذف شود؟")) return;
+
+    closeChatMsgMenu();
+
+    try{
+        await databases.deleteDocument(
+            DATABASE_ID,
+            COLLECTION_MESSAGES,
+            message.id
+        );
+
+        if(chatEditingId === message.id){
+            cancelChatEdit();
+        }
+
+        showToast("پیام حذف شد");
+        await loadChatMessages();
+    }catch(error){
+        showAppwriteError(error, "Delete chat message");
+    }
+}
+
+function bindOwnMessageActions(bubble, message){
+    if(!bubble || !message) return;
+
+    let pressTimer = null;
+    let moved = false;
+
+    const startPress = ()=>{
+        moved = false;
+        clearTimeout(pressTimer);
+        pressTimer = setTimeout(()=>{
+            openChatMsgMenu(message, bubble);
+        }, 420);
+    };
+
+    const cancelPress = ()=>{
+        clearTimeout(pressTimer);
+        pressTimer = null;
+    };
+
+    bubble.addEventListener("touchstart", (e)=>{
+        if(e.touches && e.touches.length > 1) return;
+        startPress();
+    }, {passive:true});
+
+    bubble.addEventListener("touchmove", ()=>{
+        moved = true;
+        cancelPress();
+    }, {passive:true});
+
+    bubble.addEventListener("touchend", cancelPress);
+    bubble.addEventListener("touchcancel", cancelPress);
+
+    bubble.addEventListener("contextmenu", (e)=>{
+        e.preventDefault();
+        openChatMsgMenu(message, bubble);
+    });
+
+    bubble.addEventListener("click", (e)=>{
+        if(e.target.closest(".chatBubbleReplyBtn")) return;
+        // دسکتاپ: کلیک روی پیام خودت منو را باز می‌کند
+        if(!("ontouchstart" in window)){
+            openChatMsgMenu(message, bubble);
+        }
+    });
+}
+
 function renderChatMessages(messages){
     const box = $("chatMessages");
     if(!box) return;
+
+    chatMessagesCache = messages || [];
 
     if(!messages.length){
         box.innerHTML = `<div class="chatEmpty">هنوز پیامی رد و بدل نشده. اولین پیام را بفرستید!</div>`;
         return;
     }
 
+    const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+
     box.innerHTML = "";
     messages.forEach(m=>{
         const mine = m.senderId === currentUser.id;
         const bubble = document.createElement("div");
         bubble.className = "chatBubble " + (mine ? "chatBubbleMine" : "chatBubbleTheirs");
+        bubble.dataset.msgId = m.id;
+
+        let replyHtml = "";
+        if(m.replyToText){
+            replyHtml = `<div class="chatBubbleReplyPreview">${escapeHtml(m.replyToText)}</div>`;
+        }
+
         bubble.innerHTML = `
-            ${escapeHtml(m.text)}
-            <span class="chatBubbleTime">${formatCommentTime(m.createdAt)}</span>
+            ${replyHtml}
+            <span class="chatBubbleText">${escapeHtml(m.text || "")}</span>
+            <div class="chatBubbleMeta">
+                <button type="button" class="chatBubbleReplyBtn" title="پاسخ">↩</button>
+                <span class="chatBubbleTime">${formatCommentTime(m.createdAt)}</span>
+            </div>
         `;
+
+        bubble.querySelector(".chatBubbleReplyBtn")?.addEventListener("click", (e)=>{
+            e.stopPropagation();
+            startChatReply(m);
+        });
+
+        if(mine){
+            bindOwnMessageActions(bubble, m);
+        }
+
         box.appendChild(bubble);
     });
 
-    box.scrollTop = box.scrollHeight;
+    if(nearBottom || messages.length){
+        box.scrollTop = box.scrollHeight;
+    }
 }
 
 async function loadChatMessages(){
@@ -5859,6 +6466,8 @@ async function loadChatMessages(){
             id: doc.$id,
             senderId: doc.senderId,
             text: doc.text || "",
+            replyToId: doc.replyToId || "",
+            replyToText: doc.replyToText || "",
             createdAt: doc.$createdAt
         }));
 
@@ -5878,9 +6487,25 @@ function openChat(otherUser){
         return;
     }
 
+    if(!otherUser || !otherUser.id){
+        showToast("کاربر مشخص نیست");
+        return;
+    }
+
+    if(otherUser.id === currentUser.id){
+        showToast("نمی‌توانید با خودتان چت کنید");
+        return;
+    }
+
     chatWithUser = otherUser;
+    cancelChatReply();
+    cancelChatEdit();
+    closeChatMsgMenu();
+    hideEmojiBar();
+
     $("chatWithName").textContent = otherUser.name || "گفتگو";
     $("chatMessages").innerHTML = `<div class="chatEmpty">در حال بارگذاری...</div>`;
+    if($("chatInput")) $("chatInput").value = "";
 
     showPage("chatPage");
     loadChatMessages();
@@ -5893,7 +6518,50 @@ function closeChat(){
     clearInterval(chatPollTimer);
     chatPollTimer = null;
     chatWithUser = null;
+    cancelChatReply();
+    cancelChatEdit();
+    closeChatMsgMenu();
+    hideEmojiBar();
     showPage("profilePage");
+    setProfileTab("accounts");
+}
+
+function hideEmojiBar(){
+    $("chatEmojiBar")?.classList.remove("active");
+}
+
+function toggleEmojiBar(){
+    const bar = $("chatEmojiBar");
+    if(!bar) return;
+    bar.classList.toggle("active");
+}
+
+function initEmojiBar(){
+    const bar = $("chatEmojiBar");
+    if(!bar || bar.dataset.ready === "1") return;
+    bar.dataset.ready = "1";
+    bar.innerHTML = "";
+
+    CHAT_EMOJIS.forEach(emoji => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = emoji;
+        btn.addEventListener("click", ()=>{
+            const input = $("chatInput");
+            if(!input) return;
+            const start = input.selectionStart || input.value.length;
+            const end = input.selectionEnd || input.value.length;
+            const before = input.value.slice(0, start);
+            const after = input.value.slice(end);
+            input.value = before + emoji + after;
+            input.focus();
+            const pos = start + emoji.length;
+            try{
+                input.setSelectionRange(pos, pos);
+            }catch{}
+        });
+        bar.appendChild(btn);
+    });
 }
 
 async function sendChatMessage(){
@@ -5912,31 +6580,76 @@ async function sendChatMessage(){
     if(btn) btn.disabled = true;
 
     try{
+        // حالت ویرایش پیام خود کاربر
+        if(chatEditingId){
+            await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_MESSAGES,
+                chatEditingId,
+                { text: text }
+            );
+
+            if(input) input.value = "";
+            cancelChatEdit();
+            hideEmojiBar();
+            showToast("پیام ویرایش شد");
+            await loadChatMessages();
+            return;
+        }
+
+        const payload = {
+            pairKey: pairKeyFor(currentUser.id, chatWithUser.id),
+            senderId: currentUser.id,
+            receiverId: chatWithUser.id,
+            text: text
+        };
+
+        if(chatReplyTo){
+            payload.replyToId = chatReplyTo.id || "";
+            payload.replyToText = (chatReplyTo.text || "").slice(0, 120);
+        }
+
         const permissions = (appwritePermission && appwriteRole) ? [
-            appwritePermission.read(appwriteRole.user(currentUser.id)),
-            appwritePermission.read(appwriteRole.user(chatWithUser.id)),
-            appwritePermission.write(appwriteRole.user(currentUser.id)),
-            appwritePermission.write(appwriteRole.user(chatWithUser.id))
+            appwritePermission.read(appwriteRole.users()),
+            appwritePermission.update(appwriteRole.user(currentUser.id)),
+            appwritePermission.delete(appwriteRole.user(currentUser.id))
         ] : undefined;
 
-        await databases.createDocument(
-            DATABASE_ID,
-            COLLECTION_MESSAGES,
-            appwriteID.unique(),
-            {
-                pairKey: pairKeyFor(currentUser.id, chatWithUser.id),
-                senderId: currentUser.id,
-                receiverId: chatWithUser.id,
-                text: text
-            },
-            permissions
-        );
+        try{
+            await databases.createDocument(
+                DATABASE_ID,
+                COLLECTION_MESSAGES,
+                appwriteID.unique(),
+                payload,
+                permissions
+            );
+        }catch(firstError){
+            // اگر فیلد reply در اسکیما نبود، بدون آن بفرست
+            if(payload.replyToId || payload.replyToText){
+                delete payload.replyToId;
+                delete payload.replyToText;
+                if(chatReplyTo?.text){
+                    payload.text = "↩ " + chatReplyTo.text.slice(0, 40) + "\n" + text;
+                }
+                await databases.createDocument(
+                    DATABASE_ID,
+                    COLLECTION_MESSAGES,
+                    appwriteID.unique(),
+                    payload,
+                    permissions
+                );
+            }else{
+                throw firstError;
+            }
+        }
 
         if(input) input.value = "";
+        cancelChatReply();
+        hideEmojiBar();
         await loadChatMessages();
 
     }catch(error){
-        showAppwriteError(error, "Send chat message");
+        showAppwriteError(error, chatEditingId ? "Edit chat message" : "Send chat message");
     }finally{
         if(btn) btn.disabled = false;
     }
@@ -5944,8 +6657,36 @@ async function sendChatMessage(){
 
 $("profileTabMain")?.addEventListener("click", ()=> setProfileTab("main"));
 $("profileTabAccounts")?.addEventListener("click", ()=> setProfileTab("accounts"));
+$("accountsSubChats")?.addEventListener("click", ()=> setAccountsSubTab("chats"));
+$("accountsSubAll")?.addEventListener("click", ()=> setAccountsSubTab("accounts"));
+$("accountsSearchInput")?.addEventListener("input", renderAccountsFiltered);
+$("clearAccountsSearch")?.addEventListener("click", ()=>{
+    if($("accountsSearchInput")) $("accountsSearchInput").value = "";
+    renderAccountsFiltered();
+});
 $("chatBack")?.addEventListener("click", closeChat);
 $("chatSendBtn")?.addEventListener("click", sendChatMessage);
+$("chatReplyClose")?.addEventListener("click", ()=>{
+    if(chatEditingId){
+        cancelChatEdit();
+    }else{
+        cancelChatReply();
+    }
+});
+$("chatMsgMenuEdit")?.addEventListener("click", ()=>{
+    if(chatMenuMessage) startChatEdit(chatMenuMessage);
+});
+$("chatMsgMenuDelete")?.addEventListener("click", ()=>{
+    if(chatMenuMessage) deleteChatMessage(chatMenuMessage);
+});
+$("chatMsgMenuCancel")?.addEventListener("click", closeChatMsgMenu);
+$("chatMsgMenu")?.addEventListener("click", (e)=>{
+    if(e.target === $("chatMsgMenu")) closeChatMsgMenu();
+});
+$("chatEmojiToggle")?.addEventListener("click", ()=>{
+    initEmojiBar();
+    toggleEmojiBar();
+});
 $("chatInput")?.addEventListener("keydown", e=>{
     if(e.key === "Enter" && !e.shiftKey){
         e.preventDefault();
