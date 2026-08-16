@@ -826,6 +826,465 @@ button{
     color:#e3b8a5 !important;
 }
 
+/* ===== Comments ===== */
+.commentsBox{
+    margin-top:8px;
+}
+.commentForm{
+    background:linear-gradient(160deg,#2a1c14 0%,#241912 100%);
+    border:1px solid #3a2a1c;
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:18px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+.commentRatingRow{
+    display:flex;
+    align-items:center;
+    margin-bottom:12px;
+}
+.commentRatingLabel{
+    font-size:10.5px;
+    color:#8d7660;
+    margin-left:auto;
+}
+.commentStars{
+    display:flex;
+    flex-direction:row-reverse;
+    gap:6px;
+    position:relative;
+    z-index:1;
+}
+.commentStars .cRatingStar{
+    position:static !important;
+    width:auto !important;
+    height:auto !important;
+    border-radius:0 !important;
+    background:none !important;
+    border:0 !important;
+    font-size:24px;
+    color:#4a3c2c;
+    cursor:pointer;
+    transition:color .15s, transform .12s;
+    line-height:1;
+    user-select:none;
+    padding:0 2px;
+    display:inline-block;
+}
+.commentStars .cRatingStar.filled{
+    color:#e0a94e;
+}
+.commentStars .cRatingStar:active{
+    transform:scale(1.15);
+}
+.commentForm textarea{
+    width:100%;
+    min-height:88px;
+    border:1px solid #3a2a1c;
+    outline:0;
+    background:#1e1510;
+    color:#e7d6bf;
+    padding:13px 14px;
+    border-radius:12px;
+    resize:vertical;
+    margin-bottom:12px;
+    font-size:12px;
+    line-height:1.75;
+}
+.commentForm textarea::placeholder{
+    color:#806c59;
+}
+.commentForm textarea:focus{
+    border-color:#684126;
+}
+.commentActionsRow{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:2px;
+}
+.commentEditBtn,
+.commentDeleteBtn{
+    background:none;
+    border:0;
+    font-size:10.5px;
+    padding:0;
+    display:flex;
+    align-items:center;
+    gap:3px;
+}
+.commentEditBtn{
+    color:#a68d6e;
+}
+.commentDeleteBtn{
+    color:#c37934;
+}
+.commentEditBox{
+    margin-top:8px;
+}
+.commentEditBox textarea{
+    width:100%;
+    min-height:70px;
+    border:1px solid #3a2a1c;
+    outline:0;
+    background:#1e1510;
+    color:#e7d6bf;
+    padding:10px 12px;
+    border-radius:10px;
+    resize:vertical;
+    font-size:12px;
+    line-height:1.7;
+    margin-bottom:8px;
+}
+.commentEditActions{
+    display:flex;
+    gap:8px;
+}
+.commentEditSave,
+.commentEditCancel{
+    flex:1;
+    height:36px;
+    border:0;
+    border-radius:9px;
+    font-size:11px;
+}
+.commentEditSave{
+    background:#bd7232;
+    color:#fff;
+}
+.commentEditCancel{
+    background:#2b1d15;
+    color:#c9b59a;
+    border:1px solid #3a2a1c;
+}
+.commentReplyingTo{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#2b1d15;
+    border-radius:9px;
+    padding:8px 11px;
+    margin-bottom:10px;
+    font-size:10.5px;
+    color:#c9b59a;
+}
+.commentReplyingTo span b{
+    color:#e2c6a3;
+}
+.commentReplyingTo button{
+    background:none;
+    border:0;
+    color:#c37934;
+    font-size:15px;
+    line-height:1;
+}
+.commentSubmit{
+    width:100%;
+    height:42px;
+    border:0;
+    border-radius:11px;
+    background:#bd7232;
+    color:white;
+    font-size:12px;
+}
+.commentSubmit:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+}
+.commentLoginHint{
+    text-align:center;
+    font-size:11px;
+    color:#8d7660;
+    padding:14px 10px;
+    background:#241912;
+    border-radius:12px;
+    margin-bottom:16px;
+    line-height:1.8;
+}
+.commentLoginHint button{
+    background:none;
+    border:0;
+    color:#c37934;
+    font-size:11px;
+    margin-top:6px;
+    text-decoration:underline;
+}
+.commentsList{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+.commentItem{
+    background:#241912;
+    border:1px solid #302219;
+    border-radius:14px;
+    padding:13px 14px;
+}
+.commentHeader{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:8px;
+}
+.commentAvatar{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:#3a2a1c;
+    color:#e0a94e;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:700;
+    flex-shrink:0;
+}
+.commentHeadInfo{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    flex:1;
+    min-width:0;
+}
+.commentUserRow{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+.commentUser{
+    font-size:11.5px;
+    color:#e2c6a3;
+    font-weight:600;
+}
+.commentStarsDisplay{
+    font-size:10px;
+    color:#e0a94e;
+    letter-spacing:1px;
+}
+.commentTime{
+    font-size:9px;
+    color:#8d7660;
+}
+.commentText{
+    font-size:12px;
+    color:#c9b59a;
+    line-height:1.85;
+    white-space:pre-wrap;
+    word-break:break-word;
+    margin-bottom:9px;
+}
+.commentFooterRow{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+.commentReplyBtn,
+.commentShowRepliesBtn{
+    background:none;
+    border:0;
+    font-size:10.5px;
+    color:#c37934;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    padding:0;
+}
+.commentShowRepliesBtn{
+    color:#a68d6e;
+}
+.commentRepliesBox{
+    margin-top:11px;
+    padding-right:16px;
+    border-right:2px solid #3a2a1c;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.commentRepliesBox.collapsed{
+    display:none;
+}
+.commentReplyItem{
+    background:#1d150e;
+    border:1px solid #2a1e15;
+    border-radius:11px;
+    padding:10px 12px;
+}
+.commentsEmpty{
+    text-align:center;
+    padding:30px 15px;
+    color:#796655;
+    font-size:12px;
+}
+.detailTabBadge{
+    display:inline-block;
+    background:#bd7232;
+    color:#fff;
+    font-size:9px;
+    border-radius:20px;
+    padding:1px 6px;
+    margin-right:4px;
+    min-width:14px;
+    text-align:center;
+}
+
+/* ===== Accounts / Chat ===== */
+.profileTabsRow{
+    display:flex;
+    gap:8px;
+    margin:16px 0 6px;
+}
+.profileTabBtn{
+    flex:1;
+    background:#241912;
+    border:1px solid #302219;
+    color:#a68d6e;
+    font-size:12px;
+    padding:9px 0;
+    border-radius:10px;
+}
+.profileTabBtn.active{
+    background:#bd7232;
+    color:#fff;
+    border-color:#bd7232;
+}
+.accountsList{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:14px;
+}
+.accountItem{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    background:#241912;
+    border:1px solid #302219;
+    border-radius:13px;
+    padding:11px 13px;
+}
+.accountAvatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#3a2a1c;
+    color:#e0a94e;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:15px;
+    font-weight:700;
+    flex-shrink:0;
+}
+.accountInfo{
+    flex:1;
+    min-width:0;
+}
+.accountName{
+    font-size:12px;
+    color:#e2c6a3;
+    font-weight:600;
+    margin-bottom:2px;
+}
+.accountSub{
+    font-size:9.5px;
+    color:#8d7660;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+.accountChatBtn{
+    background:#2b1d15;
+    border:0;
+    color:#c37934;
+    font-size:10.5px;
+    padding:7px 12px;
+    border-radius:9px;
+    flex-shrink:0;
+}
+.accountsEmpty{
+    text-align:center;
+    padding:30px 15px;
+    color:#796655;
+    font-size:12px;
+}
+.chatWrap{
+    display:flex;
+    flex-direction:column;
+    height:calc(100vh - 130px);
+}
+.chatMessages{
+    flex:1;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:10px 4px 16px;
+}
+.chatBubble{
+    max-width:78%;
+    padding:9px 12px;
+    border-radius:14px;
+    font-size:12px;
+    line-height:1.7;
+    word-break:break-word;
+    white-space:pre-wrap;
+}
+.chatBubbleMine{
+    align-self:flex-start;
+    background:#bd7232;
+    color:#fff;
+    border-bottom-left-radius:4px;
+}
+.chatBubbleTheirs{
+    align-self:flex-end;
+    background:#241912;
+    color:#e7d6bf;
+    border:1px solid #302219;
+    border-bottom-right-radius:4px;
+}
+.chatBubbleTime{
+    display:block;
+    font-size:8.5px;
+    opacity:.65;
+    margin-top:4px;
+}
+.chatInputRow{
+    display:flex;
+    gap:8px;
+    padding:10px 4px;
+    border-top:1px solid #302219;
+    background:#150f0a;
+}
+.chatInputRow textarea{
+    flex:1;
+    resize:none;
+    min-height:40px;
+    max-height:100px;
+    border:0;
+    outline:0;
+    background:#2b1d15;
+    color:#e7d6bf;
+    padding:10px 12px;
+    border-radius:12px;
+    font-size:12px;
+}
+.chatSendBtn{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:0;
+    background:#bd7232;
+    color:#fff;
+    font-size:16px;
+    flex-shrink:0;
+}
+.chatEmpty{
+    text-align:center;
+    padding:40px 15px;
+    color:#796655;
+    font-size:12px;
+}
+
 /* ===== Auth / Login ===== */
 .authTabs{
     display:flex;
@@ -1414,6 +1873,13 @@ aria-label="انتخاب یک کتاب تصادفی">
 <h2>پروفایل</h2>
 </div>
 
+<div class="profileTabsRow">
+<button class="profileTabBtn active" id="profileTabMain" type="button">پروفایل</button>
+<button class="profileTabBtn" id="profileTabAccounts" type="button">اکانت‌ها</button>
+</div>
+
+<div id="profileMainContent">
+
 <div class="profileCenter" id="profileCenter">
 
 <div class="avatar">
@@ -1470,6 +1936,30 @@ style="display:none">
 
 </div>
 
+</div>
+
+<div id="profileAccountsContent" style="display:none">
+<div class="accountsList" id="accountsList"></div>
+</div>
+
+</section>
+
+
+<section id="chatPage" class="page">
+
+<div class="top">
+<button class="back" id="chatBack">←</button>
+<h2 id="chatWithName">گفتگو</h2>
+</div>
+
+<div class="chatWrap">
+<div class="chatMessages" id="chatMessages"></div>
+<div class="chatInputRow">
+<textarea id="chatInput" placeholder="پیام خود را بنویسید..." rows="1"></textarea>
+<button class="chatSendBtn" id="chatSendBtn" type="button">➤</button>
+</div>
+</div>
+
 </section>
 
 
@@ -1513,6 +2003,7 @@ style="display:none">
 <div class="detailInfoTabs" id="detailInfoTabs">
 <button id="detailTabDetails" class="active" type="button">جزئیات</button>
 <button id="detailTabSimilar" type="button">مشابه</button>
+<button id="detailTabComments" type="button">نظرات <span id="commentsCountBadge" class="detailTabBadge" style="display:none">0</span></button>
 <button id="detailTabChapters" type="button" style="display:none">چپتر</button>
 </div>
 
@@ -1529,6 +2020,15 @@ style="display:none">
 
 <div id="detailPanelSimilar" class="detailPanel">
 <div id="similarBooks" class="books similarBooks"></div>
+</div>
+
+<div id="detailPanelComments" class="detailPanel">
+<div class="commentsBox">
+    <div id="commentFormWrap">
+        <!-- form or login hint will be injected -->
+    </div>
+    <div id="commentsList" class="commentsList"></div>
+</div>
 </div>
 
 <div id="detailPanelChapters" class="detailPanel">
@@ -1747,6 +2247,7 @@ style="cursor:pointer">
 <div class="adminPublishedTabs">
 <button id="publishedBooksTab" class="active" type="button">کتاب منتشر شده</button>
 <button id="publishedAuthorsTab" type="button">نویسنده منتشر شده</button>
+<button id="publishedCommentsTab" type="button">نظر منتشر شده</button>
 </div>
 
 <div id="adminPublishedBooks" class="adminSubSection active">
@@ -1755,6 +2256,10 @@ style="cursor:pointer">
 
 <div id="adminPublishedAuthors" class="adminSubSection">
 <div id="adminPublishedAuthorList"></div>
+</div>
+
+<div id="adminPublishedComments" class="adminSubSection">
+<div id="adminPublishedCommentsList"></div>
 </div>
 
 </div>
@@ -2192,6 +2697,15 @@ const COLLECTION_WORKS =
 const COLLECTION_CHAPTERS =
     "chapters";
 
+const COLLECTION_COMMENTS =
+    "comments";
+
+const COLLECTION_USERS =
+    "users";
+
+const COLLECTION_MESSAGES =
+    "messages";
+
 const RUBIKA_ID =
     "@rraararar";
 
@@ -2230,6 +2744,16 @@ let editingWorkld = null;
 let editingChapters = [];
 
 let lastAppwriteError = "";
+
+let appwritePermission = null;
+let appwriteRole = null;
+
+let selectedRating = 0;
+let replyingToComment = null; // {id, userName}
+let allCommentsForWork = [];  // آخرین لیست نظرات لود شده برای کتاب باز شده
+
+let chatWithUser = null;      // {id, name}
+let chatPollTimer = null;
 
 
 /* =========================================================
@@ -2366,6 +2890,11 @@ const deviceId =
 ========================================================= */
 
 function showPage(id){
+
+    if(id !== "chatPage" && chatPollTimer){
+        clearInterval(chatPollTimer);
+        chatPollTimer = null;
+    }
 
     if(id === "savedPage"){
 
@@ -2511,7 +3040,7 @@ $("editProfileBtn")
             getProfile();
 
         $("profileNameInput").value =
-            profile.name || "";
+            (currentUser && currentUser.name) || profile.name || "";
 
         if(profile.avatar){
 
@@ -2583,7 +3112,7 @@ $("profileAvatarInput")
 $("saveProfileBtn")
 .addEventListener(
     "click",
-    ()=>{
+    async ()=>{
 
         const old =
             getProfile();
@@ -2591,21 +3120,49 @@ $("saveProfileBtn")
         const name =
             $("profileNameInput")
                 .value
-                .trim();
+                .trim() || "کاربر";
 
         const preview =
             $("profilePreview");
 
+        const avatar =
+            preview.style.display !== "none"
+                ? preview.src
+                : old.avatar || "";
+
         saveProfileData({
-
-            name:
-                name || "کاربر",
-
-            avatar:
-                preview.style.display !== "none"
-                    ? preview.src
-                    : old.avatar || ""
+            name: name,
+            avatar: avatar
         });
+
+        if(currentUser && account && appwriteReady){
+            try{
+                if(name && name !== currentUser.name){
+                    await account.updateName(name);
+                    currentUser.name = name;
+
+                    // بروزرسانی نام در سند کاربران
+                    try{
+                        await databases.updateDocument(
+                            DATABASE_ID,
+                            COLLECTION_USERS,
+                            currentUser.id,
+                            { name: name }
+                        );
+                    }catch(e){
+                        console.warn("sync user name doc:", e);
+                    }
+
+                    // بروزرسانی نام روی نظرات قبلی همین کاربر
+                    await updateUserNameOnComments(currentUser.id, name);
+                }
+            }catch(error){
+                showAppwriteError(error, "Update profile name");
+                return;
+            }
+        }else if(currentUser){
+            currentUser.name = name;
+        }
 
         updateProfile();
 
@@ -2617,6 +3174,42 @@ $("saveProfileBtn")
         );
     }
 );
+
+async function updateUserNameOnComments(userId, newName){
+    if(!databases || !appwriteQuery || !userId || !newName) return;
+
+    try{
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_COMMENTS,
+            [
+                appwriteQuery.equal("userId", userId),
+                appwriteQuery.limit(200)
+            ]
+        );
+
+        const docs = res.documents || [];
+        for(const doc of docs){
+            if((doc.userName || "") === newName) continue;
+            try{
+                await databases.updateDocument(
+                    DATABASE_ID,
+                    COLLECTION_COMMENTS,
+                    doc.$id,
+                    { userName: newName }
+                );
+            }catch(e){
+                console.warn("update comment name:", e);
+            }
+        }
+
+        if(currentWork){
+            await loadComments(currentWork.id);
+        }
+    }catch(error){
+        console.warn("updateUserNameOnComments:", error);
+    }
+}
 
 
 $("closeProfileModal")
@@ -2706,6 +3299,8 @@ async function doLogin(){
             saveProfileData(profile);
         }
 
+        syncUserDoc(user);
+
         $("loginModal").classList.remove("active");
         updateProfile();
         showToast("خوش آمدید " + (currentUser.name || ""));
@@ -2779,6 +3374,8 @@ async function doRegister(){
         const profile = getProfile();
         profile.name = currentUser.name;
         saveProfileData(profile);
+
+        syncUserDoc(user);
 
         $("loginModal").classList.remove("active");
         updateProfile();
@@ -3817,6 +4414,7 @@ function setDetailTab(tab){
     const tabs = {
         details: ["detailTabDetails","detailPanelDetails"],
         similar: ["detailTabSimilar","detailPanelSimilar"],
+        comments: ["detailTabComments","detailPanelComments"],
         chapters: ["detailTabChapters","detailPanelChapters"]
     };
 
@@ -3828,6 +4426,10 @@ function setDetailTab(tab){
     if(tabs[tab]){
         $(tabs[tab][0])?.classList.add("active");
         $(tabs[tab][1])?.classList.add("active");
+    }
+
+    if(tab === "comments" && currentWork){
+        loadComments(currentWork.id);
     }
 }
 
@@ -3910,6 +4512,11 @@ function openDetail(work){
     renderDetailAuthor(work);
     setDetailTab("details");
 
+    // ریست شمارنده نظرات تا عدد کتاب قبلی نمایش داده نشود
+    allCommentsForWork = [];
+    updateCommentsBadge(0);
+    loadCommentCount(work.id);
+
     $("downloadBtn").setAttribute(
         "aria-label",
         work.type === "book" ? "دانلود کتاب" : "دانلود چپترها"
@@ -3924,6 +4531,34 @@ function openDetail(work){
     }
 
     showPage("detailPage");
+}
+
+async function loadCommentCount(workId){
+    if(!appwriteReady || !databases || !appwriteQuery || !workId){
+        updateCommentsBadge(0);
+        return;
+    }
+
+    try{
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_COMMENTS,
+            [
+                appwriteQuery.equal("workId", workId),
+                appwriteQuery.limit(200)
+            ]
+        );
+        const count = (res.documents || []).length;
+        // فقط اگر هنوز همان اثر باز است
+        if(currentWork && currentWork.id === workId){
+            updateCommentsBadge(count);
+        }
+    }catch(error){
+        console.warn("loadCommentCount:", error);
+        if(currentWork && currentWork.id === workId){
+            updateCommentsBadge(0);
+        }
+    }
 }
 
 
@@ -3977,6 +4612,7 @@ $("detailSaveCircle").addEventListener(
 
 $("detailTabDetails").addEventListener("click",()=>setDetailTab("details"));
 $("detailTabSimilar").addEventListener("click",()=>setDetailTab("similar"));
+$("detailTabComments").addEventListener("click",()=>setDetailTab("comments"));
 $("detailTabChapters").addEventListener("click",()=>setDetailTab("chapters"));
 
 $("genreDetailBack").addEventListener("click",()=>showPage("genresPage"));
@@ -4215,7 +4851,9 @@ async function initAppwrite(){
             Databases,
             Account,
             ID,
-            Query
+            Query,
+            Permission,
+            Role
         } = window.Appwrite;
 
 
@@ -4263,6 +4901,12 @@ async function initAppwrite(){
 
         appwriteQuery =
             Query;
+
+        appwritePermission =
+            Permission || null;
+
+        appwriteRole =
+            Role || null;
 
 
         /*
@@ -4319,6 +4963,43 @@ async function initAppwrite(){
    ADMIN APPWRITE SESSION
 ========================================================= */
 
+/*
+   ثبت / به‌روزرسانی سند عمومی کاربر در کالکشن users
+   تا بشه لیست کاربرای ثبت‌نام‌شده رو (برای بخش اکانت‌ها/چت) خواند.
+   بدون این سند، امکان لیست‌کردن کاربرا از Appwrite Auth وجود ندارد
+   چون SDK کلاینت به Users API دسترسی ندارد.
+*/
+async function syncUserDoc(user){
+    if(!databases || !user || !user.$id) return;
+
+    try{
+        await databases.createDocument(
+            DATABASE_ID,
+            COLLECTION_USERS,
+            user.$id,
+            {
+                name: user.name || "کاربر",
+                email: user.email || ""
+            }
+        );
+    }catch(error){
+        // اگر سند از قبل وجود داشت (کاربر قبلاً لاگین کرده)، فقط بروزرسانی کن
+        try{
+            await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_USERS,
+                user.$id,
+                {
+                    name: user.name || "کاربر",
+                    email: user.email || ""
+                }
+            );
+        }catch(err2){
+            console.warn("syncUserDoc failed:", err2);
+        }
+    }
+}
+
 async function checkExistingAdminSession(){
 
     if(!account){
@@ -4347,6 +5028,8 @@ async function checkExistingAdminSession(){
                 "Appwrite session:",
                 user.$id
             );
+
+            syncUserDoc(user);
 
             updateProfile();
         }
@@ -4442,6 +5125,8 @@ async function loginAdmin(){
         };
 
         isAdminMode = true;
+
+        syncUserDoc(user);
 
         $("adminPasswordInput").value = "";
 
@@ -4602,6 +5287,676 @@ async function loadWorks(){
         );
     }
 }
+
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+function formatCommentTime(iso){
+    if(!iso) return "";
+    try{
+        const d = new Date(iso);
+        const now = new Date();
+        const diff = Math.floor((now - d) / 1000);
+
+        if(diff < 60) return "همین الان";
+        if(diff < 3600) return Math.floor(diff/60) + " دقیقه پیش";
+        if(diff < 86400) return Math.floor(diff/3600) + " ساعت پیش";
+        if(diff < 604800) return Math.floor(diff/86400) + " روز پیش";
+
+        return d.toLocaleDateString("fa-IR");
+    }catch{
+        return "";
+    }
+}
+
+function avatarInitial(name){
+    const n = (name || "").trim();
+    return n ? n[0].toUpperCase() : "ک";
+}
+
+function starsMarkup(rating){
+    let out = "";
+    for(let i = 1; i <= 5; i++){
+        out += (i <= rating) ? "★" : "☆";
+    }
+    return out;
+}
+
+function renderRatingInput(){
+    const stars = $("commentStarsInput");
+    if(!stars) return;
+    stars.querySelectorAll(".cRatingStar").forEach(star=>{
+        const val = Number(star.dataset.value);
+        star.classList.toggle("filled", val <= selectedRating);
+    });
+}
+
+function startReply(commentId, userName){
+    replyingToComment = { id: commentId, userName: userName || "کاربر" };
+    renderCommentForm();
+    const textarea = $("commentTextInput");
+    if(textarea){
+        textarea.focus();
+        setTimeout(()=>{
+            textarea.scrollIntoView({ block:"center", behavior:"smooth" });
+        }, 250);
+    }
+}
+
+function cancelReply(){
+    replyingToComment = null;
+    renderCommentForm();
+}
+
+function toggleReplies(commentId){
+    const box = $("replies-" + commentId);
+    if(!box) return;
+    box.classList.toggle("collapsed");
+    const btn = document.querySelector(`.commentShowRepliesBtn[data-for="${commentId}"]`);
+    if(btn){
+        const count = btn.dataset.count || "0";
+        btn.textContent = box.classList.contains("collapsed")
+            ? `مشاهده پاسخ‌ها (${count})`
+            : `پنهان کردن پاسخ‌ها (${count})`;
+    }
+}
+
+function renderCommentForm(){
+    const wrap = $("commentFormWrap");
+    if(!wrap) return;
+
+    if(!currentUser){
+        replyingToComment = null;
+        wrap.innerHTML = `
+            <div class="commentLoginHint">
+                برای نوشتن نظر باید وارد حساب کاربری خود شوید.
+                <br>
+                <button type="button" id="commentGoLogin">ورود / ثبت‌نام</button>
+            </div>
+        `;
+        $("commentGoLogin")?.addEventListener("click", ()=>{
+            openLoginModal();
+        });
+        return;
+    }
+
+    const isReply = !!replyingToComment;
+    selectedRating = isReply ? 0 : selectedRating;
+
+    wrap.innerHTML = `
+        <div class="commentForm">
+            ${isReply ? `
+                <div class="commentReplyingTo">
+                    <span>در حال پاسخ به <b>${escapeHtml(replyingToComment.userName)}</b></span>
+                    <button type="button" id="commentCancelReply">✕</button>
+                </div>
+            ` : `
+                <div class="commentRatingRow">
+                    <div class="commentStars" id="commentStarsInput">
+                        <span class="cRatingStar" data-value="1">★</span>
+                        <span class="cRatingStar" data-value="2">★</span>
+                        <span class="cRatingStar" data-value="3">★</span>
+                        <span class="cRatingStar" data-value="4">★</span>
+                        <span class="cRatingStar" data-value="5">★</span>
+                    </div>
+                    <span class="commentRatingLabel">امتیاز شما به اثر</span>
+                </div>
+            `}
+            <textarea id="commentTextInput" placeholder="${isReply ? "پاسخ خود را بنویسید..." : "نظر خود را درباره این اثر بنویسید..."}"></textarea>
+            <button class="commentSubmit" id="commentSubmitBtn" type="button">${isReply ? "ارسال پاسخ" : "ارسال نظر"}</button>
+        </div>
+    `;
+
+    if(!isReply){
+        $("commentStarsInput")?.querySelectorAll(".cRatingStar").forEach(star=>{
+            star.addEventListener("click", ()=>{
+                selectedRating = Number(star.dataset.value);
+                renderRatingInput();
+            });
+        });
+        renderRatingInput();
+    }else{
+        $("commentCancelReply")?.addEventListener("click", cancelReply);
+    }
+
+    // جلوگیری از گرفته‌شدن نظر توسط صفحه‌کلید موبایل
+    $("commentTextInput")?.addEventListener("focus", (e)=>{
+        setTimeout(()=>{
+            e.target.scrollIntoView({ block:"center", behavior:"smooth" });
+        }, 300);
+    });
+
+    $("commentSubmitBtn")?.addEventListener("click", postComment);
+}
+
+function renderCommentItem(c, isReply){
+    const item = document.createElement("div");
+    item.className = isReply ? "commentReplyItem" : "commentItem";
+    item.dataset.commentId = c.id;
+
+    const repliesForThis = isReply ? [] : allCommentsForWork.filter(x => x.parentId === c.id);
+    const isOwner = !!(currentUser && c.userId && currentUser.id === c.userId);
+
+    item.innerHTML = `
+        <div class="commentHeader">
+            <div class="commentAvatar">${escapeHtml(avatarInitial(c.userName))}</div>
+            <div class="commentHeadInfo">
+                <div class="commentUserRow">
+                    <span class="commentUser">${escapeHtml(c.userName || "کاربر")}</span>
+                    ${(!isReply && c.rating > 0) ? `<span class="commentStarsDisplay">${starsMarkup(c.rating)}</span>` : ""}
+                </div>
+                <span class="commentTime">${formatCommentTime(c.createdAt)}</span>
+            </div>
+        </div>
+        <div class="commentText" data-comment-text="${c.id}">${escapeHtml(c.text || "")}</div>
+        <div class="commentFooterRow">
+            <button type="button" class="commentReplyBtn" data-reply-id="${c.id}" data-reply-name="${escapeHtml(c.userName || "کاربر")}">↩ پاسخ</button>
+            ${isOwner ? `<button type="button" class="commentEditBtn" data-edit-id="${c.id}">✏️ ویرایش</button>` : ""}
+            ${isOwner ? `<button type="button" class="commentDeleteBtn" data-delete-id="${c.id}">🗑 حذف</button>` : ""}
+            ${repliesForThis.length ? `<button type="button" class="commentShowRepliesBtn" data-for="${c.id}" data-count="${repliesForThis.length}">مشاهده پاسخ‌ها (${repliesForThis.length})</button>` : ""}
+        </div>
+        ${repliesForThis.length ? `<div class="commentRepliesBox collapsed" id="replies-${c.id}"></div>` : ""}
+    `;
+
+    item.querySelector(".commentReplyBtn")?.addEventListener("click", ()=>{
+        startReply(c.id, c.userName);
+    });
+
+    item.querySelector(".commentEditBtn")?.addEventListener("click", ()=>{
+        startEditComment(c, item);
+    });
+
+    item.querySelector(".commentDeleteBtn")?.addEventListener("click", ()=>{
+        deleteComment(c.id);
+    });
+
+    const showBtn = item.querySelector(".commentShowRepliesBtn");
+    if(showBtn){
+        showBtn.addEventListener("click", ()=>{
+            toggleReplies(c.id);
+        });
+        const box = item.querySelector(".commentRepliesBox");
+        repliesForThis
+            .slice()
+            .sort((a,b)=> new Date(a.createdAt) - new Date(b.createdAt))
+            .forEach(reply=>{
+                box.appendChild(renderCommentItem(reply, true));
+            });
+    }
+
+    return item;
+}
+
+function startEditComment(comment, itemEl){
+    if(!itemEl || !comment) return;
+
+    const textEl = itemEl.querySelector(`[data-comment-text="${comment.id}"]`);
+    const footer = itemEl.querySelector(".commentFooterRow");
+    if(!textEl) return;
+
+    if(itemEl.querySelector(".commentEditBox")) return;
+
+    textEl.style.display = "none";
+    if(footer) footer.style.display = "none";
+
+    const box = document.createElement("div");
+    box.className = "commentEditBox";
+    box.innerHTML = `
+        <textarea class="commentEditTextarea">${escapeHtml(comment.text || "")}</textarea>
+        <div class="commentEditActions">
+            <button type="button" class="commentEditSave">ذخیره</button>
+            <button type="button" class="commentEditCancel">انصراف</button>
+        </div>
+    `;
+    textEl.after(box);
+
+    const ta = box.querySelector("textarea");
+    ta?.focus();
+
+    box.querySelector(".commentEditCancel")?.addEventListener("click", ()=>{
+        box.remove();
+        textEl.style.display = "";
+        if(footer) footer.style.display = "";
+    });
+
+    box.querySelector(".commentEditSave")?.addEventListener("click", async ()=>{
+        const newText = (ta?.value || "").trim();
+        if(!newText || newText.length < 3){
+            showToast("متن نظر خیلی کوتاه است");
+            return;
+        }
+        await saveEditedComment(comment.id, newText);
+    });
+}
+
+async function saveEditedComment(commentId, newText){
+    if(!appwriteReady || !databases || !commentId) return;
+
+    try{
+        await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTION_COMMENTS,
+            commentId,
+            { text: newText }
+        );
+        showToast("نظر ویرایش شد");
+        if(currentWork) await loadComments(currentWork.id);
+    }catch(error){
+        showAppwriteError(error, "Edit comment");
+    }
+}
+
+async function deleteComment(commentId){
+    if(!appwriteReady || !databases || !commentId) return;
+
+    if(!confirm("این نظر حذف شود؟")) return;
+
+    try{
+        // حذف پاسخ‌های این نظر هم
+        const replies = allCommentsForWork.filter(c => c.parentId === commentId);
+        for(const reply of replies){
+            try{
+                await databases.deleteDocument(
+                    DATABASE_ID,
+                    COLLECTION_COMMENTS,
+                    reply.id
+                );
+            }catch(e){
+                console.warn("delete reply:", e);
+            }
+        }
+
+        await databases.deleteDocument(
+            DATABASE_ID,
+            COLLECTION_COMMENTS,
+            commentId
+        );
+
+        showToast("نظر حذف شد");
+        if(currentWork) await loadComments(currentWork.id);
+        if(typeof renderPublishedComments === "function"){
+            renderPublishedComments();
+        }
+    }catch(error){
+        showAppwriteError(error, "Delete comment");
+    }
+}
+
+function renderCommentsList(comments){
+    const list = $("commentsList");
+    if(!list) return;
+
+    list.innerHTML = "";
+
+    const topLevel = comments.filter(c => !c.parentId);
+
+    if(!topLevel.length){
+        list.innerHTML = `<div class="commentsEmpty">هنوز نظری ثبت نشده. اولین نفر باشید!</div>`;
+        return;
+    }
+
+    topLevel.forEach(c=>{
+        list.appendChild(renderCommentItem(c, false));
+    });
+}
+
+function updateCommentsBadge(count){
+    const badge = $("commentsCountBadge");
+    if(!badge) return;
+    if(count > 0){
+        badge.textContent = count > 99 ? "99+" : String(count);
+        badge.style.display = "inline-block";
+    }else{
+        badge.style.display = "none";
+    }
+}
+
+async function loadComments(workId){
+    renderCommentForm();
+
+    const list = $("commentsList");
+    if(list) list.innerHTML = `<div class="commentsEmpty">در حال بارگذاری نظرات...</div>`;
+
+    if(!appwriteReady || !databases || !appwriteQuery || !workId){
+        if(list) list.innerHTML = `<div class="commentsEmpty">امکان دریافت نظرات وجود ندارد.</div>`;
+        return;
+    }
+
+    try{
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_COMMENTS,
+            [
+                appwriteQuery.equal("workId", workId),
+                appwriteQuery.orderDesc("$createdAt"),
+                appwriteQuery.limit(200)
+            ]
+        );
+
+        const comments = (res.documents || []).map(doc => ({
+            id: doc.$id,
+            workId: doc.workId,
+            userId: doc.userId || "",
+            userName: doc.userName || "کاربر",
+            text: doc.text || "",
+            rating: Number(doc.rating || 0),
+            parentId: doc.parentId || "",
+            createdAt: doc.$createdAt
+        }));
+
+        allCommentsForWork = comments;
+
+        renderCommentsList(comments);
+        updateCommentsBadge(comments.length);
+
+    }catch(error){
+        console.warn("Load comments:", error);
+        updateCommentsBadge(0);
+        if(list){
+            list.innerHTML = `<div class="commentsEmpty">خطا در دریافت نظرات.</div>`;
+        }
+        showAppwriteError(error, "Load comments");
+    }
+}
+
+async function postComment(){
+    if(!currentUser){
+        showToast("ابتدا وارد حساب شوید");
+        openLoginModal();
+        return;
+    }
+
+    if(!currentWork || !currentWork.id){
+        showToast("اثر مشخص نیست");
+        return;
+    }
+
+    if(!appwriteReady || !databases || !appwriteID){
+        showToast("اتصال برقرار نیست");
+        return;
+    }
+
+    const isReply = !!replyingToComment;
+
+    if(!isReply && selectedRating < 1){
+        showToast("لطفاً ابتدا به اثر امتیاز بدهید");
+        return;
+    }
+
+    const textarea = $("commentTextInput");
+    const text = (textarea?.value || "").trim();
+
+    if(!text){
+        showToast("متن نظر را بنویسید");
+        return;
+    }
+
+    if(text.length < 3){
+        showToast("نظر خیلی کوتاه است");
+        return;
+    }
+
+    const btn = $("commentSubmitBtn");
+    if(btn){
+        btn.disabled = true;
+        btn.textContent = "در حال ارسال...";
+    }
+
+    try{
+        await databases.createDocument(
+            DATABASE_ID,
+            COLLECTION_COMMENTS,
+            appwriteID.unique(),
+            {
+                workId: currentWork.id,
+                userId: currentUser.id,
+                userName: currentUser.name || "کاربر",
+                text: text,
+                rating: isReply ? 0 : selectedRating,
+                parentId: isReply ? replyingToComment.id : ""
+            }
+        );
+
+        if(textarea) textarea.value = "";
+        showToast(isReply ? "پاسخ شما ثبت شد" : "نظر شما ثبت شد");
+
+        selectedRating = 0;
+        replyingToComment = null;
+
+        await loadComments(currentWork.id);
+
+    }catch(error){
+        showAppwriteError(error, "Post comment");
+    }finally{
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = isReply ? "ارسال پاسخ" : "ارسال نظر";
+        }
+    }
+}
+
+
+/* =========================================================
+   ACCOUNTS / CHAT
+========================================================= */
+
+function setProfileTab(tab){
+    if(tab === "accounts"){
+        $("profileTabAccounts")?.classList.add("active");
+        $("profileTabMain")?.classList.remove("active");
+        $("profileMainContent").style.display = "none";
+        $("profileAccountsContent").style.display = "block";
+        loadAccounts();
+    }else{
+        $("profileTabMain")?.classList.add("active");
+        $("profileTabAccounts")?.classList.remove("active");
+        $("profileMainContent").style.display = "block";
+        $("profileAccountsContent").style.display = "none";
+    }
+}
+
+async function loadAccounts(){
+    const list = $("accountsList");
+    if(!list) return;
+
+    if(!currentUser){
+        list.innerHTML = `<div class="accountsEmpty">برای مشاهده اکانت‌ها ابتدا وارد حساب شوید.</div>`;
+        return;
+    }
+
+    if(!appwriteReady || !databases || !appwriteQuery){
+        list.innerHTML = `<div class="accountsEmpty">اتصال برقرار نیست.</div>`;
+        return;
+    }
+
+    list.innerHTML = `<div class="accountsEmpty">در حال بارگذاری...</div>`;
+
+    try{
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_USERS,
+            [ appwriteQuery.limit(100) ]
+        );
+
+        const users = (res.documents || []).filter(doc => doc.$id !== currentUser.id);
+
+        if(!users.length){
+            list.innerHTML = `<div class="accountsEmpty">هنوز کاربر دیگری ثبت‌نام نکرده است.</div>`;
+            return;
+        }
+
+        list.innerHTML = "";
+
+        users.forEach(doc=>{
+            const item = document.createElement("div");
+            item.className = "accountItem";
+            item.innerHTML = `
+                <div class="accountAvatar">${escapeHtml(avatarInitial(doc.name))}</div>
+                <div class="accountInfo">
+                    <div class="accountName">${escapeHtml(doc.name || "کاربر")}</div>
+                    <div class="accountSub">${escapeHtml(doc.email || "")}</div>
+                </div>
+                <button type="button" class="accountChatBtn">چت</button>
+            `;
+            item.querySelector(".accountChatBtn").addEventListener("click", ()=>{
+                openChat({ id: doc.$id, name: doc.name || "کاربر" });
+            });
+            list.appendChild(item);
+        });
+
+    }catch(error){
+        list.innerHTML = `<div class="accountsEmpty">خطا در دریافت لیست کاربران.</div>`;
+        showAppwriteError(error, "Load accounts");
+    }
+}
+
+function pairKeyFor(idA, idB){
+    return [idA, idB].sort().join("_");
+}
+
+function renderChatMessages(messages){
+    const box = $("chatMessages");
+    if(!box) return;
+
+    if(!messages.length){
+        box.innerHTML = `<div class="chatEmpty">هنوز پیامی رد و بدل نشده. اولین پیام را بفرستید!</div>`;
+        return;
+    }
+
+    box.innerHTML = "";
+    messages.forEach(m=>{
+        const mine = m.senderId === currentUser.id;
+        const bubble = document.createElement("div");
+        bubble.className = "chatBubble " + (mine ? "chatBubbleMine" : "chatBubbleTheirs");
+        bubble.innerHTML = `
+            ${escapeHtml(m.text)}
+            <span class="chatBubbleTime">${formatCommentTime(m.createdAt)}</span>
+        `;
+        box.appendChild(bubble);
+    });
+
+    box.scrollTop = box.scrollHeight;
+}
+
+async function loadChatMessages(){
+    if(!chatWithUser || !currentUser || !databases || !appwriteQuery) return;
+
+    try{
+        const key = pairKeyFor(currentUser.id, chatWithUser.id);
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_MESSAGES,
+            [
+                appwriteQuery.equal("pairKey", key),
+                appwriteQuery.orderAsc("$createdAt"),
+                appwriteQuery.limit(200)
+            ]
+        );
+
+        const messages = (res.documents || []).map(doc=>({
+            id: doc.$id,
+            senderId: doc.senderId,
+            text: doc.text || "",
+            createdAt: doc.$createdAt
+        }));
+
+        renderChatMessages(messages);
+
+    }catch(error){
+        const box = $("chatMessages");
+        if(box) box.innerHTML = `<div class="chatEmpty">خطا در دریافت پیام‌ها.</div>`;
+        showAppwriteError(error, "Load chat messages");
+    }
+}
+
+function openChat(otherUser){
+    if(!currentUser){
+        showToast("ابتدا وارد حساب شوید");
+        openLoginModal();
+        return;
+    }
+
+    chatWithUser = otherUser;
+    $("chatWithName").textContent = otherUser.name || "گفتگو";
+    $("chatMessages").innerHTML = `<div class="chatEmpty">در حال بارگذاری...</div>`;
+
+    showPage("chatPage");
+    loadChatMessages();
+
+    clearInterval(chatPollTimer);
+    chatPollTimer = setInterval(loadChatMessages, 4000);
+}
+
+function closeChat(){
+    clearInterval(chatPollTimer);
+    chatPollTimer = null;
+    chatWithUser = null;
+    showPage("profilePage");
+}
+
+async function sendChatMessage(){
+    if(!currentUser || !chatWithUser) return;
+
+    if(!appwriteReady || !databases || !appwriteID){
+        showToast("اتصال برقرار نیست");
+        return;
+    }
+
+    const input = $("chatInput");
+    const text = (input?.value || "").trim();
+    if(!text) return;
+
+    const btn = $("chatSendBtn");
+    if(btn) btn.disabled = true;
+
+    try{
+        const permissions = (appwritePermission && appwriteRole) ? [
+            appwritePermission.read(appwriteRole.user(currentUser.id)),
+            appwritePermission.read(appwriteRole.user(chatWithUser.id)),
+            appwritePermission.write(appwriteRole.user(currentUser.id)),
+            appwritePermission.write(appwriteRole.user(chatWithUser.id))
+        ] : undefined;
+
+        await databases.createDocument(
+            DATABASE_ID,
+            COLLECTION_MESSAGES,
+            appwriteID.unique(),
+            {
+                pairKey: pairKeyFor(currentUser.id, chatWithUser.id),
+                senderId: currentUser.id,
+                receiverId: chatWithUser.id,
+                text: text
+            },
+            permissions
+        );
+
+        if(input) input.value = "";
+        await loadChatMessages();
+
+    }catch(error){
+        showAppwriteError(error, "Send chat message");
+    }finally{
+        if(btn) btn.disabled = false;
+    }
+}
+
+$("profileTabMain")?.addEventListener("click", ()=> setProfileTab("main"));
+$("profileTabAccounts")?.addEventListener("click", ()=> setProfileTab("accounts"));
+$("chatBack")?.addEventListener("click", closeChat);
+$("chatSendBtn")?.addEventListener("click", sendChatMessage);
+$("chatInput")?.addEventListener("keydown", e=>{
+    if(e.key === "Enter" && !e.shiftKey){
+        e.preventDefault();
+        sendChatMessage();
+    }
+});
+$("chatInput")?.addEventListener("focus", e=>{
+    setTimeout(()=>{
+        e.target.scrollIntoView({ block:"center", behavior:"smooth" });
+    }, 300);
+});
 
 
 /* =========================================================
@@ -5548,18 +6903,185 @@ async function publishAuthor(){
 
 $("publishedBooksTab").addEventListener("click",()=>{
     $("publishedBooksTab").classList.add("active");
-    $("publishedAuthorsTab").classList.remove("active");
+    $("publishedAuthorsTab")?.classList.remove("active");
+    $("publishedCommentsTab")?.classList.remove("active");
     $("adminPublishedBooks").classList.add("active");
-    $("adminPublishedAuthors").classList.remove("active");
+    $("adminPublishedAuthors")?.classList.remove("active");
+    $("adminPublishedComments")?.classList.remove("active");
 });
 
 $("publishedAuthorsTab").addEventListener("click",()=>{
     $("publishedAuthorsTab").classList.add("active");
-    $("publishedBooksTab").classList.remove("active");
+    $("publishedBooksTab")?.classList.remove("active");
+    $("publishedCommentsTab")?.classList.remove("active");
     $("adminPublishedAuthors").classList.add("active");
-    $("adminPublishedBooks").classList.remove("active");
+    $("adminPublishedBooks")?.classList.remove("active");
+    $("adminPublishedComments")?.classList.remove("active");
     renderPublishedAuthors();
 });
+
+$("publishedCommentsTab")?.addEventListener("click",()=>{
+    $("publishedCommentsTab").classList.add("active");
+    $("publishedBooksTab")?.classList.remove("active");
+    $("publishedAuthorsTab")?.classList.remove("active");
+    $("adminPublishedComments").classList.add("active");
+    $("adminPublishedBooks")?.classList.remove("active");
+    $("adminPublishedAuthors")?.classList.remove("active");
+    renderPublishedComments();
+});
+
+async function renderPublishedComments(){
+    const box = $("adminPublishedCommentsList");
+    if(!box || !isAdminMode) return;
+
+    box.innerHTML = `<div class="empty"><div class="emptyIcon">💬</div>در حال بارگذاری نظرات...</div>`;
+
+    if(!appwriteReady || !databases || !appwriteQuery){
+        box.innerHTML = "";
+        showEmpty(box, "اتصال برقرار نیست.");
+        return;
+    }
+
+    try{
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_COMMENTS,
+            [
+                appwriteQuery.orderDesc("$createdAt"),
+                appwriteQuery.limit(200)
+            ]
+        );
+
+        const comments = (res.documents || []).map(doc => ({
+            id: doc.$id,
+            workId: doc.workId || "",
+            userId: doc.userId || "",
+            userName: doc.userName || "کاربر",
+            text: doc.text || "",
+            rating: Number(doc.rating || 0),
+            parentId: doc.parentId || "",
+            createdAt: doc.$createdAt
+        }));
+
+        // گروه‌بندی بر اساس کتاب
+        const byWork = new Map();
+        comments.forEach(c => {
+            if(!c.workId) return;
+            if(!byWork.has(c.workId)) byWork.set(c.workId, []);
+            byWork.get(c.workId).push(c);
+        });
+
+        const text = normalizeText($("publishedSearchInput")?.value);
+        let workIds = [...byWork.keys()];
+
+        let items = workIds.map(workId => {
+            const work = allWorks.find(w => w.id === workId);
+            return {
+                workId,
+                work,
+                title: work?.title || "اثر حذف‌شده",
+                author: work?.Author || "",
+                type: work?.type || "",
+                comments: byWork.get(workId) || []
+            };
+        });
+
+        if(text){
+            items = items.filter(item =>
+                normalizeText(item.title).includes(text) ||
+                normalizeText(item.author).includes(text) ||
+                item.comments.some(c =>
+                    normalizeText(c.userName).includes(text) ||
+                    normalizeText(c.text).includes(text)
+                )
+            );
+        }
+
+        box.innerHTML = "";
+
+        if(!items.length){
+            showEmpty(
+                box,
+                text
+                    ? "کتاب یا نظری با این مشخصات پیدا نشد."
+                    : "هنوز نظری ثبت نشده است."
+            );
+            return;
+        }
+
+        items.forEach(item => {
+            const el = document.createElement("div");
+            el.className = "adminItem";
+
+            const typeLabel =
+                item.type === "manga" ? "📚 مانگا" :
+                item.type === "manhwa" ? "📕 مانهوا" :
+                item.type === "book" ? "📖 کتاب" : "اثر";
+
+            el.innerHTML = `
+                <div class="adminItemInfo">
+                    <b>${escapeHtml(item.title)}</b>
+                    <small>${escapeHtml(item.author || "نویسنده نامشخص")} · ${typeLabel}</small>
+                    <small>${item.comments.length} نظر</small>
+                </div>
+                <div class="adminActions">
+                    <button class="editBtn" type="button">💬 مشاهده نظرات</button>
+                </div>
+            `;
+
+            el.querySelector(".editBtn")?.addEventListener("click", ()=>{
+                if(item.work){
+                    openDetail(item.work);
+                    setTimeout(()=> setDetailTab("comments"), 50);
+                }else{
+                    showToast("این اثر در لیست موجود نیست");
+                }
+            });
+
+            // لیست نظرات برای حذف ادمین
+            const commentsBox = document.createElement("div");
+            commentsBox.style.marginTop = "10px";
+
+            item.comments
+                .slice()
+                .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
+                .forEach(c => {
+                    const row = document.createElement("div");
+                    row.className = "pendingChapter";
+                    row.style.flexDirection = "column";
+                    row.style.alignItems = "stretch";
+                    row.style.gap = "6px";
+
+                    const isReply = !!c.parentId;
+                    row.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                            <span style="font-size:10px;color:#c9b59a">
+                                <b style="color:#e2c6a3">${escapeHtml(c.userName || "کاربر")}</b>
+                                ${isReply ? " · پاسخ" : (c.rating > 0 ? " · " + starsMarkup(c.rating) : "")}
+                                · ${formatCommentTime(c.createdAt)}
+                            </span>
+                            <button type="button" class="delete" style="flex-shrink:0">حذف</button>
+                        </div>
+                        <div style="font-size:11px;color:#a9937c;line-height:1.7;white-space:pre-wrap;word-break:break-word">${escapeHtml(c.text || "")}</div>
+                    `;
+
+                    row.querySelector(".delete")?.addEventListener("click", async ()=>{
+                        await deleteComment(c.id);
+                    });
+
+                    commentsBox.appendChild(row);
+                });
+
+            el.appendChild(commentsBox);
+            box.appendChild(el);
+        });
+
+    }catch(error){
+        box.innerHTML = "";
+        showEmpty(box, "خطا در دریافت نظرات.");
+        showAppwriteError(error, "Load published comments");
+    }
+}
 
 function renderPublishedAuthors(){
     const box = $("adminPublishedAuthorList");
@@ -5974,9 +7496,10 @@ $("publishedSearchInput")
 .addEventListener(
     "input",
     ()=>{
-        const authorsTab = $("publishedAuthorsTab");
-        if(authorsTab && authorsTab.classList.contains("active")){
+        if($("publishedAuthorsTab")?.classList.contains("active")){
             renderPublishedAuthors();
+        }else if($("publishedCommentsTab")?.classList.contains("active")){
+            renderPublishedComments();
         }else{
             renderPublishedWorks();
         }
@@ -5990,9 +7513,10 @@ $("clearPublishedSearch")
     ()=>{
         $("publishedSearchInput").value = "";
 
-        const authorsTab = $("publishedAuthorsTab");
-        if(authorsTab && authorsTab.classList.contains("active")){
+        if($("publishedAuthorsTab")?.classList.contains("active")){
             renderPublishedAuthors();
+        }else if($("publishedCommentsTab")?.classList.contains("active")){
+            renderPublishedComments();
         }else{
             renderPublishedWorks();
         }
