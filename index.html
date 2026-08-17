@@ -3474,33 +3474,54 @@ document
 function getProfile(){
 
     try{
+        const key = currentUser && currentUser.id
+            ? "cafeketab_profile_" + currentUser.id
+            : "cafeketab_profile";
 
         return JSON.parse(
-            localStorage.getItem(
-                "cafeketab_profile"
-            ) ||
+            localStorage.getItem(key) ||
             '{"name":"کاربر","avatar":""}'
         );
 
     }catch{
-
         return {
             name:"کاربر",
             avatar:""
         };
-
     }
 }
 
 
 function saveProfileData(profile){
+    const key = currentUser && currentUser.id
+        ? "cafeketab_profile_" + currentUser.id
+        : "cafeketab_profile";
 
     localStorage.setItem(
-        "cafeketab_profile",
+        key,
         JSON.stringify(profile)
     );
 }
 
+
+async function refreshCurrentUserFromDatabase(){
+    if(!currentUser || !databases || !DATABASE_ID || !COLLECTION_USERS) return;
+    try{
+        const doc = await databases.getDocument(
+            DATABASE_ID,
+            COLLECTION_USERS,
+            currentUser.id
+        );
+        if(doc && doc.name){
+            currentUser.name = doc.name;
+            const profile = getProfile();
+            profile.name = doc.name;
+            saveProfileData(profile);
+        }
+    }catch(e){
+        console.warn("refresh user name:", e);
+    }
+}
 
 function updateProfile(){
 
@@ -3865,6 +3886,7 @@ async function doLogin(){
         }
 
         await syncUserDoc(user);
+        await refreshCurrentUserFromDatabase();
 
         $("loginModal").classList.remove("active");
         updateProfile();
@@ -4309,7 +4331,7 @@ async function openUserAuthorPage(email){
        از همان‌جا مستقیم وارد چت او شو. */
     if(!userBooks.length){
         if(!currentUser){
-            showToast("ابتدا وارد حساب شوید");
+            showToast("ابتدا ثبت‌نام کنید");
             openLoginModal();
             return;
         }
@@ -4336,9 +4358,18 @@ async function openUserAuthorPage(email){
         return;
     }
 
-    const authorName =
-        userBooks.find(work => work.Author)?.Author ||
-        authorEmail;
+    let authorName = authorEmail;
+    try{
+        await fetchAllUsers();
+        const authorUser = (allUsersCache || []).find(u =>
+            normalizeText(u.email) === normalizeText(authorEmail)
+        );
+        if(authorUser && authorUser.name){
+            authorName = authorUser.name;
+        }
+    }catch(e){
+        console.warn("Get real author name:", e);
+    }
 
     currentAuthor = {
         id: "userauthor:" + authorEmail.toLowerCase(),
@@ -4361,6 +4392,9 @@ async function openUserAuthorPage(email){
     $("authorDetailChatDescription").textContent =
         "برای گفتگو با این نویسنده، گزینه چت را انتخاب کنید.";
 
+    /* نویسنده‌های کاربر (با ایمیل): کتاب‌ها + چت */
+    setAuthorDetailChatVisible(true);
+
     const box = $("authorDetailBooks");
     box.innerHTML = "";
 
@@ -4377,7 +4411,7 @@ async function openUserAuthorPage(email){
         chatBtn.style.display = "block";
         chatBtn.onclick = async ()=>{
             if(!currentUser){
-                showToast("ابتدا وارد حساب شوید");
+                showToast("ابتدا ثبت‌نام کنید");
                 openLoginModal();
                 return;
             }
@@ -4410,6 +4444,33 @@ async function openUserAuthorPage(email){
     showPage("authorDetailPage");
 }
 
+function setAuthorDetailChatVisible(visible){
+    const tabs = $("authorDetailTabs");
+    const chatTab = $("authorDetailChatTab");
+    const chatPanel = $("authorDetailChatPanel");
+    const booksTab = $("authorDetailBooksTab");
+    const booksPanel = $("authorDetailBooksPanel");
+
+    if(tabs){
+        tabs.style.display = visible ? "flex" : "none";
+    }
+    if(chatTab){
+        chatTab.style.display = visible ? "" : "none";
+    }
+    if(chatPanel){
+        chatPanel.style.display = visible ? "" : "none";
+        if(!visible){
+            chatPanel.classList.remove("active");
+        }
+    }
+    if(booksTab){
+        booksTab.classList.add("active");
+    }
+    if(booksPanel){
+        booksPanel.classList.add("active");
+    }
+}
+
 function openAuthorDetail(author){
 
     currentAuthor = author;
@@ -4423,10 +4484,9 @@ function openAuthorDetail(author){
         author.description || "توضیحاتی برای این نویسنده ثبت نشده است.";
 
     $("authorDetailBooksTitle").textContent = "کتاب‌های این نویسنده";
-    $("authorDetailChatDescription").textContent =
-        author.email
-            ? "برای گفتگو با این نویسنده، گزینه چت را انتخاب کنید."
-            : "برای این نویسنده ایمیل قابل چت ثبت نشده است.";
+
+    /* نویسنده‌های واقعی ایمیل چت ندارند: فقط کتاب‌ها */
+    setAuthorDetailChatVisible(false);
 
     const box = $("authorDetailBooks");
     box.innerHTML = "";
@@ -4445,37 +4505,8 @@ function openAuthorDetail(author){
 
     const chatBtn = $("authorDetailChatBtn");
     if(chatBtn){
-        chatBtn.style.display = author.email ? "block" : "none";
-        chatBtn.onclick = async ()=>{
-            if(!author.email) return;
-            if(!currentUser){
-                showToast("ابتدا وارد حساب شوید");
-                openLoginModal();
-                return;
-            }
-
-            try{
-                await fetchAllUsers();
-            }catch(error){
-                showAppwriteError(error,"Find author account");
-                return;
-            }
-
-            const user = (allUsersCache || []).find(u =>
-                normalizeText(u.email) === normalizeText(author.email)
-            );
-
-            if(!user){
-                showToast("اکانت این ایمیل در چت‌ها پیدا نشد");
-                return;
-            }
-
-            openChat({
-                id: user.id,
-                name: user.name || author.title || "نویسنده",
-                email: user.email || author.email
-            });
-        };
+        chatBtn.style.display = "none";
+        chatBtn.onclick = null;
     }
 
     setAuthorDetailTab("books");
@@ -5806,19 +5837,16 @@ async function syncUserDoc(user){
     if(!databases || !user || !user.$id) return;
 
     try{
-        await databases.createDocument(
+        await databases.getDocument(
             DATABASE_ID,
             COLLECTION_USERS,
-            user.$id,
-            {
-                name: user.name || "کاربر",
-                email: user.email || ""
-            }
+            user.$id
         );
+        // اگر کاربر وجود دارد، نام ذخیره‌شده در دیتابیس حفظ می‌شود
+        return;
     }catch(error){
-        // اگر سند از قبل وجود داشت (کاربر قبلاً لاگین کرده)، فقط بروزرسانی کن
         try{
-            await databases.updateDocument(
+            await databases.createDocument(
                 DATABASE_ID,
                 COLLECTION_USERS,
                 user.$id,
@@ -6303,7 +6331,28 @@ function renderCommentItem(c, isReply){
     `;
 
     if(canChat){
-        item.querySelector(".commentAvatar")?.addEventListener("click", ()=>{
+        item.querySelector(".commentAvatar")?.addEventListener("click", async ()=>{
+            try{
+                await fetchAllUsers();
+                const user = (allUsersCache || []).find(u => u.id === c.userId);
+                const email = user?.email || "";
+
+                if(email){
+                    const hasBook = allWorks.some(work =>
+                        work &&
+                        work.type === "userbook" &&
+                        String(work.authorEmail || work.createdByDevice || "").trim().toLowerCase() === email.toLowerCase()
+                    );
+
+                    if(hasBook){
+                        openUserAuthorPage(email);
+                        return;
+                    }
+                }
+            }catch(error){
+                console.warn("Open comment user page:", error);
+            }
+
             openChat({ id: c.userId, name: c.userName || "کاربر" });
         });
     }
@@ -6637,6 +6686,10 @@ function setAccountsSubTab(tab){
 function renderAccountItem(user, listEl){
     if(!listEl || !user) return;
 
+    // نام حساب همیشه از پروفایل خود کاربر گرفته می‌شود.
+    // اسم کتاب نباید جایگزین نام کاربر شود.
+    const displayUserName = user.name || "کاربر";
+
     const item = document.createElement("div");
     item.className = "accountItem";
     const unread = Number(user.unreadCount || unreadBySenderCache[user.id] || 0);
@@ -6644,7 +6697,7 @@ function renderAccountItem(user, listEl){
     item.innerHTML = `
         <div class="accountAvatar">${escapeHtml(avatarInitial(user.name))}</div>
         <div class="accountInfo">
-            <div class="accountName">${escapeHtml(user.name || "کاربر")}</div>
+            <div class="accountName">${escapeHtml(displayUserName)}</div>
             <div class="accountSub">${escapeHtml(user.email || user.sub || "")}</div>
         </div>
         <div class="accountChatBtnWrap">
@@ -7617,6 +7670,12 @@ function renderChapters(chapters){
             item.addEventListener(
                 "click",
                 ()=>{
+                    if(!currentUser){
+                        showToast("ابتدا ثبت‌نام کنید");
+                        openLoginModal();
+                        return;
+                    }
+
                     const content =
                         chapter.link || "";
 
@@ -7720,6 +7779,12 @@ $("downloadBtn")
 
         if(!currentWork)
             return;
+
+        if(!currentUser){
+            showToast("ابتدا ثبت‌نام کنید");
+            openLoginModal();
+            return;
+        }
 
         if(currentWork.type === "userbook"){
             return;
