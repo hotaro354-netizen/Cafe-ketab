@@ -3461,19 +3461,41 @@ function showToast(text){
 
 function getErrorText(error,operation){
 
-    return [
+    const code = error?.code ?? "نامشخص";
+    const type = String(error?.type || "");
+    const message = error?.message ?? String(error);
+
+    const lines = [
         "APPWRITE ERROR",
         "-------------------------",
         "Operation: " + operation,
-        "Code: " + (error?.code ?? "نامشخص"),
-        "Type: " + (error?.type ?? "نامشخص"),
-        "Message: " + (error?.message ?? String(error)),
+        "Code: " + code,
+        "Type: " + (type || "نامشخص"),
+        "Message: " + message,
         "-------------------------",
         "Project ID: " + APPWRITE_PROJECT,
         "Database ID: " + DATABASE_ID,
         "Works Collection: " + COLLECTION_WORKS,
         "Chapters Collection: " + COLLECTION_CHAPTERS
-    ].join("\n");
+    ];
+
+    /* پروژه به‌خاطر عدم فعالیت در Appwrite Cloud متوقف شده */
+    if(
+        Number(code) === 403 ||
+        type === "project_paused" ||
+        String(message).toLowerCase().includes("project is paused")
+    ){
+        lines.push(
+            "-------------------------",
+            "راهنما:",
+            "پروژه Appwrite شما به‌خاطر عدم فعالیت متوقف (Paused) شده است.",
+            "وارد کنسول Appwrite شوید:",
+            "https://cloud.appwrite.io",
+            "سپس پروژه را Restore / Resume کنید تا اتصال برقرار شود."
+        );
+    }
+
+    return lines.join("\n");
 }
 
 
@@ -5650,7 +5672,7 @@ $("readerBack")?.addEventListener(
 
 
 /* =========================================================
-   GENRES
+   GENRES  (همگام با Appwrite برای همه کاربران)
 ========================================================= */
 
 const defaultGenres = [
@@ -5666,8 +5688,14 @@ const defaultGenres = [
     "درام"
 ];
 
+/* سند ثابت ژانرها در کالکشن works با type=genres_config */
+const GENRES_DOC_ID = "cafeketab_genres";
+const GENRES_DOC_TYPE = "genres_config";
 
-function getGenres(){
+let cloudGenres = null;   // لیست ژانرهای ابری (null = هنوز لود نشده)
+
+
+function getLocalGenresFallback(){
 
     try{
 
@@ -5691,12 +5719,171 @@ function getGenres(){
 }
 
 
-function saveGenres(genres){
+function getGenres(){
+
+    if(
+        Array.isArray(cloudGenres) &&
+        cloudGenres.length
+    ){
+        return [...cloudGenres];
+    }
+
+    return getLocalGenresFallback();
+}
+
+
+function saveGenresLocal(genres){
 
     localStorage.setItem(
         "cafeketab_genres",
         JSON.stringify(genres)
     );
+}
+
+
+async function saveGenres(genres){
+
+    const list =
+        Array.isArray(genres)
+            ? genres.map(g => String(g || "").trim()).filter(Boolean)
+            : [];
+
+    cloudGenres = list;
+    saveGenresLocal(list);
+
+    if(
+        !appwriteReady ||
+        !databases ||
+        !appwriteID
+    ){
+        return;
+    }
+
+    const payload = {
+        title: "genres",
+        Author: "",
+        genre: "",
+        description: JSON.stringify(list),
+        type: GENRES_DOC_TYPE,
+        coverUrl: "",
+        bookLink: "",
+        createdByDevice: "system"
+    };
+
+    try{
+
+        try{
+
+            await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_WORKS,
+                GENRES_DOC_ID,
+                payload
+            );
+
+        }catch(updateErr){
+
+            const code = Number(updateErr?.code || 0);
+
+            /* سند وجود ندارد → ایجاد با شناسه ثابت */
+            if(code === 404){
+
+                await databases.createDocument(
+                    DATABASE_ID,
+                    COLLECTION_WORKS,
+                    GENRES_DOC_ID,
+                    payload
+                );
+
+            }else{
+
+                throw updateErr;
+            }
+        }
+
+    }catch(error){
+
+        console.warn("Save genres cloud:", error);
+        /* محلی ذخیره شده؛ خطای ابری را فقط لاگ می‌کنیم تا UI نشکند */
+    }
+}
+
+
+async function loadGenresFromCloud(){
+
+    if(
+        !appwriteReady ||
+        !databases
+    ){
+        cloudGenres = null;
+        return getGenres();
+    }
+
+    try{
+
+        let doc = null;
+
+        try{
+
+            doc = await databases.getDocument(
+                DATABASE_ID,
+                COLLECTION_WORKS,
+                GENRES_DOC_ID
+            );
+
+        }catch(getErr){
+
+            /* اگر با ID ثابت پیدا نشد، با type جستجو کن */
+            if(
+                appwriteQuery &&
+                Number(getErr?.code) === 404
+            ){
+
+                const res = await databases.listDocuments(
+                    DATABASE_ID,
+                    COLLECTION_WORKS,
+                    [
+                        appwriteQuery.equal("type", GENRES_DOC_TYPE),
+                        appwriteQuery.limit(1)
+                    ]
+                );
+
+                doc = (res.documents || [])[0] || null;
+            }else{
+                throw getErr;
+            }
+        }
+
+        if(doc && doc.description){
+
+            let parsed = null;
+
+            try{
+                parsed = JSON.parse(doc.description);
+            }catch{}
+
+            if(Array.isArray(parsed) && parsed.length){
+
+                cloudGenres = parsed
+                    .map(g => String(g || "").trim())
+                    .filter(Boolean);
+
+                saveGenresLocal(cloudGenres);
+                return cloudGenres;
+            }
+        }
+
+        /* هنوز سندی نیست → پیش‌فرض را ابری کن تا همه یکسان ببینند */
+        const initial = getLocalGenresFallback();
+        await saveGenres(initial);
+        return initial;
+
+    }catch(error){
+
+        console.warn("Load genres cloud:", error);
+        cloudGenres = null;
+        return getGenres();
+    }
 }
 
 
@@ -5956,16 +6143,29 @@ async function initAppwrite(){
 
         await loadWorks();
 
+        await loadGenresFromCloud();
+        renderGenres();
+        fillGenreSelect();
+        renderGenreAdmin();
+
 
     }catch(error){
 
         appwriteReady =
             false;
 
+        const errType = String(error?.type || "");
+        const errMsg = String(error?.message || "").toLowerCase();
+        const isPaused =
+            Number(error?.code) === 403 ||
+            errType === "project_paused" ||
+            errMsg.includes("project is paused");
 
         $("firebaseStatus")
             .textContent =
-            "اتصال Appwrite برقرار نیست";
+            isPaused
+                ? "پروژه Appwrite متوقف است — از کنسول Restore کنید"
+                : "اتصال Appwrite برقرار نیست";
 
         $("firebaseStatus")
             .style.display =
@@ -6259,7 +6459,11 @@ async function loadWorks(){
             );
 
         allWorks =
-            res.documents.map(
+            res.documents
+            .filter(doc =>
+                String(doc.type || "") !== GENRES_DOC_TYPE
+            )
+            .map(
                 doc=>({
 
                     id:
@@ -10395,7 +10599,7 @@ $("closeEditWorkModal")
 $("addGenreBtn")
 .addEventListener(
     "click",
-    ()=>{
+    async ()=>{
 
         const input =
             $("newGenre");
@@ -10432,7 +10636,7 @@ $("addGenreBtn")
             genre
         );
 
-        saveGenres(
+        await saveGenres(
             genres
         );
 
@@ -10506,7 +10710,7 @@ function renderGenreAdmin(){
 
             button.addEventListener(
                 "click",
-                ()=>{
+                async ()=>{
 
                     if(
                         !confirm(
@@ -10526,7 +10730,7 @@ function renderGenreAdmin(){
                         1
                     );
 
-                    saveGenres(
+                    await saveGenres(
                         current
                     );
 
