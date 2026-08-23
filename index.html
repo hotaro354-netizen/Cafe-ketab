@@ -2127,6 +2127,60 @@ button{
     justify-content:center;
 }
 
+
+/* ===== User Books Notice Banner ===== */
+.userBooksNoticeOverlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.58);
+    z-index:4800;
+    display:none;
+    align-items:flex-end;
+}
+.userBooksNoticeOverlay.active{
+    display:flex;
+}
+.userBooksNotice{
+    width:100%;
+    max-width:520px;
+    margin:auto;
+    background:#211710;
+    border:1px solid #4a3222;
+    border-radius:20px 20px 0 0;
+    padding:20px;
+    box-shadow:0 -8px 30px rgba(0,0,0,.35);
+}
+.userBooksNotice h3{
+    font-size:16px;
+    margin-bottom:10px;
+}
+.userBooksNotice p{
+    color:#a9937c;
+    font-size:11px;
+    line-height:2;
+    margin-bottom:16px;
+}
+.userBooksNoticeActions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+.userBooksNoticeActions button{
+    height:44px;
+    border:0;
+    border-radius:11px;
+    font-size:11px;
+}
+.userBooksNoticeConfirm{
+    background:#bd7232;
+    color:#fff;
+}
+.userBooksNoticeRead{
+    background:#302119;
+    color:#c8ad90;
+    border:1px solid #3a291e !important;
+}
+
 </style>
 </head>
 
@@ -3208,12 +3262,73 @@ style="background:#302119;color:#c8ad90">
 
 <div id="chatLimitNotice" class="chatLimitNotice"></div>
 
+
+<div id="userBooksNoticeOverlay" class="userBooksNoticeOverlay">
+    <div class="userBooksNotice">
+        <h3>✍️ قلم کاربران</h3>
+        <p>در این بخش می‌توانید آثار منتشرشده توسط کاربران را بخوانید و فصل‌ها یا پارت‌های آن‌ها را مشاهده کنید.</p>
+<p>اگر شما هم می‌خواهید کتابتان را به صورت رایگان منتشر کنید، به آیدی تلگرام/روبیکا <b dir="ltr">@rraararar</b> پیام بدهید.</p>
+        <div class="userBooksNoticeActions">
+            <button id="userBooksNoticeConfirm" class="userBooksNoticeConfirm" type="button">تأیید</button>
+            <button id="userBooksNoticeRead" class="userBooksNoticeRead" type="button">خوانده شد</button>
+        </div>
+    </div>
+</div>
+
+
 <div id="toast" class="toast">
 انجام شد
 </div>
 
 
 <script>
+
+
+/* =========================================================
+   USER BOOKS NOTICE
+========================================================= */
+
+const USER_BOOKS_NOTICE_READ_KEY =
+    "cafeketab_userbooks_notice_read_v1";
+
+function showUserBooksNotice(){
+
+    const overlay =
+        $("userBooksNoticeOverlay");
+
+    if(!overlay) return;
+
+    if(localStorage.getItem(USER_BOOKS_NOTICE_READ_KEY) === "1")
+        return;
+
+    overlay.classList.add("active");
+}
+
+function hideUserBooksNotice(){
+
+    $("userBooksNoticeOverlay")
+        ?.classList.remove("active");
+}
+
+$("userBooksNoticeConfirm")
+?.addEventListener(
+    "click",
+    hideUserBooksNotice
+);
+
+$("userBooksNoticeRead")
+?.addEventListener(
+    "click",
+    ()=>{
+        localStorage.setItem(
+            USER_BOOKS_NOTICE_READ_KEY,
+            "1"
+        );
+
+        hideUserBooksNotice();
+    }
+);
+
 
 /* =========================================================
    APPWRITE CONFIG
@@ -4090,7 +4205,10 @@ function setHomeCategory(category){
 
 $("booksTab").addEventListener("click",()=>setHomeCategory("book"));
 $("mangaTab").addEventListener("click",()=>setHomeCategory("manga"));
-$("userBooksTab").addEventListener("click",()=>setHomeCategory("userbook"));
+$("userBooksTab").addEventListener("click",()=>{
+    setHomeCategory("userbook");
+    showUserBooksNotice();
+});
 
 
 /* =========================================================
@@ -8403,9 +8521,20 @@ function addChapter(){
         return;
     }
 
+    if(typeof link !== "string" || link.length > 2000){
+
+        showToast(
+            isUserBook
+                ? "متن فصل / پارت نباید بیشتر از ۲۰۰۰ کاراکتر باشد"
+                : "لینک چپتر نباید بیشتر از ۲۰۰۰ کاراکتر باشد"
+        );
+
+        return;
+    }
+
     pendingChapters.push({
         title,
-        link
+        link: String(link)
     });
 
     $("chapterTitle").value = "";
