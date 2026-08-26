@@ -1737,6 +1737,41 @@ button{
     line-height:1;
 }
 
+.mangaRandomRow{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.randomBookBtnHalf{
+    min-height:56px;
+    padding:8px 8px;
+    gap:8px;
+}
+
+.randomBookBtnHalf .randomBookDice{
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+    font-size:17px;
+    border-radius:10px;
+}
+
+.randomBookBtnHalf .randomBookText strong{
+    font-size:11px;
+}
+
+.randomBookBtnHalf .randomBookText small{
+    font-size:8px;
+}
+
+.randomBookBtnHalf .randomBookGo{
+    width:22px;
+    height:22px;
+    flex:0 0 22px;
+    font-size:15px;
+}
+
 
 
 /* ===== User Books / Reader ===== */
@@ -2239,6 +2274,34 @@ button{
 
 <div id="forYou" class="books"></div>
 
+<div id="bookRandomBox" class="randomBookBox" style="display:none;margin-top:28px;margin-bottom:8px">
+<button id="bookRandomBtn" type="button" class="randomBookBtn" aria-label="انتخاب تصادفی کتاب">
+<span class="randomBookDice" aria-hidden="true">🎲</span>
+<span class="randomBookText"><strong>کتاب تصادفی</strong><small>بذار شانس یک کتاب انتخاب کنه!</small></span>
+<span class="randomBookGo" aria-hidden="true">‹</span>
+</button>
+</div>
+
+<div id="mangaRandomBox" class="randomBookBox" style="display:none;margin-top:28px;margin-bottom:8px">
+<button id="mangaManhwaRandomBtn" type="button" class="randomBookBtn" style="margin-bottom:8px" aria-label="مانگا و مانهوا تصادفی">
+<span class="randomBookDice" aria-hidden="true">🎲</span>
+<span class="randomBookText"><strong>مانگا و مانهوا تصادفی</strong><small>یکی از مانگا یا مانهواها را شانسی انتخاب کن!</small></span>
+<span class="randomBookGo" aria-hidden="true">‹</span>
+</button>
+<div class="mangaRandomRow">
+<button id="mangaRandomBtn" type="button" class="randomBookBtn randomBookBtnHalf" aria-label="مانگا تصادفی">
+<span class="randomBookDice" aria-hidden="true">🎲</span>
+<span class="randomBookText"><strong>مانگا تصادفی</strong><small>یکی از مانگاها را شانسی انتخاب کن!</small></span>
+<span class="randomBookGo" aria-hidden="true">‹</span>
+</button>
+<button id="manhwaRandomBtn" type="button" class="randomBookBtn randomBookBtnHalf" aria-label="مانهوا تصادفی">
+<span class="randomBookDice" aria-hidden="true">🎲</span>
+<span class="randomBookText"><strong>مانهوای تصادفی</strong><small>یکی از مانهواها را شانسی انتخاب کن!</small></span>
+<span class="randomBookGo" aria-hidden="true">‹</span>
+</button>
+</div>
+</div>
+
 <div id="userRandomBookBox" class="randomBookBox" style="display:none;margin-top:28px;margin-bottom:8px">
 <button id="userRandomBookBtn" type="button" class="randomBookBtn" aria-label="انتخاب تصادفی از کتاب‌های کاربران">
 <span class="randomBookDice" aria-hidden="true">🎲</span>
@@ -2268,25 +2331,6 @@ placeholder="نام کتاب، مانگا یا مانهوا">
 ×
 </span>
 
-</div>
-
-<div class="randomBookBox">
-<button
-id="randomBookBtn"
-type="button"
-class="randomBookBtn"
-aria-label="انتخاب یک کتاب تصادفی">
-
-<span class="randomBookDice" aria-hidden="true">🎲</span>
-
-<span class="randomBookText">
-<strong>کتاب تصادفی</strong>
-<small>بذار شانس انتخاب کنه!</small>
-</span>
-
-<span class="randomBookGo" aria-hidden="true">‹</span>
-
-</button>
 </div>
 
 <div id="searchAuthorsSection" class="authorStrip">
@@ -2699,6 +2743,13 @@ placeholder="https://example.com/cover.jpg">
 id="adminDescription"
 placeholder="توضیحات اثر"
 style="min-height:110px"></textarea>
+
+
+<label>کلید واژه</label>
+
+<input
+id="adminKeywords"
+placeholder="کلیدواژه‌ها را با کاما جدا کنید (فقط برای جستجو)">
 
 
 <div id="bookLinkBox">
@@ -3142,6 +3193,13 @@ placeholder="توضیحات">
 </textarea>
 
 
+<label>کلید واژه</label>
+
+<input
+id="editKeywords"
+placeholder="کلیدواژه‌ها را با کاما جدا کنید (فقط برای جستجو)">
+
+
 <label>لینک مستقیم جلد</label>
 
 <input
@@ -3364,6 +3422,9 @@ const RUBIKA_ID =
 const APP_DOWNLOAD_LINK =
     "https://github.com/hotaro354-netizen/Cafe-ketab/releases/download/v1.0.0/Book_Cafe1.apk";
 
+const ADMIN_EMAIL =
+    "hotaro354@gmail.com";
+
 
 /* =========================================================
    STATE
@@ -3389,6 +3450,11 @@ let pendingChapters = [];
 
 let isAdminMode = false;
 let publishing = false;
+
+let recentRandomIds = [];
+const RECENT_RANDOM_LIMIT = 10;
+
+let appPageStack = ["homePage"];
 
 let editingWork = null;
 let editingWorkType = null;
@@ -3578,7 +3644,7 @@ const deviceId =
    PAGE
 ========================================================= */
 
-function showPage(id){
+function showPage(id, fromPop){
 
     if(id !== "chatPage" && chatPollTimer){
         clearInterval(chatPollTimer);
@@ -3624,7 +3690,68 @@ function showPage(id){
         });
 
     window.scrollTo(0,0);
+
+    /* مدیریت دکمه برگشت سیستم (WebView / مرورگر) */
+    if(!fromPop){
+        const mainPages = [
+            "homePage",
+            "searchPage",
+            "genresPage",
+            "savedPage",
+            "profilePage"
+        ];
+
+        const top =
+            appPageStack[
+                appPageStack.length - 1
+            ];
+
+        if(top !== id){
+            if(mainPages.includes(id)){
+                appPageStack = [id];
+                try{
+                    history.replaceState(
+                        { page: id },
+                        ""
+                    );
+                }catch(e){}
+            }else{
+                appPageStack.push(id);
+                try{
+                    history.pushState(
+                        { page: id },
+                        ""
+                    );
+                }catch(e){}
+            }
+        }
+    }
 }
+
+window.addEventListener(
+    "popstate",
+    ()=>{
+        if(appPageStack.length > 1){
+            appPageStack.pop();
+            const prev =
+                appPageStack[
+                    appPageStack.length - 1
+                ];
+            showPage(prev, true);
+        }else{
+            try{
+                history.pushState(
+                    {
+                        page:
+                            appPageStack[0] ||
+                            "homePage"
+                    },
+                    ""
+                );
+            }catch(e){}
+        }
+    }
+);
 
 
 document
@@ -3705,6 +3832,7 @@ function updateProfile(){
     const openLoginBtn = $("openLoginBtn");
     const logoutBtn = $("logoutBtn");
     const editBtn = $("editProfileBtn");
+    const adminBtn = $("adminAccessBtn");
 
     if(currentUser){
         // کاربر لاگین کرده
@@ -3728,6 +3856,19 @@ function updateProfile(){
         if(openLoginBtn) openLoginBtn.style.display = "inline-block";
         if(logoutBtn) logoutBtn.style.display = "none";
         if(editBtn) editBtn.style.display = "inline-block";
+    }
+
+    // دکمه پنل مدیریت فقط برای ایمیل ادمین نمایش داده شود
+    if(adminBtn){
+        const isOwner =
+            currentUser &&
+            String(currentUser.email || "")
+                .trim()
+                .toLowerCase() ===
+            ADMIN_EMAIL.toLowerCase();
+
+        adminBtn.style.display =
+            isOwner ? "" : "none";
     }
 
     if(profile.avatar){
@@ -4055,6 +4196,12 @@ async function doLogin(){
             email: user.email || ""
         };
 
+        isAdminMode =
+            String(user.email || "")
+                .trim()
+                .toLowerCase() ===
+            ADMIN_EMAIL.toLowerCase();
+
         const profile = getProfile();
         if(currentUser.name){
             profile.name = currentUser.name;
@@ -4149,6 +4296,12 @@ async function doRegister(){
             name: user.name || name,
             email: user.email || email
         };
+
+        isAdminMode =
+            String(currentUser.email || "")
+                .trim()
+                .toLowerCase() ===
+            ADMIN_EMAIL.toLowerCase();
 
         const profile = getProfile();
         profile.name = currentUser.name;
@@ -4861,9 +5014,21 @@ function renderHome(){
     if(newSection) newSection.style.display = "";
     if(forYouSection) forYouSection.style.display = "";
 
+    const bookRandomBox = $("bookRandomBox");
+    const mangaRandomBox = $("mangaRandomBox");
     const userRandomBox = $("userRandomBookBox");
+
+    if(bookRandomBox){
+        bookRandomBox.style.display =
+            currentCategory === "book" ? "block" : "none";
+    }
+    if(mangaRandomBox){
+        mangaRandomBox.style.display =
+            currentCategory === "manga" ? "block" : "none";
+    }
     if(userRandomBox){
-        userRandomBox.style.display = currentCategory === "userbook" ? "block" : "none";
+        userRandomBox.style.display =
+            currentCategory === "userbook" ? "block" : "none";
     }
 
     $("latestTitle").textContent = "تازه انتشار شده";
@@ -5078,6 +5243,7 @@ function renderSearch(){
             const title = normalizeText(work.title);
             const author = normalizeText(work.Author);
             const genre = normalizeText(work.genre);
+            const keywords = normalizeText(work.keywords || "");
             let score = -1;
 
             if(title === text) score = 1000;
@@ -5088,6 +5254,13 @@ function renderSearch(){
             else if(author.includes(text)) score = 550;
             else if(genre === text) score = 500;
             else if(genre.includes(text)) score = 450;
+            else if(keywords.includes(text)) score = 480;
+            else if(
+                keywords
+                    .split(/[,،\s]+/)
+                    .filter(Boolean)
+                    .some(kw => kw === text || kw.includes(text) || text.includes(kw))
+            ) score = 460;
 
             return {work,score};
         })
@@ -5110,58 +5283,99 @@ function renderSearch(){
 
 
 /* =========================================================
-   RANDOM BOOK
+   RANDOM BOOK / MANGA / USER
 ========================================================= */
 
-$("randomBookBtn")
-.addEventListener(
-    "click",
-    ()=>{
+function pickRandomWork(works){
 
-        const books =
-            allWorks.filter(
-                work =>
-                    work &&
-                    work.type === "book"
-            );
+    if(!works || !works.length) return null;
 
-        if(!books.length){
-
-            showToast(
-                "هنوز کتابی برای انتخاب وجود ندارد"
-            );
-
-            return;
-        }
-
-        const randomBook =
-            books[
-                Math.floor(
-                    Math.random() *
-                    books.length
-                )
-            ];
-
-        openDetail(
-            randomBook
+    let candidates =
+        works.filter(
+            work =>
+                work &&
+                work.id &&
+                !recentRandomIds.includes(work.id)
         );
+
+    if(!candidates.length){
+        candidates = works.filter(work => work && work.id);
     }
-);
 
-/* =========================================================
-   RANDOM USER BOOK
-========================================================= */
+    if(!candidates.length) return null;
 
-$("userRandomBookBtn")?.addEventListener("click",()=>{
-    const books = allWorks.filter(work => work && work.type === "userbook");
+    const picked =
+        candidates[
+            Math.floor(
+                Math.random() *
+                candidates.length
+            )
+        ];
 
-    if(!books.length){
-        showToast("هنوز کتابی از کاربران منتشر نشده است");
+    recentRandomIds =
+        [picked.id, ...recentRandomIds]
+            .slice(0, RECENT_RANDOM_LIMIT);
+
+    return picked;
+}
+
+function openRandomByTypes(types, emptyMsg){
+
+    const list =
+        allWorks.filter(
+            work =>
+                work &&
+                types.includes(work.type)
+        );
+
+    if(!list.length){
+        showToast(emptyMsg || "هنوز اثری برای انتخاب وجود ندارد");
         return;
     }
 
-    const randomBook = books[Math.floor(Math.random() * books.length)];
-    openDetail(randomBook);
+    const picked = pickRandomWork(list);
+
+    if(!picked){
+        showToast(emptyMsg || "هنوز اثری برای انتخاب وجود ندارد");
+        return;
+    }
+
+    openDetail(picked);
+}
+
+$("bookRandomBtn")?.addEventListener("click", ()=>{
+    openRandomByTypes(
+        ["book"],
+        "هنوز کتابی برای انتخاب وجود ندارد"
+    );
+});
+
+$("mangaManhwaRandomBtn")?.addEventListener("click", ()=>{
+    openRandomByTypes(
+        ["manga", "manhwa"],
+        "هنوز مانگا یا مانهوایی برای انتخاب وجود ندارد"
+    );
+});
+
+$("mangaRandomBtn")?.addEventListener("click", ()=>{
+    openRandomByTypes(
+        ["manga"],
+        "هنوز مانگایی برای انتخاب وجود ندارد"
+    );
+});
+
+$("manhwaRandomBtn")?.addEventListener("click", ()=>{
+    openRandomByTypes(
+        ["manhwa"],
+        "هنوز مانهوایی برای انتخاب وجود ندارد"
+    );
+});
+
+$("userRandomBookBtn")?.addEventListener("click", ()=>{
+    openRandomByTypes(
+        ["userbook"],
+        "هنوز کتابی از کاربران منتشر نشده است"
+    );
 });
 
 /* =========================================================
@@ -6238,9 +6452,12 @@ async function checkExistingAdminSession(){
                 email: user.email || ""
             };
 
-            // فعلاً هر کاربری که لاگین باشد می‌تواند به پنل ادمین دسترسی داشته باشد
-            // (اگر بعداً خواستی فقط ایمیل‌های خاص ادمین باشند اینجا فیلتر بگذار)
-            isAdminMode = true;
+            // فقط ایمیل ادمین اجازه دسترسی به پنل مدیریت دارد
+            isAdminMode =
+                String(user.email || "")
+                    .trim()
+                    .toLowerCase() ===
+                ADMIN_EMAIL.toLowerCase();
 
             console.log(
                 "Appwrite session:",
@@ -6345,6 +6562,23 @@ async function loginAdmin(){
             name: user.name || "",
             email: user.email || ""
         };
+
+        const isOwner =
+            String(user.email || "")
+                .trim()
+                .toLowerCase() ===
+            ADMIN_EMAIL.toLowerCase();
+
+        if(!isOwner){
+            try{
+                await account.deleteSession("current");
+            }catch(e){}
+            currentUser = null;
+            isAdminMode = false;
+            updateProfile();
+            showToast("فقط حساب مدیریت مجاز به ورود است");
+            return;
+        }
 
         isAdminMode = true;
 
@@ -6480,6 +6714,9 @@ async function loadWorks(){
 
                     description:
                         doc.description || "",
+
+                    keywords:
+                        doc.keywords || "",
 
                     type:
                         doc.type || "book",
@@ -8434,10 +8671,22 @@ $("adminAccessBtn")
                 const user =
                     await account.get();
 
-                if(user && user.$id){
+                if(
+                    user &&
+                    user.$id &&
+                    String(user.email || "")
+                        .trim()
+                        .toLowerCase() ===
+                    ADMIN_EMAIL.toLowerCase()
+                ){
 
-                    isAdminMode =
-                        true;
+                    currentUser = {
+                        id: user.$id,
+                        name: user.name || "",
+                        email: user.email || ""
+                    };
+
+                    isAdminMode = true;
 
                     showPage(
                         "adminPage"
@@ -9288,6 +9537,11 @@ async function publishWork(){
             .value
             .trim();
 
+    const keywords =
+        $("adminKeywords")
+            .value
+            .trim();
+
     const coverUrl =
         $("adminCoverUrl")
             .value
@@ -9398,6 +9652,9 @@ async function publishWork(){
             description:
                 description,
 
+            keywords:
+                keywords,
+
             type:
                 type,
 
@@ -9495,6 +9752,7 @@ function clearAdminForm(){
     $("adminTitle").value = "";
     $("adminAuthor").value = "";
     $("adminDescription").value = "";
+    $("adminKeywords").value = "";
     $("adminCoverUrl").value = "";
     $("adminAuthorId").value = "";
     $("bookLinkInput").value = "";
@@ -9892,6 +10150,11 @@ async function openEditWork(work){
     $("editDescription").value =
         work.description || "";
 
+    if($("editKeywords")){
+        $("editKeywords").value =
+            work.keywords || "";
+    }
+
     $("editCoverUrl").value =
         work.coverUrl || "";
 
@@ -10251,6 +10514,10 @@ async function saveEditedWork(){
             .value
             .trim();
 
+    const keywords =
+        ($("editKeywords")?.value || "")
+            .trim();
+
     const coverUrl =
         $("editCoverUrl")
             .value
@@ -10301,6 +10568,9 @@ async function saveEditedWork(){
 
             description:
                 description,
+
+            keywords:
+                keywords,
 
             coverUrl:
                 coverUrl
@@ -10881,6 +11151,13 @@ function initializeUI(){
 
 
 initializeUI();
+
+try{
+    history.replaceState(
+        { page: "homePage" },
+        ""
+    );
+}catch(e){}
 
 
 /* =========================================================
