@@ -184,6 +184,39 @@ button{
     gap:12px;
 }
 
+/* ردیف افقی قابل اسکرول — مثل نویسندگان در جستجو */
+.booksStrip{
+    display:block;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 1px 10px;
+    margin:0 -4px;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+}
+.booksStrip::-webkit-scrollbar{display:none}
+.booksStripTrack{
+    display:flex;
+    flex-direction:row;
+    gap:12px;
+    min-width:max-content;
+    padding:0 4px;
+}
+.booksStrip .book{
+    width:112px;
+    flex:0 0 112px;
+    min-width:112px;
+}
+.booksStrip .cover{
+    height:148px;
+}
+.booksStrip .bookTitle{
+    font-size:10px;
+}
+.booksStrip .bookAuthor{
+    font-size:8px;
+}
+
 .book{
     min-width:0;
     cursor:pointer;
@@ -1298,6 +1331,43 @@ button{
     font-size:15px;
     font-weight:700;
     flex-shrink:0;
+    cursor:pointer;
+}
+
+.chatHeaderUser{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+}
+.chatHeaderAvatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#3a2a1c;
+    color:#e0a94e;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:700;
+    flex-shrink:0;
+    overflow:hidden;
+}
+.chatHeaderAvatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.chatBubbleSeen{
+    font-size:11px;
+    color:#7fb8e0;
+    margin-right:3px;
+}
+.chatBubbleSent{
+    font-size:11px;
+    color:var(--muted);
+    margin-right:3px;
 }
 .accountInfo{
     flex:1;
@@ -1934,6 +2004,10 @@ button{
     overflow-y:hidden;
     padding:2px 1px 8px;
     scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+}
+#homeAuthors.authorStrip{
+    display:block;
 }
 .authorStrip::-webkit-scrollbar{display:none}
 .authorStripTrack{
@@ -2100,15 +2174,21 @@ button{
     border-radius:13px;
     padding:4px;
     margin-bottom:15px;
+    gap:2px;
+    overflow-x:auto;
+    scrollbar-width:none;
 }
+.adminPublishedTabs::-webkit-scrollbar{display:none}
 .adminPublishedTabs button{
     flex:1;
+    min-width:70px;
     border:0;
     border-radius:10px;
     height:37px;
     background:transparent;
     color:#8f775f;
-    font-size:10px;
+    font-size:9px;
+    white-space:nowrap;
 }
 .adminPublishedTabs button.active{
     background:#a96631;
@@ -2162,6 +2242,63 @@ button{
     justify-content:center;
 }
 
+
+
+/* ===== User Profile (Rubika-like) ===== */
+.userProfileTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+.userProfileBack,
+.userProfileMore{
+    width:40px;
+    height:40px;
+    border:1px solid #3a291e;
+    border-radius:50%;
+    background:#241912;
+    color:#d6b994;
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.userProfileMore{font-size:22px;line-height:1}
+.userProfileCenter{text-align:center;padding:10px 0 6px}
+.userProfileAvatar{
+    width:96px;height:96px;margin:0 auto;border-radius:50%;
+    overflow:hidden;background:#2b2018;border:1px solid #8b552d;
+    display:flex;align-items:center;justify-content:center;
+    color:#e0a94e;font-size:36px;
+}
+.userProfileAvatar img{width:100%;height:100%;object-fit:cover}
+.userProfileName{margin-top:12px;font-size:17px;color:#e7cfad;font-weight:700}
+.userProfileEmail{margin-top:5px;font-size:10px;color:#8d7660}
+.userProfileActions{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 8px
+}
+.userProfileActions.single{grid-template-columns:1fr}
+.userProfileActionBtn{
+    height:46px;border:0;border-radius:12px;background:#bd7232;color:#fff;font-size:12px
+}
+.userProfileActionBtn.secondary{
+    background:#241912;color:#c9ac89;border:1px solid #3a291e
+}
+.userProfileBioBox,.userProfileSocialBox{
+    background:#241912;border:1px solid #302219;border-radius:14px;
+    padding:14px;margin-top:12px
+}
+.userProfileBioLabel{font-size:10px;color:#8d7660;margin-bottom:6px}
+.userProfileBio{font-size:12px;color:#c9b59a;line-height:1.9;white-space:pre-wrap;word-break:break-word}
+.userProfileSocialBtn{
+    width:100%;text-align:right;background:none;border:0;color:#c37934;
+    font-size:12px;padding:4px 0;direction:ltr
+}
+.blockedBanner{
+    background:#5b3028;color:#e3b8a5;border-radius:12px;padding:12px;font-size:11px;
+    text-align:center;line-height:1.8;margin:10px 0
+}
 
 /* ===== User Books Notice Banner ===== */
 .userBooksNoticeOverlay{
@@ -2520,7 +2657,10 @@ style="display:none">
 
 <div class="top">
 <button class="back" id="chatBack">←</button>
+<div class="chatHeaderUser" id="chatHeaderUser">
+<div class="chatHeaderAvatar" id="chatHeaderAvatar"></div>
 <h2 id="chatWithName">گفتگو</h2>
+</div>
 </div>
 
 <div class="chatWrap">
@@ -2642,6 +2782,43 @@ style="display:none">
 
 </div>
 </section>
+
+
+<section id="userProfilePage" class="page">
+<div class="userProfileTop">
+<button class="userProfileBack" id="userProfileBack" type="button" aria-label="بازگشت">→</button>
+<button class="userProfileMore" id="userProfileMore" type="button" aria-label="بیشتر">⋮</button>
+</div>
+<div class="userProfileCenter">
+<div class="userProfileAvatar" id="userProfileAvatar"><span>♙</span></div>
+<div class="userProfileName" id="userProfileName">کاربر</div>
+<div class="userProfileEmail" id="userProfileEmail"></div>
+</div>
+<div class="userProfileActions" id="userProfileActions">
+<button type="button" class="userProfileActionBtn" id="userProfileMsgBtn">پیام</button>
+<button type="button" class="userProfileActionBtn" id="userProfileBooksBtn">کتاب‌ها</button>
+</div>
+<div class="userProfileBioBox">
+<div class="userProfileBioLabel">بیوگرافی</div>
+<div class="userProfileBio" id="userProfileBio">—</div>
+</div>
+<div class="userProfileSocialBox" id="userProfileSocialBox" style="display:none">
+<div class="userProfileBioLabel" id="userProfileSocialLabel">آیدی</div>
+<button type="button" class="userProfileSocialBtn" id="userProfileSocialBtn"></button>
+</div>
+<div id="userProfileBooksSection" style="display:none;margin-top:18px">
+<div class="sectionHead"><h3>کتاب‌های این کاربر</h3></div>
+<div id="userProfileBooks" class="books"></div>
+</div>
+</section>
+
+<div id="userProfileMenu" class="chatMsgMenu">
+<div class="chatMsgMenuSheet">
+<button type="button" class="chatMsgMenuDelete" id="userProfileBlockBtn">🚫 مسدود کردن کاربر</button>
+<button type="button" class="chatMsgMenuEdit" id="userProfileUnblockBtn" style="display:none">✓ لغو مسدود</button>
+<button type="button" class="chatMsgMenuCancel" id="userProfileMenuCancel">انصراف</button>
+</div>
+</div>
 
 <section id="readerPage" class="page readerPage">
 <div class="readerTop">
@@ -2873,6 +3050,7 @@ style="cursor:pointer">
 <button id="publishedBooksTab" class="active" type="button">کتاب منتشر شده</button>
 <button id="publishedAuthorsTab" type="button">نویسنده منتشر شده</button>
 <button id="publishedCommentsTab" type="button">نظر منتشر شده</button>
+<button id="publishedAccountsTab" type="button">اکانت منتشر شده</button>
 </div>
 
 <div id="adminPublishedBooks" class="adminSubSection active">
@@ -2885,6 +3063,10 @@ style="cursor:pointer">
 
 <div id="adminPublishedComments" class="adminSubSection">
 <div id="adminPublishedCommentsList"></div>
+</div>
+
+<div id="adminPublishedAccounts" class="adminSubSection">
+<div id="adminPublishedAccountsList"></div>
 </div>
 
 </div>
@@ -2987,16 +3169,43 @@ style="display:none">
 
 </div>
 
+<label style="display:block;font-size:11px;color:#967c64;margin:0 4px 7px">لینک مستقیم عکس پروفایل (اختیاری)</label>
+<input
+id="profileAvatarUrlInput"
+class="modalInput"
+type="url"
+placeholder="https://example.com/avatar.jpg">
+
 <input
 id="profileAvatarInput"
 class="modalInput"
 type="file"
-accept="image/*">
+accept="image/*"
+style="display:none">
 
 <input
 id="profileNameInput"
 class="modalInput"
-placeholder="نام شما">
+placeholder="نام شما (الزامی)">
+
+<label style="display:block;font-size:11px;color:#967c64;margin:0 4px 7px">بیوگرافی (اختیاری)</label>
+<textarea
+id="profileBioInput"
+class="modalInput"
+placeholder="چند خط درباره خودتان..."
+style="min-height:80px;resize:vertical"></textarea>
+
+<label style="display:block;font-size:11px;color:#967c64;margin:0 4px 7px">پلتفرم ارتباطی (اختیاری)</label>
+<select id="profileSocialType" class="modalInput" style="appearance:auto">
+<option value="">انتخاب کنید</option>
+<option value="rubika">روبیکا</option>
+<option value="telegram">تلگرام</option>
+</select>
+
+<input
+id="profileSocialIdInput"
+class="modalInput"
+placeholder="آیدی روبیکا یا تلگرام (مثل @username)">
 
 <button
 class="modalBtn"
@@ -3486,7 +3695,17 @@ const CHAT_SEND_LIMIT = 18;
 const CHAT_LIMIT_HOURS = 5;
 const CHAT_LIMIT_MS = CHAT_LIMIT_HOURS * 60 * 60 * 1000;
 const CHAT_SEEN_KEY = "cafeketab_chat_seen";
+const CHAT_MESSAGE_TTL_MS = 48 * 60 * 60 * 1000; /* حذف خودکار پیام‌ها بعد از ۴۸ ساعت */
+
 const CHAT_LIMIT_TEXT = "کاربر عزیز ارسال پیامک برای این کاربر تا ۵ ساعت دیگر محدود شد ، دقت کنید قسمت چت فقط برای پیدا کردن کاربر دیگر و گرفتن آیدی یه پلتفرم دیگر اوست ممنون از همراهی شما";
+
+const MESSAGE_TTL_MS = 2 * 24 * 60 * 60 * 1000; /* ۲ روز */
+const BANNED_DOC_ID = "cafeketab_banned_emails";
+const BANNED_DOC_TYPE = "banned_config";
+
+let viewingUserProfile = null; /* کاربر در حال مشاهده پروفایل */
+let bannedEmailsCache = [];
+
 
 
 /* =========================================================
@@ -3781,15 +4000,26 @@ function getProfile(){
             ? "cafeketab_profile_" + currentUser.id
             : "cafeketab_profile";
 
-        return JSON.parse(
+        const data = JSON.parse(
             localStorage.getItem(key) ||
-            '{"name":"کاربر","avatar":""}'
+            '{"name":"کاربر","avatar":"","bio":"","socialType":"","socialId":""}'
         );
+
+        return {
+            name: data.name || "کاربر",
+            avatar: data.avatar || "",
+            bio: data.bio || "",
+            socialType: data.socialType || "",
+            socialId: data.socialId || ""
+        };
 
     }catch{
         return {
             name:"کاربر",
-            avatar:""
+            avatar:"",
+            bio:"",
+            socialType:"",
+            socialId:""
         };
     }
 }
@@ -3871,8 +4101,13 @@ function updateProfile(){
             isOwner ? "" : "none";
     }
 
-    if(profile.avatar){
-        $("avatarImg").src = profile.avatar;
+    const avatarSrc =
+        (currentUser && currentUser.avatarUrl) ||
+        profile.avatar ||
+        "";
+
+    if(avatarSrc){
+        $("avatarImg").src = avatarSrc;
         $("avatarImg").style.display = "block";
         $("avatarEmpty").style.display = "none";
     }else{
@@ -3893,10 +4128,30 @@ $("editProfileBtn")
         $("profileNameInput").value =
             (currentUser && currentUser.name) || profile.name || "";
 
-        if(profile.avatar){
+        if($("profileBioInput")){
+            $("profileBioInput").value =
+                (currentUser && currentUser.bio) || profile.bio || "";
+        }
+        if($("profileSocialType")){
+            $("profileSocialType").value =
+                (currentUser && currentUser.socialType) || profile.socialType || "";
+        }
+        if($("profileSocialIdInput")){
+            $("profileSocialIdInput").value =
+                (currentUser && currentUser.socialId) || profile.socialId || "";
+        }
+        if($("profileAvatarUrlInput")){
+            $("profileAvatarUrlInput").value =
+                (currentUser && currentUser.avatarUrl) || profile.avatar || "";
+        }
+
+        const avatarSrc =
+            (currentUser && currentUser.avatarUrl) || profile.avatar || "";
+
+        if(avatarSrc){
 
             $("profilePreview").src =
-                profile.avatar;
+                avatarSrc;
 
             $("profilePreview").style.display =
                 "block";
@@ -3913,12 +4168,22 @@ $("editProfileBtn")
                 "block";
         }
 
-        $("profileAvatarInput").value = "";
-
         $("profileModal")
             .classList.add("active");
     }
 );
+
+$("profileAvatarUrlInput")?.addEventListener("input", ()=>{
+    const url = ($("profileAvatarUrlInput").value || "").trim();
+    if(url && /^https?:\/\//i.test(url)){
+        $("profilePreview").src = url;
+        $("profilePreview").style.display = "block";
+        $("profilePreviewIcon").style.display = "none";
+    }else if(!url){
+        $("profilePreview").style.display = "none";
+        $("profilePreviewIcon").style.display = "block";
+    }
+});
 
 
 $("profileAvatarInput")
@@ -3973,17 +4238,33 @@ $("saveProfileBtn")
                 .value
                 .trim() || "کاربر";
 
-        const preview =
-            $("profilePreview");
+        const bio =
+            ($("profileBioInput")?.value || "").trim();
 
-        const avatar =
-            preview.style.display !== "none"
-                ? preview.src
-                : old.avatar || "";
+        const socialType =
+            ($("profileSocialType")?.value || "").trim();
+
+        const socialId =
+            ($("profileSocialIdInput")?.value || "").trim();
+
+        let avatar =
+            ($("profileAvatarUrlInput")?.value || "").trim();
+
+        if(avatar && !/^https?:\/\//i.test(avatar)){
+            showToast("لینک عکس باید با http یا https شروع شود");
+            return;
+        }
+
+        if(!avatar){
+            avatar = old.avatar || "";
+        }
 
         saveProfileData({
             name: name,
-            avatar: avatar
+            avatar: avatar,
+            bio: bio,
+            socialType: socialType,
+            socialId: socialId
         });
 
         if(currentUser && account && appwriteReady){
@@ -3991,28 +4272,60 @@ $("saveProfileBtn")
                 if(name && name !== currentUser.name){
                     await account.updateName(name);
                     currentUser.name = name;
+                    await updateUserNameOnComments(currentUser.id, name);
+                }
 
-                    // بروزرسانی نام در سند کاربران
+                currentUser.bio = bio;
+                currentUser.socialType = socialType;
+                currentUser.socialId = socialId;
+                currentUser.avatarUrl = avatar;
+
+                const payload = { name: name };
+                /* فیلدهای اختیاری — اگر در اسکیما نباشند نادیده گرفته می‌شوند */
+                try{
+                    await databases.updateDocument(
+                        DATABASE_ID,
+                        COLLECTION_USERS,
+                        currentUser.id,
+                        {
+                            name: name,
+                            bio: bio,
+                            socialType: socialType,
+                            socialId: socialId,
+                            avatarUrl: avatar
+                        }
+                    );
+                }catch(e1){
                     try{
                         await databases.updateDocument(
                             DATABASE_ID,
                             COLLECTION_USERS,
                             currentUser.id,
-                            { name: name }
+                            { name: name, bio: bio, avatarUrl: avatar }
                         );
-                    }catch(e){
-                        console.warn("sync user name doc:", e);
+                    }catch(e2){
+                        try{
+                            await databases.updateDocument(
+                                DATABASE_ID,
+                                COLLECTION_USERS,
+                                currentUser.id,
+                                { name: name }
+                            );
+                        }catch(e3){
+                            console.warn("sync user profile doc:", e3);
+                        }
                     }
-
-                    // بروزرسانی نام روی نظرات قبلی همین کاربر
-                    await updateUserNameOnComments(currentUser.id, name);
                 }
             }catch(error){
-                showAppwriteError(error, "Update profile name");
+                showAppwriteError(error, "Update profile");
                 return;
             }
         }else if(currentUser){
             currentUser.name = name;
+            currentUser.bio = bio;
+            currentUser.socialType = socialType;
+            currentUser.socialId = socialId;
+            currentUser.avatarUrl = avatar;
         }
 
         updateProfile();
@@ -4190,6 +4503,33 @@ async function doLogin(){
             return;
         }
 
+        await loadBannedEmails();
+        if(isEmailBanned(user.email)){
+            await clearAuthSessionQuietly();
+            currentUser = null;
+            isAdminMode = false;
+            updateProfile();
+            showToast("این ایمیل مسدود شده و امکان ورود ندارد");
+            return;
+        }
+
+        /* بررسی فلگ banned روی سند کاربر */
+        try{
+            const udoc = await databases.getDocument(
+                DATABASE_ID,
+                COLLECTION_USERS,
+                user.$id
+            );
+            if(udoc && (udoc.banned === true || udoc.status === "banned")){
+                await clearAuthSessionQuietly();
+                currentUser = null;
+                isAdminMode = false;
+                updateProfile();
+                showToast("این حساب توسط مدیریت مسدود شده است");
+                return;
+            }
+        }catch(e){}
+
         currentUser = {
             id: user.$id,
             name: user.name || "",
@@ -4276,6 +4616,12 @@ async function doRegister(){
         await clearAuthSessionQuietly();
         currentUser = null;
         isAdminMode = false;
+
+        await loadBannedEmails();
+        if(isEmailBanned(email)){
+            showToast("این ایمیل مسدود شده و امکان ثبت‌نام ندارد");
+            return;
+        }
 
         await account.create(
             appwriteID.unique(),
@@ -4574,6 +4920,9 @@ function renderHomeAuthors(){
 
     const authors = shuffleWorks(getAuthors());
     box.innerHTML = "";
+    box.classList.remove("authorGrid");
+    box.classList.add("authorStrip");
+    box.style.display = "block";
 
     if(!authors.length){
         section.style.display = "none";
@@ -4583,11 +4932,14 @@ function renderHomeAuthors(){
     section.style.display = "block";
 
     const expanded = window.homeExpanded?.authors === true;
-    const visible = expanded ? authors : authors.slice(0,4);
+    const visible = expanded ? authors : authors.slice(0,12);
 
+    const track = document.createElement("div");
+    track.className = "authorStripTrack";
     visible.forEach(author=>{
-        box.appendChild(createAuthorCard(author));
+        track.appendChild(createAuthorCard(author));
     });
+    box.appendChild(track);
 
     const arrow = $("authorsHomeArrow");
     if(arrow){
@@ -4845,6 +5197,246 @@ function openAuthorDetail(author){
     showPage("authorDetailPage");
 }
 
+
+async function openUserProfilePage(userOrEmail){
+    if(!userOrEmail){
+        showToast("کاربر مشخص نیست");
+        return;
+    }
+
+    let user = null;
+    if(typeof userOrEmail === "object" && userOrEmail.id){
+        user = { ...userOrEmail };
+    }else{
+        const email = String(userOrEmail || "").trim();
+        try{
+            await fetchAllUsers();
+        }catch(e){}
+        user = (allUsersCache || []).find(u =>
+            normalizeText(u.email) === normalizeText(email)
+        );
+        if(!user){
+            user = {
+                id: "",
+                name: email,
+                email: email
+            };
+        }
+    }
+
+    /* بارگذاری جزئیات کامل از دیتابیس */
+    if(user.id && databases && appwriteReady){
+        try{
+            const doc = await databases.getDocument(
+                DATABASE_ID,
+                COLLECTION_USERS,
+                user.id
+            );
+            user.name = doc.name || user.name;
+            user.email = doc.email || user.email;
+            user.bio = doc.bio || "";
+            user.socialType = doc.socialType || "";
+            user.socialId = doc.socialId || "";
+            user.avatarUrl = doc.avatarUrl || "";
+            user.blockedIds = doc.blockedIds || "";
+        }catch(e){}
+    }
+
+    viewingUserProfile = user;
+
+    /* آواتار */
+    const av = $("userProfileAvatar");
+    if(av){
+        if(user.avatarUrl){
+            av.innerHTML = `<img src="${escapeHtml(user.avatarUrl)}" alt="پروفایل" onerror="this.parentNode.innerHTML='<span>♙</span>'">`;
+        }else{
+            av.innerHTML = `<span>${escapeHtml(avatarInitial(user.name))}</span>`;
+        }
+    }
+
+    $("userProfileName").textContent = user.name || "کاربر";
+    $("userProfileEmail").textContent = user.email || "";
+
+    const bio = (user.bio || "").trim();
+    $("userProfileBio").textContent = bio || "بیوگرافی ثبت نشده است.";
+
+    const socialBox = $("userProfileSocialBox");
+    const socialBtn = $("userProfileSocialBtn");
+    const socialLabel = $("userProfileSocialLabel");
+    const sid = (user.socialId || "").trim();
+    if(sid && socialBox){
+        socialBox.style.display = "block";
+        const platform =
+            user.socialType === "telegram" ? "تلگرام" :
+            user.socialType === "rubika" ? "روبیکا" : "آیدی";
+        if(socialLabel) socialLabel.textContent = "آیدی " + platform;
+        if(socialBtn){
+            socialBtn.textContent = sid;
+            socialBtn.onclick = async ()=>{
+                try{
+                    await navigator.clipboard.writeText(sid);
+                    showToast("آیدی کپی شد");
+                }catch{
+                    showToast("کپی انجام نشد");
+                }
+            };
+        }
+    }else if(socialBox){
+        socialBox.style.display = "none";
+    }
+
+    /* کتاب‌های کاربر */
+    const email = String(user.email || "").trim();
+    const userBooks = email ? allWorks.filter(work =>
+        work &&
+        work.type === "userbook" &&
+        String(work.authorEmail || work.createdByDevice || "").trim().toLowerCase() ===
+            email.toLowerCase()
+    ) : [];
+
+    const actions = $("userProfileActions");
+    const booksBtn = $("userProfileBooksBtn");
+    const booksSection = $("userProfileBooksSection");
+    const booksBox = $("userProfileBooks");
+
+    if(userBooks.length){
+        actions?.classList.remove("single");
+        if(booksBtn) booksBtn.style.display = "";
+        if(booksSection){
+            booksSection.style.display = "none";
+        }
+        if(booksBox){
+            renderWorksStrip(booksBox, userBooks.sort(
+                (a,b)=> new Date(b.createdAt||0) - new Date(a.createdAt||0)
+            ));
+        }
+    }else{
+        actions?.classList.add("single");
+        if(booksBtn) booksBtn.style.display = "none";
+        if(booksSection) booksSection.style.display = "none";
+    }
+
+    /* بنر مسدودیت */
+    let blockedBanner = $("userProfileBlockedBanner");
+    if(!blockedBanner){
+        blockedBanner = document.createElement("div");
+        blockedBanner.id = "userProfileBlockedBanner";
+        blockedBanner.className = "blockedBanner";
+        actions?.parentNode?.insertBefore(blockedBanner, actions);
+    }
+
+    const iBlocked = user.id && isBlockedByMe(user.id);
+    let theyBlocked = false;
+    if(user.id){
+        theyBlocked = await isBlockedByOther(user.id);
+    }
+
+    if(theyBlocked){
+        blockedBanner.style.display = "block";
+        blockedBanner.textContent = "شما توسط این کاربر مسدود شده‌اید. امکان ارسال پیام وجود ندارد.";
+    }else if(iBlocked){
+        blockedBanner.style.display = "block";
+        blockedBanner.textContent = "شما این کاربر را مسدود کرده‌اید.";
+    }else{
+        blockedBanner.style.display = "none";
+    }
+
+    /* منوی سه نقطه */
+    const blockBtn = $("userProfileBlockBtn");
+    const unblockBtn = $("userProfileUnblockBtn");
+    if(iBlocked){
+        if(blockBtn) blockBtn.style.display = "none";
+        if(unblockBtn) unblockBtn.style.display = "";
+    }else{
+        if(blockBtn) blockBtn.style.display = "";
+        if(unblockBtn) unblockBtn.style.display = "none";
+    }
+
+    showPage("userProfilePage");
+}
+
+function closeUserProfile(){
+    viewingUserProfile = null;
+    if(appPageStack.length > 1){
+        appPageStack.pop();
+        const prev = appPageStack[appPageStack.length - 1];
+        showPage(prev, true);
+    }else{
+        showPage("profilePage");
+    }
+}
+
+$("userProfileBack")?.addEventListener("click", closeUserProfile);
+
+$("userProfileMore")?.addEventListener("click", ()=>{
+    if(!currentUser){
+        showToast("ابتدا وارد حساب شوید");
+        openLoginModal();
+        return;
+    }
+    $("userProfileMenu")?.classList.add("active");
+});
+
+$("userProfileMenuCancel")?.addEventListener("click", ()=>{
+    $("userProfileMenu")?.classList.remove("active");
+});
+
+$("userProfileMenu")?.addEventListener("click", (e)=>{
+    if(e.target === $("userProfileMenu")){
+        $("userProfileMenu")?.classList.remove("active");
+    }
+});
+
+$("userProfileBlockBtn")?.addEventListener("click", async ()=>{
+    if(!viewingUserProfile?.id){
+        showToast("شناسه کاربر موجود نیست");
+        return;
+    }
+    if(!confirm("این کاربر مسدود شود؟")) return;
+    await blockUser(viewingUserProfile.id);
+    $("userProfileMenu")?.classList.remove("active");
+    await openUserProfilePage(viewingUserProfile);
+});
+
+$("userProfileUnblockBtn")?.addEventListener("click", async ()=>{
+    if(!viewingUserProfile?.id) return;
+    await unblockUser(viewingUserProfile.id);
+    $("userProfileMenu")?.classList.remove("active");
+    await openUserProfilePage(viewingUserProfile);
+});
+
+$("userProfileMsgBtn")?.addEventListener("click", async ()=>{
+    if(!currentUser){
+        showToast("ابتدا وارد حساب شوید");
+        openLoginModal();
+        return;
+    }
+    if(!viewingUserProfile?.id){
+        showToast("امکان چت با این کاربر نیست");
+        return;
+    }
+    if(isBlockedByMe(viewingUserProfile.id)){
+        showToast("ابتدا مسدودیت را بردارید");
+        return;
+    }
+    if(await isBlockedByOther(viewingUserProfile.id)){
+        showToast("شما توسط این کاربر مسدود شده‌اید");
+        return;
+    }
+    openChat({
+        id: viewingUserProfile.id,
+        name: viewingUserProfile.name || "کاربر",
+        email: viewingUserProfile.email || ""
+    });
+});
+
+$("userProfileBooksBtn")?.addEventListener("click", ()=>{
+    const sec = $("userProfileBooksSection");
+    if(!sec) return;
+    const open = sec.style.display !== "none";
+    sec.style.display = open ? "none" : "block";
+});
+
 function toggleAuthorSection(){
     window.homeExpanded.authors = !window.homeExpanded.authors;
     renderHomeAuthors();
@@ -5086,9 +5678,9 @@ function renderHome(){
         renderHomeAuthors();
 
     updateHomeArrows(
-        latestWorks.length > 3,
-        suggestedPool.length > 3,
-        personal.length > 3
+        latestWorks.length > 9,
+        suggestedPool.length > 9,
+        personal.length > 9
     );
 }
 
@@ -5099,18 +5691,38 @@ function renderHomeSection(container,works,section){
     const expanded =
         window.homeExpanded?.[section] === true;
 
-    const visible =
-        expanded
-            ? works
-            : works.slice(0,3);
+    if(expanded){
+        /* حالت باز شده: مثل قبل، شبکه‌ی ۳ تایی از همه‌ی آثار */
+        container.classList.remove("booksStrip");
+
+        works.forEach(
+            work=>{
+                container.appendChild(
+                    createBookCard(work)
+                );
+            }
+        );
+
+        return;
+    }
+
+    /* حالت پیش‌فرض: ردیف افقی با حداقل ۷ تا ۹ اثر */
+    container.classList.add("booksStrip");
+
+    const visible = works.slice(0,9);
+
+    const track = document.createElement("div");
+    track.className = "booksStripTrack";
 
     visible.forEach(
         work=>{
-            container.appendChild(
+            track.appendChild(
                 createBookCard(work)
             );
         }
     );
+
+    container.appendChild(track);
 }
 
 
@@ -5208,6 +5820,24 @@ $("clearSearch")
 );
 
 
+
+function renderWorksStrip(container, works){
+    if(!container) return;
+    container.innerHTML = "";
+    container.classList.add("booksStrip");
+
+    if(!works || !works.length){
+        container.classList.remove("booksStrip");
+        showEmpty(container, "موردی پیدا نشد.");
+        return;
+    }
+
+    const track = document.createElement("div");
+    track.className = "booksStripTrack";
+    works.forEach(work => track.appendChild(createBookCard(work)));
+    container.appendChild(track);
+}
+
 function renderSearch(){
 
     const box = $("searchResults");
@@ -5232,9 +5862,12 @@ function renderSearch(){
             ...works.filter(work => work.type === "userbook")
         ];
 
-        ordered.forEach(work=>box.appendChild(createBookCard(work)));
-
-        if(!ordered.length) showEmpty(box,"هنوز اثری منتشر نشده است.");
+        if(!ordered.length){
+            showEmpty(box,"هنوز اثری منتشر نشده است.");
+            return;
+        }
+        box.classList.remove("booksStrip");
+        ordered.forEach(work => box.appendChild(createBookCard(work)));
         return;
     }
 
@@ -5265,20 +5898,15 @@ function renderSearch(){
             return {work,score};
         })
         .filter(item=>item.score >= 0)
-        .sort((a,b)=>{
-            const aUser = a.work.type === "userbook" ? 1 : 0;
-            const bUser = b.work.type === "userbook" ? 1 : 0;
-
-            if(aUser !== bUser) return aUser - bUser;
-            return b.score - a.score;
-        });
+        .sort((a,b)=>b.score - a.score);
 
     if(!results.length){
         showEmpty(box,"نتیجه‌ای پیدا نشد.");
         return;
     }
 
-    results.forEach(item=>box.appendChild(createBookCard(item.work)));
+    box.classList.remove("booksStrip");
+    results.forEach(item => box.appendChild(createBookCard(item.work)));
 }
 
 
@@ -6144,17 +6772,30 @@ function openGenreDetail(genre){
     box.innerHTML = "";
 
     const books = allWorks.filter(
-        work => work.type === "book" &&
-                normalizeText(work.genre) === normalizeText(genre)
+        work =>
+            (work.type === "book" ||
+             work.type === "manga" ||
+             work.type === "manhwa" ||
+             work.type === "userbook") &&
+            normalizeText(work.genre) === normalizeText(genre)
     );
 
     $("genreDetailCount").textContent =
-        books.length + " کتاب";
+        books.length + " اثر";
 
     if(!books.length){
-        showEmpty(box,"هنوز کتابی در این ژانر منتشر نشده است.");
+        showEmpty(box,"هنوز اثری در این ژانر منتشر نشده است.");
     }else{
-        books.forEach(work=>box.appendChild(createBookCard(work)));
+        const sorted = books
+            .sort((a,b)=>{
+                const order = {book:0, manga:1, manhwa:2, userbook:3};
+                const ao = order[a.type] ?? 9;
+                const bo = order[b.type] ?? 9;
+                if(ao !== bo) return ao - bo;
+                return new Date(b.createdAt||0) - new Date(a.createdAt||0);
+            });
+        box.classList.remove("booksStrip");
+        sorted.forEach(work => box.appendChild(createBookCard(work)));
     }
 
     showPage("genreDetailPage");
@@ -6355,12 +6996,17 @@ async function initAppwrite(){
 
         await checkExistingAdminSession();
 
+        await loadBannedEmails();
         await loadWorks();
+        await cleanupOldMessages();
 
         await loadGenresFromCloud();
         renderGenres();
         fillGenreSelect();
         renderGenreAdmin();
+
+        /* پاکسازی دوره‌ای پیام‌های قدیمی هر ۳۰ دقیقه */
+        setInterval(()=>{ cleanupOldMessages(); }, 30 * 60 * 1000);
 
 
     }catch(error){
@@ -6408,14 +7054,28 @@ async function syncUserDoc(user){
     if(!databases || !user || !user.$id) return;
 
     try{
-        await databases.getDocument(
+        const doc = await databases.getDocument(
             DATABASE_ID,
             COLLECTION_USERS,
             user.$id
         );
-        // اگر کاربر وجود دارد، نام ذخیره‌شده در دیتابیس حفظ می‌شود
-        return;
+        if(doc){
+            if(doc.banned === true || doc.status === "banned"){
+                throw { code: 403, message: "banned", type: "user_banned" };
+            }
+            if(currentUser && currentUser.id === user.$id){
+                currentUser.bio = doc.bio || currentUser.bio || "";
+                currentUser.socialType = doc.socialType || currentUser.socialType || "";
+                currentUser.socialId = doc.socialId || currentUser.socialId || "";
+                currentUser.avatarUrl = doc.avatarUrl || currentUser.avatarUrl || "";
+                if(doc.name) currentUser.name = doc.name;
+            }
+        }
+        return doc;
     }catch(error){
+        if(error && (error.type === "user_banned" || String(error.message||"").includes("banned"))){
+            throw error;
+        }
         try{
             await databases.createDocument(
                 DATABASE_ID,
@@ -6423,14 +7083,252 @@ async function syncUserDoc(user){
                 user.$id,
                 {
                     name: user.name || "کاربر",
-                    email: user.email || ""
+                    email: user.email || "",
+                    bio: "",
+                    socialType: "",
+                    socialId: "",
+                    avatarUrl: "",
+                    banned: false
                 }
             );
         }catch(err2){
-            console.warn("syncUserDoc failed:", err2);
+            try{
+                await databases.createDocument(
+                    DATABASE_ID,
+                    COLLECTION_USERS,
+                    user.$id,
+                    {
+                        name: user.name || "کاربر",
+                        email: user.email || ""
+                    }
+                );
+            }catch(err3){
+                console.warn("syncUserDoc failed:", err3);
+            }
         }
     }
 }
+
+async function loadBannedEmails(){
+    bannedEmailsCache = [];
+    if(!databases || !appwriteReady) return [];
+    try{
+        const doc = await databases.getDocument(
+            DATABASE_ID,
+            COLLECTION_WORKS,
+            BANNED_DOC_ID
+        );
+        const raw = doc.description || doc.keywords || "[]";
+        try{
+            bannedEmailsCache = JSON.parse(raw);
+            if(!Array.isArray(bannedEmailsCache)) bannedEmailsCache = [];
+        }catch{
+            bannedEmailsCache = [];
+        }
+    }catch(e){
+        bannedEmailsCache = [];
+    }
+    return bannedEmailsCache;
+}
+
+async function saveBannedEmails(list){
+    bannedEmailsCache = list || [];
+    if(!databases || !appwriteReady || !appwriteID) return;
+    const payload = {
+        title: "banned_emails",
+        Author: "",
+        genre: "",
+        description: JSON.stringify(bannedEmailsCache),
+        type: BANNED_DOC_TYPE,
+        coverUrl: "",
+        bookLink: "",
+        createdByDevice: "system"
+    };
+    try{
+        await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTION_WORKS,
+            BANNED_DOC_ID,
+            payload
+        );
+    }catch(e){
+        try{
+            await databases.createDocument(
+                DATABASE_ID,
+                COLLECTION_WORKS,
+                BANNED_DOC_ID,
+                payload
+            );
+        }catch(e2){
+            console.warn("saveBannedEmails:", e2);
+        }
+    }
+}
+
+function isEmailBanned(email){
+    const e = String(email || "").trim().toLowerCase();
+    if(!e) return false;
+    return bannedEmailsCache.some(x => String(x).trim().toLowerCase() === e);
+}
+
+async function cleanupOldMessages(){
+    if(!databases || !appwriteReady || !appwriteQuery) return;
+    try{
+        const cutoff = new Date(Date.now() - MESSAGE_TTL_MS).toISOString();
+        /* تلاش با فیلتر زمانی؛ در صورت عدم پشتیبانی اسکیما، کلاینت‌ساید */
+        let docs = [];
+        try{
+            const res = await databases.listDocuments(
+                DATABASE_ID,
+                COLLECTION_MESSAGES,
+                [
+                    appwriteQuery.lessThan("$createdAt", cutoff),
+                    appwriteQuery.limit(100)
+                ]
+            );
+            docs = res.documents || [];
+        }catch(e){
+            const res = await databases.listDocuments(
+                DATABASE_ID,
+                COLLECTION_MESSAGES,
+                [ appwriteQuery.limit(100) ]
+            );
+            const cutMs = Date.now() - MESSAGE_TTL_MS;
+            docs = (res.documents || []).filter(d => {
+                const t = new Date(d.$createdAt).getTime();
+                return t < cutMs;
+            });
+        }
+
+        for(const doc of docs){
+            try{
+                await databases.deleteDocument(
+                    DATABASE_ID,
+                    COLLECTION_MESSAGES,
+                    doc.$id
+                );
+            }catch(err){
+                console.warn("cleanup msg:", err);
+            }
+        }
+        if(docs.length){
+            console.log("Cleaned old messages:", docs.length);
+        }
+    }catch(error){
+        console.warn("cleanupOldMessages:", error);
+    }
+}
+
+/* ---- Block system ---- */
+function getBlockedIds(){
+    if(!currentUser) return [];
+    try{
+        const raw = JSON.parse(localStorage.getItem("cafeketab_blocked_" + currentUser.id) || "[]");
+        return Array.isArray(raw) ? raw : [];
+    }catch{
+        return [];
+    }
+}
+
+function saveBlockedIds(ids){
+    if(!currentUser) return;
+    localStorage.setItem(
+        "cafeketab_blocked_" + currentUser.id,
+        JSON.stringify(ids || [])
+    );
+}
+
+function isBlockedByMe(userId){
+    return getBlockedIds().includes(userId);
+}
+
+async function blockUser(userId){
+    if(!currentUser || !userId) return;
+    const ids = getBlockedIds();
+    if(!ids.includes(userId)){
+        ids.push(userId);
+        saveBlockedIds(ids);
+    }
+    /* همگام اختیاری با سند کاربر */
+    try{
+        if(databases && appwriteReady){
+            await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_USERS,
+                currentUser.id,
+                { blockedIds: ids.join(",") }
+            );
+        }
+    }catch(e){}
+
+    /* اگر طرف مقابل هم ما را مسدود کرده، چت‌ها پاک شود */
+    await maybeWipeMutualBlockChats(userId);
+    showToast("کاربر مسدود شد");
+}
+
+async function unblockUser(userId){
+    if(!currentUser || !userId) return;
+    const ids = getBlockedIds().filter(id => id !== userId);
+    saveBlockedIds(ids);
+    try{
+        if(databases && appwriteReady){
+            await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_USERS,
+                currentUser.id,
+                { blockedIds: ids.join(",") }
+            );
+        }
+    }catch(e){}
+    showToast("مسدودیت برداشته شد");
+}
+
+async function isBlockedByOther(userId){
+    if(!databases || !appwriteReady || !userId || !currentUser) return false;
+    try{
+        const doc = await databases.getDocument(
+            DATABASE_ID,
+            COLLECTION_USERS,
+            userId
+        );
+        const raw = String(doc.blockedIds || "");
+        const ids = raw.split(",").map(s => s.trim()).filter(Boolean);
+        return ids.includes(currentUser.id);
+    }catch{
+        return false;
+    }
+}
+
+async function maybeWipeMutualBlockChats(otherId){
+    const otherBlockedMe = await isBlockedByOther(otherId);
+    if(!otherBlockedMe) return;
+
+    /* هر دو یکدیگر را مسدود کرده‌اند → حذف کل پیام‌های جفت */
+    try{
+        const key = pairKeyFor(currentUser.id, otherId);
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_MESSAGES,
+            [
+                appwriteQuery.equal("pairKey", key),
+                appwriteQuery.limit(200)
+            ]
+        );
+        for(const doc of (res.documents || [])){
+            try{
+                await databases.deleteDocument(
+                    DATABASE_ID,
+                    COLLECTION_MESSAGES,
+                    doc.$id
+                );
+            }catch(e){}
+        }
+        showToast("چت‌ها به‌خاطر مسدودیت دوطرفه پاک شد");
+    }catch(e){
+        console.warn("wipe mutual chats:", e);
+    }
+}
+
 
 async function checkExistingAdminSession(){
 
@@ -6695,7 +7593,8 @@ async function loadWorks(){
         allWorks =
             res.documents
             .filter(doc =>
-                String(doc.type || "") !== GENRES_DOC_TYPE
+                String(doc.type || "") !== GENRES_DOC_TYPE &&
+                String(doc.type || "") !== BANNED_DOC_TYPE
             )
             .map(
                 doc=>({
@@ -6933,25 +7832,19 @@ function renderCommentItem(c, isReply){
             try{
                 await fetchAllUsers();
                 const user = (allUsersCache || []).find(u => u.id === c.userId);
-                const email = user?.email || "";
-
-                if(email){
-                    const hasBook = allWorks.some(work =>
-                        work &&
-                        work.type === "userbook" &&
-                        String(work.authorEmail || work.createdByDevice || "").trim().toLowerCase() === email.toLowerCase()
-                    );
-
-                    if(hasBook){
-                        openUserAuthorPage(email);
-                        return;
-                    }
-                }
+                await openUserProfilePage({
+                    id: c.userId,
+                    name: (user && user.name) || c.userName || "کاربر",
+                    email: (user && user.email) || ""
+                });
             }catch(error){
                 console.warn("Open comment user page:", error);
+                await openUserProfilePage({
+                    id: c.userId,
+                    name: c.userName || "کاربر",
+                    email: ""
+                });
             }
-
-            openChat({ id: c.userId, name: c.userName || "کاربر" });
         });
     }
 
@@ -7298,29 +8191,22 @@ function renderAccountItem(user, listEl){
             <div class="accountName">${escapeHtml(displayUserName)}</div>
             <div class="accountSub">${escapeHtml(user.email || user.sub || "")}</div>
         </div>
-        <div class="accountChatBtnWrap">
-            ${unread > 0 ? `<span class="unreadSenderBadge">${unread > 99 ? "99+" : unread}</span>` : ""}
-            <button type="button" class="accountChatBtn">چت</button>
-        </div>
+        ${unread > 0 ? `<span class="unreadSenderBadge">${unread > 99 ? "99+" : unread}</span>` : ""}
     `;
-    /* کلیک روی خود کاربر: اگر کتاب قلم کاربری دارد، صفحه کتاب‌های او؛
-       اگر ندارد، مستقیم چت. */
+
+    /* کلیک روی بدنه‌ی آیتم: مستقیم وارد چت شو */
     item.addEventListener("click", ()=>{
-        const email = String(user.email || "").trim();
-        if(email){
-            openUserAuthorPage(email);
-        }else{
-            openChat({
-                id: user.id,
-                name: user.name || "کاربر",
-                email: user.email || ""
-            });
-        }
+        openChat({
+            id: user.id,
+            name: user.name || "کاربر",
+            email: user.email || ""
+        });
     });
 
-    item.querySelector(".accountChatBtn")?.addEventListener("click", (event)=>{
+    /* کلیک روی آواتار/پروفایل: صفحه‌ی پروفایل (بیوگرافی و کتاب‌ها) */
+    item.querySelector(".accountAvatar")?.addEventListener("click", (event)=>{
         event.stopPropagation();
-        openChat({
+        openUserProfilePage({
             id: user.id,
             name: user.name || "کاربر",
             email: user.email || ""
@@ -7343,10 +8229,15 @@ async function fetchAllUsers(){
 
     allUsersCache = (res.documents || [])
         .filter(doc => doc.$id !== currentUser.id)
+        .filter(doc => !(doc.banned === true || doc.status === "banned"))
         .map(doc => ({
             id: doc.$id,
             name: doc.name || "کاربر",
-            email: doc.email || ""
+            email: doc.email || "",
+            bio: doc.bio || "",
+            socialType: doc.socialType || "",
+            socialId: doc.socialId || "",
+            avatarUrl: doc.avatarUrl || ""
         }));
 
     return allUsersCache;
@@ -7671,12 +8562,19 @@ function renderChatMessages(messages){
             replyHtml = `<div class="chatBubbleReplyPreview">${escapeHtml(m.replyToText)}</div>`;
         }
 
+        const tickHtml = mine
+            ? (m.seen
+                ? `<span class="chatBubbleSeen" title="دیده شد">✓✓</span>`
+                : `<span class="chatBubbleSent" title="ارسال شد">✓</span>`)
+            : "";
+
         bubble.innerHTML = `
             ${replyHtml}
             <span class="chatBubbleText">${escapeHtml(m.text || "")}</span>
             <div class="chatBubbleMeta">
                 <button type="button" class="chatBubbleReplyBtn" title="پاسخ">↩</button>
                 <span class="chatBubbleTime">${formatCommentTime(m.createdAt)}</span>
+                ${tickHtml}
             </div>
         `;
 
@@ -7712,16 +8610,51 @@ async function loadChatMessages(){
             ]
         );
 
-        const messages = (res.documents || []).map(doc=>({
-            id: doc.$id,
-            senderId: doc.senderId,
-            text: doc.text || "",
-            replyToId: doc.replyToId || "",
-            replyToText: doc.replyToText || "",
-            createdAt: doc.$createdAt
-        }));
+        const nowMs = Date.now();
+        const expiredIds = [];
+        const messages = (res.documents || [])
+            .filter(doc=>{
+                const ageMs = nowMs - new Date(doc.$createdAt).getTime();
+                if(ageMs > CHAT_MESSAGE_TTL_MS){
+                    expiredIds.push(doc.$id);
+                    return false;
+                }
+                return true;
+            })
+            .map(doc=>({
+                id: doc.$id,
+                senderId: doc.senderId,
+                text: doc.text || "",
+                replyToId: doc.replyToId || "",
+                replyToText: doc.replyToText || "",
+                createdAt: doc.$createdAt,
+                seen: doc.seen === true
+            }));
 
         renderChatMessages(messages);
+
+        /* پیام‌های قدیمی‌تر از ۴۸ ساعت به‌صورت خودکار حذف می‌شوند */
+        if(expiredIds.length){
+            expiredIds.forEach(id=>{
+                databases.deleteDocument(DATABASE_ID, COLLECTION_MESSAGES, id)
+                    .catch(()=>{});
+            });
+        }
+
+        /* پیام‌های دریافتی دیده‌شده در دیتابیس علامت بخور تا سین برای فرستنده دیده شود */
+        const unseenIncoming = messages.filter(
+            m => m.senderId !== currentUser.id && !m.seen
+        );
+        if(unseenIncoming.length){
+            unseenIncoming.forEach(m=>{
+                databases.updateDocument(
+                    DATABASE_ID,
+                    COLLECTION_MESSAGES,
+                    m.id,
+                    { seen: true }
+                ).catch(()=>{});
+            });
+        }
 
     }catch(error){
         const box = $("chatMessages");
@@ -7730,7 +8663,7 @@ async function loadChatMessages(){
     }
 }
 
-function openChat(otherUser){
+async function openChat(otherUser){
     if(!currentUser){
         showToast("ابتدا وارد حساب شوید");
         openLoginModal();
@@ -7747,6 +8680,16 @@ function openChat(otherUser){
         return;
     }
 
+    if(isBlockedByMe(otherUser.id)){
+        showToast("این کاربر را مسدود کرده‌اید. از پروفایل لغو مسدود کنید.");
+        return;
+    }
+
+    if(await isBlockedByOther(otherUser.id)){
+        showToast("شما توسط این کاربر مسدود شده‌اید");
+        return;
+    }
+
     chatWithUser = otherUser;
     cancelChatReply();
     cancelChatEdit();
@@ -7756,6 +8699,24 @@ function openChat(otherUser){
     $("chatWithName").textContent = otherUser.name || "گفتگو";
     $("chatMessages").innerHTML = `<div class="chatEmpty">در حال بارگذاری...</div>`;
     if($("chatInput")) $("chatInput").value = "";
+
+    const headerAvatar = $("chatHeaderAvatar");
+    if(headerAvatar){
+        headerAvatar.innerHTML =
+            otherUser.avatarUrl
+                ? `<img src="${escapeHtml(otherUser.avatarUrl)}" alt="پروفایل" onerror="this.parentNode.innerHTML='${escapeHtml(avatarInitial(otherUser.name))}'">`
+                : escapeHtml(avatarInitial(otherUser.name));
+    }
+    const headerUser = $("chatHeaderUser");
+    if(headerUser){
+        headerUser.onclick = ()=>{
+            openUserProfilePage({
+                id: otherUser.id,
+                name: otherUser.name || "کاربر",
+                email: otherUser.email || ""
+            });
+        };
+    }
 
     markChatSeen(otherUser.id);
     showPage("chatPage");
@@ -7993,6 +8954,11 @@ async function sendChatMessage(){
         return;
     }
 
+    if(isBlockedByMe(chatWithUser.id) || await isBlockedByOther(chatWithUser.id)){
+        showToast("امکان ارسال پیام به‌خاطر مسدودیت وجود ندارد");
+        return;
+    }
+
     const input = $("chatInput");
     const text = (input?.value || "").trim();
     if(!text) return;
@@ -8029,7 +8995,8 @@ async function sendChatMessage(){
             pairKey: pairKeyFor(currentUser.id, chatWithUser.id),
             senderId: currentUser.id,
             receiverId: chatWithUser.id,
-            text: text
+            text: text,
+            seen: false
         };
 
         if(chatReplyTo){
@@ -9153,18 +10120,22 @@ $("publishedBooksTab").addEventListener("click",()=>{
     $("publishedBooksTab").classList.add("active");
     $("publishedAuthorsTab")?.classList.remove("active");
     $("publishedCommentsTab")?.classList.remove("active");
+    $("publishedAccountsTab")?.classList.remove("active");
     $("adminPublishedBooks").classList.add("active");
     $("adminPublishedAuthors")?.classList.remove("active");
     $("adminPublishedComments")?.classList.remove("active");
+    $("adminPublishedAccounts")?.classList.remove("active");
 });
 
 $("publishedAuthorsTab").addEventListener("click",()=>{
     $("publishedAuthorsTab").classList.add("active");
     $("publishedBooksTab")?.classList.remove("active");
     $("publishedCommentsTab")?.classList.remove("active");
+    $("publishedAccountsTab")?.classList.remove("active");
     $("adminPublishedAuthors").classList.add("active");
     $("adminPublishedBooks")?.classList.remove("active");
     $("adminPublishedComments")?.classList.remove("active");
+    $("adminPublishedAccounts")?.classList.remove("active");
     renderPublishedAuthors();
 });
 
@@ -9172,11 +10143,131 @@ $("publishedCommentsTab")?.addEventListener("click",()=>{
     $("publishedCommentsTab").classList.add("active");
     $("publishedBooksTab")?.classList.remove("active");
     $("publishedAuthorsTab")?.classList.remove("active");
+    $("publishedAccountsTab")?.classList.remove("active");
     $("adminPublishedComments").classList.add("active");
     $("adminPublishedBooks")?.classList.remove("active");
     $("adminPublishedAuthors")?.classList.remove("active");
+    $("adminPublishedAccounts")?.classList.remove("active");
     renderPublishedComments();
 });
+
+$("publishedAccountsTab")?.addEventListener("click",()=>{
+    $("publishedAccountsTab").classList.add("active");
+    $("publishedBooksTab")?.classList.remove("active");
+    $("publishedAuthorsTab")?.classList.remove("active");
+    $("publishedCommentsTab")?.classList.remove("active");
+    $("adminPublishedAccounts").classList.add("active");
+    $("adminPublishedBooks")?.classList.remove("active");
+    $("adminPublishedAuthors")?.classList.remove("active");
+    $("adminPublishedComments")?.classList.remove("active");
+    renderPublishedAccounts();
+});
+
+async function renderPublishedAccounts(){
+    const box = $("adminPublishedAccountsList");
+    if(!box || !isAdminMode) return;
+
+    box.innerHTML = `<div class="empty"><div class="emptyIcon">👤</div>در حال بارگذاری اکانت‌ها...</div>`;
+
+    if(!appwriteReady || !databases || !appwriteQuery){
+        box.innerHTML = "";
+        showEmpty(box, "اتصال برقرار نیست.");
+        return;
+    }
+
+    try{
+        await loadBannedEmails();
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_USERS,
+            [ appwriteQuery.limit(100) ]
+        );
+
+        const text = normalizeText($("publishedSearchInput")?.value);
+        let users = (res.documents || []).map(doc => ({
+            id: doc.$id,
+            name: doc.name || "کاربر",
+            email: doc.email || "",
+            banned: doc.banned === true || doc.status === "banned" || isEmailBanned(doc.email)
+        }));
+
+        if(text){
+            users = users.filter(u =>
+                normalizeText(u.name).includes(text) ||
+                normalizeText(u.email).includes(text)
+            );
+        }
+
+        box.innerHTML = "";
+
+        if(!users.length){
+            showEmpty(box, text ? "اکانتی پیدا نشد." : "هنوز اکانتی ثبت نشده است.");
+            return;
+        }
+
+        users.forEach(u => {
+            const el = document.createElement("div");
+            el.className = "adminItem";
+            const bannedLabel = u.banned ? " · 🚫 مسدود" : "";
+            el.innerHTML = `
+                <div class="adminItemInfo">
+                    <b>${escapeHtml(u.name)}</b>
+                    <small dir="ltr">${escapeHtml(u.email || "—")}${bannedLabel}</small>
+                </div>
+                <div class="adminActions">
+                    <button class="delete" type="button">${u.banned ? "حذف از لیست" : "🗑 حذف اکانت"}</button>
+                </div>
+            `;
+            el.querySelector(".delete")?.addEventListener("click", async ()=>{
+                if(!confirm("اکانت «" + (u.email || u.name) + "» حذف و مسدود شود؟\nپس از این، با این ایمیل نمی‌تواند وارد شود.")) return;
+                await banAndDeleteAccount(u);
+                renderPublishedAccounts();
+            });
+            box.appendChild(el);
+        });
+    }catch(error){
+        box.innerHTML = "";
+        showEmpty(box, "خطا در دریافت اکانت‌ها.");
+        showAppwriteError(error, "Load published accounts");
+    }
+}
+
+async function banAndDeleteAccount(user){
+    if(!user || !isAdminMode) return;
+
+    const email = String(user.email || "").trim().toLowerCase();
+    if(email){
+        await loadBannedEmails();
+        if(!isEmailBanned(email)){
+            bannedEmailsCache.push(email);
+            await saveBannedEmails(bannedEmailsCache);
+        }
+    }
+
+    if(user.id && databases){
+        try{
+            await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_USERS,
+                user.id,
+                { banned: true, status: "banned" }
+            );
+        }catch(e){
+            try{
+                await databases.deleteDocument(
+                    DATABASE_ID,
+                    COLLECTION_USERS,
+                    user.id
+                );
+            }catch(e2){
+                console.warn("delete user doc:", e2);
+            }
+        }
+    }
+
+    showToast("اکانت حذف و ایمیل مسدود شد");
+}
+
 
 async function renderPublishedComments(){
     const box = $("adminPublishedCommentsList");
@@ -9780,6 +10871,8 @@ $("publishedSearchInput")
             renderPublishedAuthors();
         }else if($("publishedCommentsTab")?.classList.contains("active")){
             renderPublishedComments();
+        }else if($("publishedAccountsTab")?.classList.contains("active")){
+            renderPublishedAccounts();
         }else{
             renderPublishedWorks();
         }
@@ -9797,6 +10890,8 @@ $("clearPublishedSearch")
             renderPublishedAuthors();
         }else if($("publishedCommentsTab")?.classList.contains("active")){
             renderPublishedComments();
+        }else if($("publishedAccountsTab")?.classList.contains("active")){
+            renderPublishedAccounts();
         }else{
             renderPublishedWorks();
         }
