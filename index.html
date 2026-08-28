@@ -307,78 +307,16 @@ button{
     color:#796655;
 }
 
-/* ===== Notification Banner ===== */
-.notifBanner{
-    position:fixed;
-    top:14px;
-    left:50%;
-    transform:translateX(-50%) translateY(-140%);
-    width:calc(100% - 32px);
-    max-width:488px;
-    background:linear-gradient(145deg,#2b1d14,#241912);
-    border:1px solid #4a301b;
-    border-radius:16px;
-    padding:12px 14px;
-    display:flex;
-    align-items:center;
-    gap:11px;
-    box-shadow:0 10px 30px rgba(0,0,0,.45);
-    z-index:9999;
-    cursor:pointer;
-    transition:transform .35s ease;
-}
-.notifBanner.show{
-    transform:translateX(-50%) translateY(0);
-}
-.notifBannerAvatar{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#3a2a1c;
-    color:#e0a94e;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:16px;
-    font-weight:700;
-    flex-shrink:0;
-    overflow:hidden;
-}
-.notifBannerAvatar img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-.notifBannerBody{
-    min-width:0;
-    flex:1;
-}
-.notifBannerTitle{
-    font-size:12.5px;
-    color:#f2e4ca;
-    font-weight:700;
-    margin-bottom:2px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-.notifBannerText{
-    font-size:11px;
-    color:#c7ab8a;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-/* نقطه‌ی کوچک روی جلد کتابی که پاسخ خوانده‌نشده دارد */
+/* نقطه‌ی کوچک روی جلد کتابی که پاسخ خوانده‌نشده دارد (هم‌رنگ با نشانگر پیام‌های نخوانده) */
 .replyDot{
     position:absolute;
-    left:6px;
-    bottom:6px;
-    width:11px;
-    height:11px;
+    left:7px;
+    bottom:7px;
+    width:13px;
+    height:13px;
     border-radius:50%;
-    background:#e0483f;
+    background:#c0392b;
+    box-shadow:0 1px 4px rgba(0,0,0,.35);
     border:2px solid #17100c;
     z-index:6;
 }
@@ -2463,13 +2401,6 @@ button{
 </div>
 
 <div class="app">
-<div id="notifBanner" class="notifBanner">
-<div class="notifBannerAvatar" id="notifBannerAvatar"></div>
-<div class="notifBannerBody">
-<div class="notifBannerTitle" id="notifBannerTitle"></div>
-<div class="notifBannerText" id="notifBannerText"></div>
-</div>
-</div>
 
 <section id="homePage" class="page active">
 
@@ -6542,7 +6473,11 @@ async function updateUserAuthorIdBox(email, workId){
     let avatarUrl = "";
 
     try{
-        if(currentUser){
+        if(currentUser && normalizeText(currentUser.email) === normalizeText(email)){
+            /* خود کاربر نویسنده‌ی این کتاب است */
+            name = currentUser.name || email;
+            avatarUrl = currentUser.avatarUrl || "";
+        }else if(currentUser){
             await fetchAllUsers();
             const user = (allUsersCache || []).find(u =>
                 normalizeText(u.email) === normalizeText(email)
@@ -7973,7 +7908,9 @@ function renderCommentItem(c, isReply){
     const isOwner = !!(currentUser && c.userId && currentUser.id === c.userId);
 
     const canChat = !!(c.userId && currentUser && c.userId !== currentUser.id);
-    const cUser = (allUsersCache || []).find(u => u.id === c.userId);
+    const cUser = (currentUser && c.userId === currentUser.id)
+        ? currentUser
+        : (allUsersCache || []).find(u => u.id === c.userId);
 
     item.innerHTML = `
         <div class="commentHeader">
@@ -9093,18 +9030,9 @@ async function updateUnreadBadge(){
             if(created > lastSeen){
                 total++;
                 bySender[sender] = (bySender[sender] || 0) + 1;
-
-                /* اعلان زیبا برای پیام جدید (فقط برای پیام‌هایی که واقعاً تازه رسیده‌اند) */
-                if(!notifiedMessageIds.has(doc.$id)){
-                    notifiedMessageIds.add(doc.$id);
-                    if(unreadNotifInitialized){
-                        notifyNewMessage(sender, doc.text || "");
-                    }
-                }
             }
         });
 
-        unreadNotifInitialized = true;
         unreadBySenderCache = bySender;
         updateNavChatBadge(total);
 
@@ -9122,70 +9050,13 @@ async function updateUnreadBadge(){
 }
 
 /* =========================================================
-   NOTIFICATIONS (پیام جدید و پاسخ به نظر)
+   دایره‌ی پاسخ نخوانده روی جلد کتاب
 ========================================================= */
 
-let notifiedMessageIds = new Set();
-let unreadNotifInitialized = false;
-let notifiedReplyIds = new Set();
-let repliesNotifInitialized = false;
-let notifBannerTimer = null;
+let repliesCheckInitialized = false;
+let seenReplyIds = new Set();
 
-function showNotificationBanner({avatarUrl, name, text, onClick}){
-    const el = $("notifBanner");
-    if(!el) return;
-
-    const avatarEl = $("notifBannerAvatar");
-    if(avatarEl){
-        avatarEl.innerHTML = avatarUrl
-            ? `<img src="${escapeHtml(avatarUrl)}" alt="" onerror="this.parentNode.textContent='${escapeHtml(avatarInitial(name))}'">`
-            : escapeHtml(avatarInitial(name));
-    }
-
-    const titleEl = $("notifBannerTitle");
-    if(titleEl) titleEl.textContent = name || "اعلان جدید";
-
-    const textEl = $("notifBannerText");
-    if(textEl) textEl.textContent = text || "";
-
-    el.onclick = ()=>{
-        el.classList.remove("show");
-        clearTimeout(notifBannerTimer);
-        if(onClick) onClick();
-    };
-
-    el.classList.add("show");
-    clearTimeout(notifBannerTimer);
-    notifBannerTimer = setTimeout(()=>{
-        el.classList.remove("show");
-    }, 4500);
-}
-
-async function notifyNewMessage(senderId, text){
-    let user = (allUsersCache || []).find(u => u.id === senderId);
-    if(!user){
-        try{ await fetchAllUsers(); }catch(e){}
-        user = (allUsersCache || []).find(u => u.id === senderId);
-    }
-
-    const name = (user && user.name) || "کاربر";
-
-    showNotificationBanner({
-        avatarUrl: (user && user.avatarUrl) || "",
-        name: "پیام از " + name,
-        text: text || "پیام جدید دریافت شد",
-        onClick: ()=>{
-            openChat({
-                id: senderId,
-                name: name,
-                email: (user && user.email) || "",
-                avatarUrl: (user && user.avatarUrl) || ""
-            });
-        }
-    });
-}
-
-/* آیا این اثر پاسخ خوانده‌نشده دارد؟ (روی جلد کتاب نقطه‌ی قرمز نشان داده می‌شود) */
+/* آیا این اثر پاسخ خوانده‌نشده دارد؟ (روی جلد کتاب یک دایره‌ی کوچک نشان داده می‌شود) */
 function getUnseenReplyWorkIds(){
     try{
         return new Set(JSON.parse(localStorage.getItem("unseenReplyWorkIds") || "[]"));
@@ -9225,13 +9096,14 @@ function clearUnseenReply(workId){
     }
 }
 
-/* رفرش سبک لیست‌های نمایش‌داده‌شده تا نقطه‌ی پاسخ به‌روز شود */
+/* رفرش سبک لیست‌های نمایش‌داده‌شده تا دایره‌ی پاسخ به‌روز شود */
 function refreshVisibleBookLists(){
     try{ renderHome(); }catch(e){}
     try{ renderSaved(); }catch(e){}
     try{ renderPublishedWorks(); }catch(e){}
 }
 
+/* بررسی پاسخ‌های جدید روی نظرات خودم (فقط برای روشن‌کردن دایره‌ی روی جلد، بدون هیچ اعلان/بنری) */
 async function checkCommentReplies(){
     if(!currentUser || !appwriteReady || !databases || !appwriteQuery) return;
 
@@ -9247,7 +9119,7 @@ async function checkCommentReplies(){
 
         const myCommentIds = new Set((mine.documents || []).map(d => d.$id));
         if(!myCommentIds.size){
-            repliesNotifInitialized = true;
+            repliesCheckInitialized = true;
             return;
         }
 
@@ -9269,31 +9141,20 @@ async function checkCommentReplies(){
             if(!doc.parentId || !myCommentIds.has(doc.parentId)) return;
             if(doc.userId === currentUser.id) return;
 
-            if(!repliesNotifInitialized){
-                notifiedReplyIds.add(doc.$id);
+            if(!repliesCheckInitialized){
+                seenReplyIds.add(doc.$id);
                 return;
             }
 
-            if(notifiedReplyIds.has(doc.$id)) return;
-            notifiedReplyIds.add(doc.$id);
+            if(seenReplyIds.has(doc.$id)) return;
+            seenReplyIds.add(doc.$id);
 
             if(doc.workId && doc.workId !== openWorkId){
                 markUnseenReply(doc.workId);
             }
-
-            const work = allWorks.find(w => w.id === doc.workId);
-
-            showNotificationBanner({
-                avatarUrl: "",
-                name: "پاسخ از " + (doc.userName || "کاربر"),
-                text: doc.text || "",
-                onClick: ()=>{
-                    if(work) openDetail(work);
-                }
-            });
         });
 
-        repliesNotifInitialized = true;
+        repliesCheckInitialized = true;
     }catch(error){
         console.warn("checkCommentReplies:", error);
     }
