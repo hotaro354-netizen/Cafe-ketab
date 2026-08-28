@@ -307,6 +307,82 @@ button{
     color:#796655;
 }
 
+/* ===== Notification Banner ===== */
+.notifBanner{
+    position:fixed;
+    top:14px;
+    left:50%;
+    transform:translateX(-50%) translateY(-140%);
+    width:calc(100% - 32px);
+    max-width:488px;
+    background:linear-gradient(145deg,#2b1d14,#241912);
+    border:1px solid #4a301b;
+    border-radius:16px;
+    padding:12px 14px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);
+    z-index:9999;
+    cursor:pointer;
+    transition:transform .35s ease;
+}
+.notifBanner.show{
+    transform:translateX(-50%) translateY(0);
+}
+.notifBannerAvatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#3a2a1c;
+    color:#e0a94e;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    font-weight:700;
+    flex-shrink:0;
+    overflow:hidden;
+}
+.notifBannerAvatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.notifBannerBody{
+    min-width:0;
+    flex:1;
+}
+.notifBannerTitle{
+    font-size:12.5px;
+    color:#f2e4ca;
+    font-weight:700;
+    margin-bottom:2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.notifBannerText{
+    font-size:11px;
+    color:#c7ab8a;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* نقطه‌ی کوچک روی جلد کتابی که پاسخ خوانده‌نشده دارد */
+.replyDot{
+    position:absolute;
+    left:6px;
+    bottom:6px;
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:#e0483f;
+    border:2px solid #17100c;
+    z-index:6;
+}
+
 .emptyIcon{
     font-size:38px;
     margin-bottom:12px;
@@ -1153,6 +1229,12 @@ button{
     font-size:13px;
     font-weight:700;
     flex-shrink:0;
+    overflow:hidden;
+}
+.commentAvatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 .commentHeadInfo{
     display:flex;
@@ -1332,6 +1414,12 @@ button{
     font-weight:700;
     flex-shrink:0;
     cursor:pointer;
+    overflow:hidden;
+}
+.accountAvatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
 .chatHeaderUser{
@@ -1854,36 +1942,48 @@ button{
 .userAuthorIdBox{
     margin:18px auto 2px;
     display:flex;
+    flex-direction:column;
+    align-items:center;
     justify-content:center;
+    gap:5px;
 }
 .userAuthorIdCircle{
-    width:82px;
-    height:82px;
+    width:66px;
+    height:66px;
     border-radius:50%;
     border:1px solid rgba(224,169,78,.45);
     background:radial-gradient(circle at 35% 30%,#4a301b,#241912 72%);
     display:flex;
-    flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:4px;
-    padding:8px;
-    text-align:center;
+    overflow:hidden;
     box-shadow:0 5px 16px rgba(0,0,0,.18);
 }
+.userAuthorIdCircle img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
 .userAuthorIdIcon{
-    font-size:16px;
+    font-size:22px;
     color:#e0a94e;
     line-height:1;
 }
+.userAuthorIdName{
+    font-size:12.5px;
+    color:#f0e2c8;
+    font-weight:700;
+    text-align:center;
+}
 .userAuthorIdEmail{
     width:100%;
-    color:#d8c09f;
-    font-size:7px;
-    line-height:1.35;
+    color:#8d7660;
+    font-size:9px;
+    line-height:1.3;
     word-break:break-all;
+    text-align:center;
     overflow:hidden;
-    max-height:31px;
+    max-height:24px;
 }
 .readerPage{
     background:#17100c;
@@ -2363,6 +2463,13 @@ button{
 </div>
 
 <div class="app">
+<div id="notifBanner" class="notifBanner">
+<div class="notifBannerAvatar" id="notifBannerAvatar"></div>
+<div class="notifBannerBody">
+<div class="notifBannerTitle" id="notifBannerTitle"></div>
+<div class="notifBannerText" id="notifBannerText"></div>
+</div>
+</div>
 
 <section id="homePage" class="page active">
 
@@ -2741,10 +2848,11 @@ style="display:none">
 <div class="description" id="detailDescription"></div>
 
 <div id="userAuthorIdBox" class="userAuthorIdBox" style="display:none">
-<div class="userAuthorIdCircle" aria-label="آیدی نویسنده">
+<div class="userAuthorIdCircle" id="userAuthorIdAvatar" aria-label="پروفایل نویسنده">
 <span class="userAuthorIdIcon">✉</span>
-<span id="userAuthorIdEmail" class="userAuthorIdEmail"></span>
 </div>
+<div id="userAuthorIdName" class="userAuthorIdName"></div>
+<span id="userAuthorIdEmail" class="userAuthorIdEmail"></span>
 </div>
 
 <div id="detailAuthorBox" style="display:none">
@@ -4855,6 +4963,16 @@ function createCover(work){
     wrapper.appendChild(star);
     wrapper.appendChild(workTypeBadge);
 
+    if(work.id && hasUnseenReply(work.id)){
+        const dot =
+            document.createElement("span");
+
+        dot.className =
+            "replyDot";
+
+        wrapper.appendChild(dot);
+    }
+
     return wrapper;
 }
 
@@ -5030,7 +5148,8 @@ async function openUserAuthorPage(email){
                 openChat({
                     id: user.id,
                     name: user.name || authorEmail,
-                    email: user.email || authorEmail
+                    email: user.email || authorEmail,
+                    avatarUrl: user.avatarUrl || ""
                 });
                 return;
             }
@@ -5119,7 +5238,8 @@ async function openUserAuthorPage(email){
             openChat({
                 id: user.id,
                 name: user.name || authorName,
-                email: user.email || authorEmail
+                email: user.email || authorEmail,
+                avatarUrl: user.avatarUrl || ""
             });
         };
     }
@@ -5426,7 +5546,8 @@ $("userProfileMsgBtn")?.addEventListener("click", async ()=>{
     openChat({
         id: viewingUserProfile.id,
         name: viewingUserProfile.name || "کاربر",
-        email: viewingUserProfile.email || ""
+        email: viewingUserProfile.email || "",
+        avatarUrl: viewingUserProfile.avatarUrl || ""
     });
 });
 
@@ -6347,19 +6468,24 @@ function openDetail(work){
 
     const userAuthorIdBox = $("userAuthorIdBox");
     const userAuthorIdEmail = $("userAuthorIdEmail");
+    const userAuthorIdName = $("userAuthorIdName");
+    const userAuthorIdAvatar = $("userAuthorIdAvatar");
 
     if(userAuthorIdBox && userAuthorIdEmail){
         const email = work.authorEmail || work.createdByDevice || "";
         userAuthorIdBox.style.display =
             isUserBook && email ? "flex" : "none";
         userAuthorIdEmail.textContent = email;
+        if(userAuthorIdName) userAuthorIdName.textContent = email;
+        if(userAuthorIdAvatar) userAuthorIdAvatar.innerHTML = `<span class="userAuthorIdIcon">✉</span>`;
 
         userAuthorIdBox.onclick = null;
         if(isUserBook && email){
             userAuthorIdBox.onclick = ()=>{
-                openUserAuthorPage(email);
+                openUserProfilePage(email);
             };
-            userAuthorIdBox.title = "مشاهده کتاب‌ها و چت با نویسنده";
+            userAuthorIdBox.title = "مشاهده پروفایل نویسنده";
+            updateUserAuthorIdBox(email, work.id);
         }
     }
 
@@ -6405,6 +6531,38 @@ function openDetail(work){
     }
 
     showPage("detailPage");
+}
+
+async function updateUserAuthorIdBox(email, workId){
+    const nameEl = $("userAuthorIdName");
+    const avatarEl = $("userAuthorIdAvatar");
+    if(!nameEl || !avatarEl) return;
+
+    let name = email;
+    let avatarUrl = "";
+
+    try{
+        if(currentUser){
+            await fetchAllUsers();
+            const user = (allUsersCache || []).find(u =>
+                normalizeText(u.email) === normalizeText(email)
+            );
+            if(user){
+                name = user.name || email;
+                avatarUrl = user.avatarUrl || "";
+            }
+        }
+    }catch(e){
+        console.warn("updateUserAuthorIdBox:", e);
+    }
+
+    /* اگر کاربر صفحه‌ی کتاب دیگری را باز کرده، این نتیجه دیگر معتبر نیست */
+    if(currentWork && currentWork.id !== workId) return;
+
+    nameEl.textContent = name;
+    avatarEl.innerHTML = avatarUrl
+        ? `<img src="${escapeHtml(avatarUrl)}" alt="پروفایل" onerror="this.parentNode.innerHTML='<span class=\\'userAuthorIdIcon\\'>✉</span>'">`
+        : `<span class="userAuthorIdIcon">✉</span>`;
 }
 
 async function loadCommentCount(workId){
@@ -7681,6 +7839,16 @@ function avatarInitial(name){
     return n ? n[0].toUpperCase() : "ک";
 }
 
+/* اگر کاربر عکس پروفایل دارد نمایش عکس، در غیر این‌صورت حرف اول اسم */
+function avatarHTML(user){
+    const url = user && user.avatarUrl;
+    const name = user && user.name;
+    if(url){
+        return `<img src="${escapeHtml(url)}" alt="پروفایل" onerror="this.parentNode.textContent='${escapeHtml(avatarInitial(name))}'">`;
+    }
+    return escapeHtml(avatarInitial(name));
+}
+
 function starsMarkup(rating){
     let out = "";
     for(let i = 1; i <= 5; i++){
@@ -7805,10 +7973,11 @@ function renderCommentItem(c, isReply){
     const isOwner = !!(currentUser && c.userId && currentUser.id === c.userId);
 
     const canChat = !!(c.userId && currentUser && c.userId !== currentUser.id);
+    const cUser = (allUsersCache || []).find(u => u.id === c.userId);
 
     item.innerHTML = `
         <div class="commentHeader">
-            <div class="commentAvatar${canChat ? " clickable" : ""}" title="${canChat ? "شروع گفتگو" : ""}">${escapeHtml(avatarInitial(c.userName))}</div>
+            <div class="commentAvatar${canChat ? " clickable" : ""}" title="${canChat ? "مشاهده پروفایل" : ""}">${avatarHTML(cUser || {name:c.userName})}</div>
             <div class="commentHeadInfo">
                 <div class="commentUserRow">
                     <span class="commentUser">${escapeHtml(c.userName || "کاربر")}</span>
@@ -8004,12 +8173,18 @@ function updateCommentsBadge(count){
 async function loadComments(workId){
     renderCommentForm();
 
+    clearUnseenReply(workId);
+
     const list = $("commentsList");
     if(list) list.innerHTML = `<div class="commentsEmpty">در حال بارگذاری نظرات...</div>`;
 
     if(!appwriteReady || !databases || !appwriteQuery || !workId){
         if(list) list.innerHTML = `<div class="commentsEmpty">امکان دریافت نظرات وجود ندارد.</div>`;
         return;
+    }
+
+    if(currentUser){
+        try{ await fetchAllUsers(); }catch(e){}
     }
 
     try{
@@ -8186,7 +8361,7 @@ function renderAccountItem(user, listEl){
     const unread = Number(user.unreadCount || unreadBySenderCache[user.id] || 0);
 
     item.innerHTML = `
-        <div class="accountAvatar">${escapeHtml(avatarInitial(user.name))}</div>
+        <div class="accountAvatar">${avatarHTML(user)}</div>
         <div class="accountInfo">
             <div class="accountName">${escapeHtml(displayUserName)}</div>
             <div class="accountSub">${escapeHtml(user.email || user.sub || "")}</div>
@@ -8199,7 +8374,8 @@ function renderAccountItem(user, listEl){
         openChat({
             id: user.id,
             name: user.name || "کاربر",
-            email: user.email || ""
+            email: user.email || "",
+            avatarUrl: user.avatarUrl || ""
         });
     });
 
@@ -8209,7 +8385,8 @@ function renderAccountItem(user, listEl){
         openUserProfilePage({
             id: user.id,
             name: user.name || "کاربر",
-            email: user.email || ""
+            email: user.email || "",
+            avatarUrl: user.avatarUrl || ""
         });
     });
     listEl.appendChild(item);
@@ -8347,6 +8524,7 @@ async function loadChatsList(){
                 id: p.id,
                 name: user?.name || "کاربر",
                 email: user?.email || "",
+                avatarUrl: user?.avatarUrl || "",
                 sub: p.lastText,
                 lastAt: p.lastAt,
                 unreadCount: unreadBySenderCache[p.id] || 0
@@ -8915,9 +9093,18 @@ async function updateUnreadBadge(){
             if(created > lastSeen){
                 total++;
                 bySender[sender] = (bySender[sender] || 0) + 1;
+
+                /* اعلان زیبا برای پیام جدید (فقط برای پیام‌هایی که واقعاً تازه رسیده‌اند) */
+                if(!notifiedMessageIds.has(doc.$id)){
+                    notifiedMessageIds.add(doc.$id);
+                    if(unreadNotifInitialized){
+                        notifyNewMessage(sender, doc.text || "");
+                    }
+                }
             }
         });
 
+        unreadNotifInitialized = true;
         unreadBySenderCache = bySender;
         updateNavChatBadge(total);
 
@@ -8929,6 +9116,186 @@ async function updateUnreadBadge(){
         }
     }catch(error){
         console.warn("updateUnreadBadge:", error);
+    }
+
+    checkCommentReplies();
+}
+
+/* =========================================================
+   NOTIFICATIONS (پیام جدید و پاسخ به نظر)
+========================================================= */
+
+let notifiedMessageIds = new Set();
+let unreadNotifInitialized = false;
+let notifiedReplyIds = new Set();
+let repliesNotifInitialized = false;
+let notifBannerTimer = null;
+
+function showNotificationBanner({avatarUrl, name, text, onClick}){
+    const el = $("notifBanner");
+    if(!el) return;
+
+    const avatarEl = $("notifBannerAvatar");
+    if(avatarEl){
+        avatarEl.innerHTML = avatarUrl
+            ? `<img src="${escapeHtml(avatarUrl)}" alt="" onerror="this.parentNode.textContent='${escapeHtml(avatarInitial(name))}'">`
+            : escapeHtml(avatarInitial(name));
+    }
+
+    const titleEl = $("notifBannerTitle");
+    if(titleEl) titleEl.textContent = name || "اعلان جدید";
+
+    const textEl = $("notifBannerText");
+    if(textEl) textEl.textContent = text || "";
+
+    el.onclick = ()=>{
+        el.classList.remove("show");
+        clearTimeout(notifBannerTimer);
+        if(onClick) onClick();
+    };
+
+    el.classList.add("show");
+    clearTimeout(notifBannerTimer);
+    notifBannerTimer = setTimeout(()=>{
+        el.classList.remove("show");
+    }, 4500);
+}
+
+async function notifyNewMessage(senderId, text){
+    let user = (allUsersCache || []).find(u => u.id === senderId);
+    if(!user){
+        try{ await fetchAllUsers(); }catch(e){}
+        user = (allUsersCache || []).find(u => u.id === senderId);
+    }
+
+    const name = (user && user.name) || "کاربر";
+
+    showNotificationBanner({
+        avatarUrl: (user && user.avatarUrl) || "",
+        name: "پیام از " + name,
+        text: text || "پیام جدید دریافت شد",
+        onClick: ()=>{
+            openChat({
+                id: senderId,
+                name: name,
+                email: (user && user.email) || "",
+                avatarUrl: (user && user.avatarUrl) || ""
+            });
+        }
+    });
+}
+
+/* آیا این اثر پاسخ خوانده‌نشده دارد؟ (روی جلد کتاب نقطه‌ی قرمز نشان داده می‌شود) */
+function getUnseenReplyWorkIds(){
+    try{
+        return new Set(JSON.parse(localStorage.getItem("unseenReplyWorkIds") || "[]"));
+    }catch(e){
+        return new Set();
+    }
+}
+
+function saveUnseenReplyWorkIds(set){
+    try{
+        localStorage.setItem("unseenReplyWorkIds", JSON.stringify([...set]));
+    }catch(e){}
+}
+
+function hasUnseenReply(workId){
+    if(!workId) return false;
+    return getUnseenReplyWorkIds().has(workId);
+}
+
+function markUnseenReply(workId){
+    if(!workId) return;
+    const set = getUnseenReplyWorkIds();
+    if(!set.has(workId)){
+        set.add(workId);
+        saveUnseenReplyWorkIds(set);
+        refreshVisibleBookLists();
+    }
+}
+
+function clearUnseenReply(workId){
+    if(!workId) return;
+    const set = getUnseenReplyWorkIds();
+    if(set.has(workId)){
+        set.delete(workId);
+        saveUnseenReplyWorkIds(set);
+        refreshVisibleBookLists();
+    }
+}
+
+/* رفرش سبک لیست‌های نمایش‌داده‌شده تا نقطه‌ی پاسخ به‌روز شود */
+function refreshVisibleBookLists(){
+    try{ renderHome(); }catch(e){}
+    try{ renderSaved(); }catch(e){}
+    try{ renderPublishedWorks(); }catch(e){}
+}
+
+async function checkCommentReplies(){
+    if(!currentUser || !appwriteReady || !databases || !appwriteQuery) return;
+
+    try{
+        const mine = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_COMMENTS,
+            [
+                appwriteQuery.equal("userId", currentUser.id),
+                appwriteQuery.limit(200)
+            ]
+        );
+
+        const myCommentIds = new Set((mine.documents || []).map(d => d.$id));
+        if(!myCommentIds.size){
+            repliesNotifInitialized = true;
+            return;
+        }
+
+        const recent = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_COMMENTS,
+            [
+                appwriteQuery.orderDesc("$createdAt"),
+                appwriteQuery.limit(200)
+            ]
+        );
+
+        const openWorkId =
+            (currentWork && $("detailPage")?.classList.contains("active"))
+                ? currentWork.id
+                : null;
+
+        (recent.documents || []).forEach(doc=>{
+            if(!doc.parentId || !myCommentIds.has(doc.parentId)) return;
+            if(doc.userId === currentUser.id) return;
+
+            if(!repliesNotifInitialized){
+                notifiedReplyIds.add(doc.$id);
+                return;
+            }
+
+            if(notifiedReplyIds.has(doc.$id)) return;
+            notifiedReplyIds.add(doc.$id);
+
+            if(doc.workId && doc.workId !== openWorkId){
+                markUnseenReply(doc.workId);
+            }
+
+            const work = allWorks.find(w => w.id === doc.workId);
+
+            showNotificationBanner({
+                avatarUrl: "",
+                name: "پاسخ از " + (doc.userName || "کاربر"),
+                text: doc.text || "",
+                onClick: ()=>{
+                    if(work) openDetail(work);
+                }
+            });
+        });
+
+        repliesNotifInitialized = true;
+    }catch(error){
+        console.warn("checkCommentReplies:", error);
     }
 }
 
