@@ -292,12 +292,23 @@ button{
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+    max-width:100%;
+    direction:rtl;
+    text-align:right;
+    unicode-bidi:plaintext;
 }
 
 .bookAuthor{
     font-size:9px;
     color:var(--muted);
     margin-top:5px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100%;
+    direction:rtl;
+    text-align:right;
+    unicode-bidi:plaintext;
 }
 
 .empty{
@@ -319,6 +330,335 @@ button{
     box-shadow:0 1px 4px rgba(0,0,0,.35);
     border:2px solid #17100c;
     z-index:6;
+}
+
+/* ===== Explore (ریلز تمام‌صفحه مثل اینستا) ===== */
+#explorePage.page{
+    position:relative;
+    padding:0 !important;
+    overflow:hidden;
+    background:#000 !important;
+    min-height:100vh;
+    min-height:100dvh;
+}
+#explorePage.page.active{
+    background:#000 !important;
+}
+#explorePage .exploreTopBar{
+    display:none;
+}
+.exploreVpnBanner{
+    position:absolute;
+    inset:0;
+    z-index:40;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    background:rgba(0,0,0,.55);
+    box-sizing:border-box;
+}
+.exploreVpnBannerInner{
+    width:100%;
+    max-width:320px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    padding:18px 16px;
+    border-radius:16px;
+    background:rgba(28,20,14,.96);
+    border:1px solid rgba(224,169,78,.4);
+    box-shadow:0 12px 32px rgba(0,0,0,.5);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    direction:rtl;
+}
+.exploreVpnBannerText{
+    font-size:13px;
+    line-height:1.75;
+    color:#f2e4ca;
+    text-align:center;
+}
+.exploreVpnBannerActions{
+    display:flex;
+    flex-direction:row;
+    gap:8px;
+}
+.exploreVpnBannerBtn{
+    flex:1;
+    margin:0;
+    padding:10px 8px;
+    border:0;
+    border-radius:11px;
+    font-size:12.5px;
+    font-weight:700;
+    cursor:pointer;
+}
+.exploreVpnBannerBtn.primary{
+    background:#e0a94e;
+    color:#1a120c;
+}
+.exploreVpnBannerBtn.secondary{
+    background:rgba(255,255,255,.1);
+    color:#f2e4ca;
+    border:1px solid rgba(224,169,78,.35);
+}
+.exploreVpnBannerBtn:active{
+    opacity:.85;
+}
+.exploreFeed{
+    height:calc(100vh - 70px);
+    height:calc(100dvh - 70px);
+    overflow-y:scroll;
+    overflow-x:hidden;
+    scroll-snap-type:y mandatory;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain;
+    background:#000 !important;
+    scrollbar-width:none;
+    color-scheme:dark;
+}
+.exploreFeed::-webkit-scrollbar{display:none}
+.exploreVideoCard{
+    position:relative;
+    width:100%;
+    height:calc(100vh - 70px);
+    height:calc(100dvh - 70px);
+    min-height:calc(100vh - 70px);
+    min-height:calc(100dvh - 70px);
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    background:#000 !important;
+    border:0;
+    border-radius:0;
+    overflow:hidden;
+    flex-shrink:0;
+    color-scheme:dark;
+}
+.exploreVideoMedia{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    background:#000 !important;
+}
+.exploreVideoMedia video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:0;
+    object-fit:cover;
+    object-position:center center;
+    background:#000 !important;
+    color-scheme:dark;
+}
+.exploreVideoMedia iframe{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    border:0;
+    background:#000 !important;
+    color-scheme:dark;
+    transform:none;
+}
+/*
+  فقط پایین امبد اینستاگرام بریده می‌شود
+  (لایک / کامنت / مشاهده در اینستا / نوار سفید پایین)
+  بالای ویدیو و پروفایل دست‌نخورده می‌ماند
+*/
+.exploreVideoMedia.is-instagram{
+    overflow:hidden;
+    background:#000 !important;
+}
+.exploreVideoMedia.is-instagram iframe{
+    top:0;
+    left:0;
+    width:100%;
+    height:150%;
+    transform:none;
+    pointer-events:auto;
+}
+.exploreVideoMedia.is-youtube iframe,
+.exploreVideoMedia.is-aparat iframe{
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:auto;
+}
+.explorePlayBtn{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:8;
+    width:64px;
+    height:64px;
+    border:0;
+    border-radius:50%;
+    background:rgba(0,0,0,.45);
+    color:#fff;
+    font-size:28px;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    box-shadow:0 4px 18px rgba(0,0,0,.35);
+}
+.explorePlayBtn.show{
+    display:flex;
+}
+/* کپشن و مشاهده کتاب جمع‌وجور در گوشه پایین */
+.exploreVideoOverlay{
+    position:absolute;
+    left:auto;
+    right:10px;
+    bottom:18px;
+    z-index:6;
+    width:auto;
+    max-width:72%;
+    padding:0;
+    background:none;
+    pointer-events:none;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:8px;
+    direction:rtl;
+}
+.exploreVideoOverlay > *{
+    pointer-events:auto;
+}
+.exploreVideoCaption{
+    display:block;
+    width:auto;
+    max-width:100%;
+    box-sizing:border-box;
+    padding:6px 10px;
+    margin:0;
+    font-size:11.5px;
+    line-height:1.45;
+    color:#fff;
+    font-weight:400;
+    white-space:pre-wrap;
+    word-break:break-word;
+    max-height:4.4em;
+    overflow:hidden;
+    text-shadow:0 1px 2px rgba(0,0,0,.55);
+    direction:rtl;
+    text-align:right;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    background:rgba(0,0,0,.55);
+    border-radius:10px;
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+}
+.exploreVideoCaption.expanded{
+    max-height:none;
+}
+.exploreVideoBooksBtn{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    width:auto;
+    max-width:100%;
+    margin:0;
+    padding:6px 11px;
+    border:0;
+    border-radius:16px;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    color:#fff;
+    font-size:11px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
+    white-space:nowrap;
+}
+.exploreVideoBooksBtn:active{
+    opacity:.85;
+}
+.exploreEmptyFull{
+    height:calc(100vh - 70px);
+    height:calc(100dvh - 70px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    color:#796655;
+    font-size:13px;
+    gap:10px;
+    background:#120c09;
+}
+.exploreSwipeHint{
+    position:absolute;
+    top:14px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:5;
+    font-size:10px;
+    color:rgba(242,228,202,.55);
+    background:rgba(0,0,0,.35);
+    padding:5px 12px;
+    border-radius:20px;
+    pointer-events:none;
+    white-space:nowrap;
+}
+
+/* انتخاب کتاب برای ویدیو در پنل مدیریت */
+.videoBooksPicker{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:8px;
+    min-height:8px;
+}
+.videoBookChip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:#3a2a1c;
+    color:#e0a94e;
+    font-size:10.5px;
+    padding:5px 9px;
+    border-radius:20px;
+}
+.videoBooksResults{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    max-height:180px;
+    overflow-y:auto;
+    margin-bottom:10px;
+}
+.videoBookResultRow{
+    padding:10px 12px;
+    font-size:11.5px;
+    color:#d8c09f;
+    background:#2b1d14;
+    border:1px solid #3a2a1c;
+    border-radius:10px;
+    cursor:pointer;
+    text-align:right;
+}
+.videoBookResultRow:active,
+.videoBookResultRow:hover{
+    opacity:.9;
+    border-color:rgba(224,169,78,.45);
+    color:#e0a94e;
+}
+.videoBookResultRow small{
+    display:block;
+    margin-top:3px;
+    font-size:9.5px;
+    color:#8d7660;
 }
 
 .emptyIcon{
@@ -756,7 +1096,7 @@ button{
     background:#1c130e;
     border-top:1px solid #302219;
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+    grid-template-columns:repeat(6,1fr);
     z-index:1000;
 }
 
@@ -775,15 +1115,28 @@ button{
     display:block;
     font-size:18px;
     margin-bottom:4px;
+    line-height:1;
 }
 .navIconWrap{
     position:relative;
-    display:inline-block;
+    display:block;
+    width:22px;
+    height:18px;
+    margin:0 auto 4px;
+    line-height:1;
+    overflow:visible;
+}
+.navIconWrap .navIcon{
+    display:block;
+    margin-bottom:0;
+    font-size:18px;
+    line-height:18px;
 }
 .navChatBadge{
     position:absolute;
-    top:-7px;
-    left:-10px;
+    top:-8px;
+    left:50%;
+    margin-left:4px;
     min-width:16px;
     height:16px;
     padding:0 4px;
@@ -796,6 +1149,10 @@ button{
     text-align:center;
     box-shadow:0 1px 4px rgba(0,0,0,.35);
     pointer-events:none;
+    z-index:20;
+}
+#navProfileBtn{
+    overflow:visible;
 }
 .chatLimitNotice{
     position:fixed;
@@ -1190,6 +1547,13 @@ button{
     font-size:11.5px;
     color:#e2c6a3;
     font-weight:600;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    max-width:180px;
+    direction:rtl;
+    text-align:right;
+    unicode-bidi:plaintext;
 }
 .commentStarsDisplay{
     font-size:10px;
@@ -1404,6 +1768,13 @@ button{
     color:#e2c6a3;
     font-weight:600;
     margin-bottom:2px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    max-width:100%;
+    direction:rtl;
+    text-align:right;
+    unicode-bidi:plaintext;
 }
 .accountSub{
     font-size:9.5px;
@@ -1411,6 +1782,10 @@ button{
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
+    max-width:100%;
+    direction:rtl;
+    text-align:right;
+    unicode-bidi:plaintext;
 }
 .accountChatBtn{
     background:#2b1d15;
@@ -2034,6 +2409,10 @@ button{
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+    max-width:100%;
+    direction:rtl;
+    text-align:right;
+    unicode-bidi:plaintext;
 }
 .authorStrip{
     display:none;
@@ -2175,10 +2554,22 @@ button{
 .detailCenterInfo h1{
     font-size:19px;
     margin:0 0 7px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    max-width:100%;
+    direction:rtl;
+    unicode-bidi:plaintext;
 }
 .detailCenterInfo .detailAuthorName{
     color:#8d755d;
     font-size:11px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    max-width:100%;
+    direction:rtl;
+    unicode-bidi:plaintext;
 }
 .detailGenreLine{
     text-align:center;
@@ -2599,6 +2990,25 @@ placeholder="نام کتاب، مانگا یا مانهوا">
 </section>
 
 
+<section id="explorePage" class="page">
+
+<div id="exploreVpnBanner" class="exploreVpnBanner" style="display:none">
+<div class="exploreVpnBannerInner">
+<div class="exploreVpnBannerText" id="exploreVpnBannerText">
+برای پخش بهتر کلیپ‌ها، یک‌بار از اپ خارج شوید و با VPN دوباره وارد همین بخش شوید.
+</div>
+<div class="exploreVpnBannerActions">
+<button type="button" class="exploreVpnBannerBtn primary" id="exploreVpnBannerConfirm">تأیید</button>
+<button type="button" class="exploreVpnBannerBtn secondary" id="exploreVpnBannerRead">خوانده شد</button>
+</div>
+</div>
+</div>
+
+<div id="exploreFeed" class="exploreFeed"></div>
+
+</section>
+
+
 <section id="profilePage" class="page">
 
 <div class="top">
@@ -2915,8 +3325,14 @@ class="adminSection active">
 ✍️ کتاب کاربران
 </option>
 
+<option value="video">
+🎬 ویدیو
+</option>
+
 </select>
 
+
+<div id="adminWorkFields">
 
 <label>عنوان</label>
 
@@ -2966,6 +3382,8 @@ style="min-height:110px"></textarea>
 <input
 id="adminKeywords"
 placeholder="کلیدواژه‌ها را با کاما جدا کنید (فقط برای جستجو)">
+
+</div>
 
 
 <div id="bookLinkBox">
@@ -3017,6 +3435,22 @@ id="addChapterBtn">
 id="pendingChapters"
 style="margin-top:12px">
 </div>
+
+</div>
+
+
+<div id="videoPublishBox" style="display:none">
+
+<label>کپشن</label>
+<textarea id="adminVideoCaption" placeholder="کپشن ویدیو" style="min-height:90px"></textarea>
+
+<label>لینک ویدیو</label>
+<input id="adminVideoUrl" type="url" placeholder="بهترین: لینک مستقیم فایل (mp4) — یا یوتیوب / آپارات / اینستاگرام">
+
+<label>کتاب‌ها</label>
+<div id="adminVideoBooksPicker" class="videoBooksPicker"></div>
+<input id="adminVideoBooksSearch" placeholder="جستجوی نام کتاب برای افزودن...">
+<div id="adminVideoBooksResults" class="videoBooksResults"></div>
 
 </div>
 
@@ -3090,6 +3524,7 @@ style="cursor:pointer">
 <button id="publishedAuthorsTab" type="button">نویسنده منتشر شده</button>
 <button id="publishedCommentsTab" type="button">نظر منتشر شده</button>
 <button id="publishedAccountsTab" type="button">اکانت منتشر شده</button>
+<button id="publishedVideosTab" type="button">ویدیو منتشر شده</button>
 </div>
 
 <div id="adminPublishedBooks" class="adminSubSection active">
@@ -3106,6 +3541,10 @@ style="cursor:pointer">
 
 <div id="adminPublishedAccounts" class="adminSubSection">
 <div id="adminPublishedAccountsList"></div>
+</div>
+
+<div id="adminPublishedVideos" class="adminSubSection">
+<div id="adminPublishedVideosList"></div>
 </div>
 
 </div>
@@ -3170,6 +3609,13 @@ class="active">
 
 <span class="navIcon">☆</span>
 ذخیره‌ها
+
+</button>
+
+<button data-page="explorePage">
+
+<span class="navIcon">▶</span>
+اکسپلور
 
 </button>
 
@@ -3530,6 +3976,32 @@ style="background:#302119;color:#c8ad90">
 </div>
 </div>
 
+<div id="editVideoModal" class="modal">
+<div class="modalContent">
+<h3>ویرایش ویدیو</h3>
+<div class="form">
+<label>کپشن</label>
+<textarea id="editVideoCaption" style="min-height:90px" placeholder="کپشن ویدیو"></textarea>
+<label>لینک ویدیو</label>
+<input id="editVideoUrl" type="url" placeholder="لینک مستقیم فایل یا لینک آپارات/یوتیوب">
+<label>کتاب‌ها</label>
+<div id="editVideoBooksPicker" class="videoBooksPicker"></div>
+<input id="editVideoBooksSearch" placeholder="جستجوی نام کتاب برای افزودن...">
+<div id="editVideoBooksResults" class="videoBooksResults"></div>
+</div>
+<button class="modalBtn" id="saveEditVideoBtn">ذخیره ویرایش</button>
+<button class="modalBtn" id="closeEditVideoModal" style="background:#302119;color:#c8ad90">انصراف</button>
+</div>
+</div>
+
+<div id="videoBooksModal" class="modal">
+<div class="modalContent">
+<h3>کتاب‌های این ویدیو</h3>
+<div id="videoBooksModalList"></div>
+<button class="modalBtn" id="closeVideoBooksModal" style="background:#302119;color:#c8ad90">بستن</button>
+</div>
+</div>
+
 
 <div id="errorModal" class="modal">
 
@@ -3663,6 +4135,9 @@ const COLLECTION_USERS =
 
 const COLLECTION_MESSAGES =
     "messages";
+
+const COLLECTION_VIDEOS =
+    "videos";
 
 const RUBIKA_ID =
     "@rraararar";
@@ -3926,6 +4401,18 @@ function showPage(id, fromPop){
         );
     }
 
+    if(id === "explorePage"){
+        setTimeout(async ()=>{
+            if(!allVideos.length){
+                try{ await loadVideos(); }catch(e){}
+            }
+            renderExplore();
+            showExploreVpnBanner();
+        }, 0);
+    }else{
+        pauseAllExploreVideos();
+    }
+
     document
         .querySelectorAll(".page")
         .forEach(page=>{
@@ -3956,6 +4443,7 @@ function showPage(id, fromPop){
             "searchPage",
             "genresPage",
             "savedPage",
+            "explorePage",
             "profilePage"
         ];
 
@@ -5249,6 +5737,15 @@ function openAuthorDetail(author){
 }
 
 
+function isSelfUser(user){
+    if(!currentUser || !user) return false;
+    if(user.id && currentUser.id && String(user.id) === String(currentUser.id)) return true;
+    const e1 = normalizeText(user.email || "");
+    const e2 = normalizeText(currentUser.email || "");
+    if(e1 && e2 && e1 === e2) return true;
+    return false;
+}
+
 async function openUserProfilePage(userOrEmail){
     if(!userOrEmail){
         showToast("کاربر مشخص نیست");
@@ -5256,7 +5753,7 @@ async function openUserProfilePage(userOrEmail){
     }
 
     let user = null;
-    if(typeof userOrEmail === "object" && userOrEmail.id){
+    if(typeof userOrEmail === "object" && (userOrEmail.id || userOrEmail.email)){
         user = { ...userOrEmail };
     }else{
         const email = String(userOrEmail || "").trim();
@@ -5273,6 +5770,11 @@ async function openUserProfilePage(userOrEmail){
                 email: email
             };
         }
+    }
+
+    /* پروفایل خود کاربر باز نشود — فقط برای دیگران */
+    if(isSelfUser(user)){
+        return;
     }
 
     /* بارگذاری جزئیات کامل از دیتابیس */
@@ -6411,11 +6913,20 @@ function openDetail(work){
         if(userAuthorIdAvatar) userAuthorIdAvatar.innerHTML = `<span class="userAuthorIdIcon">✉</span>`;
 
         userAuthorIdBox.onclick = null;
+        userAuthorIdBox.style.cursor = "";
         if(isUserBook && email){
-            userAuthorIdBox.onclick = ()=>{
-                openUserProfilePage(email);
-            };
-            userAuthorIdBox.title = "مشاهده پروفایل نویسنده";
+            const isOwn =
+                currentUser &&
+                normalizeText(currentUser.email) === normalizeText(email);
+            if(!isOwn){
+                userAuthorIdBox.onclick = ()=>{
+                    openUserProfilePage(email);
+                };
+                userAuthorIdBox.title = "مشاهده پروفایل نویسنده";
+                userAuthorIdBox.style.cursor = "pointer";
+            }else{
+                userAuthorIdBox.title = "";
+            }
             updateUserAuthorIdBox(email, work.id);
         }
     }
@@ -7097,6 +7608,9 @@ async function initAppwrite(){
         renderGenres();
         fillGenreSelect();
         renderGenreAdmin();
+
+        await loadVideos();
+        renderExplore();
 
         /* پاکسازی دوره‌ای پیام‌های قدیمی هر ۳۰ دقیقه */
         setInterval(()=>{ cleanupOldMessages(); }, 30 * 60 * 1000);
@@ -8316,9 +8830,10 @@ function renderAccountItem(user, listEl){
         });
     });
 
-    /* کلیک روی آواتار/پروفایل: صفحه‌ی پروفایل (بیوگرافی و کتاب‌ها) */
+    /* کلیک روی آواتار/پروفایل: صفحه‌ی پروفایل دیگران (خود کاربر باز نمی‌شود) */
     item.querySelector(".accountAvatar")?.addEventListener("click", (event)=>{
         event.stopPropagation();
+        if(isSelfUser(user)) return;
         openUserProfilePage({
             id: user.id,
             name: user.name || "کاربر",
@@ -8988,8 +9503,10 @@ function updateNavChatBadge(count){
     if(count > 0){
         badge.textContent = count > 99 ? "99+" : String(count);
         badge.style.display = "inline-block";
+        badge.setAttribute("aria-hidden", "false");
     }else{
         badge.style.display = "none";
+        badge.setAttribute("aria-hidden", "true");
     }
 }
 
@@ -9022,11 +9539,17 @@ async function updateUnreadBadge(){
             if(!sender || sender === currentUser.id) return;
 
             const key = pairKeyFor(currentUser.id, sender);
+            /* چت باز فعلی را نخوانده حساب نکن */
             if(openKey && key === openKey) return;
 
-            const lastSeen = seen[key] ? new Date(seen[key]).getTime() : 0;
-            const created = new Date(doc.$createdAt).getTime();
+            /* در دیتابیس به‌عنوان دیده شده علامت خورده */
+            if(doc.seen === true) return;
 
+            const lastSeen = seen[key] ? new Date(seen[key]).getTime() : 0;
+            const created = new Date(doc.$createdAt || 0).getTime();
+            if(!created) return;
+
+            /* نخوانده اگر بعد از آخرین بازدید این چت آمده باشد */
             if(created > lastSeen){
                 total++;
                 bySender[sender] = (bySender[sender] || 0) + 1;
@@ -9044,6 +9567,7 @@ async function updateUnreadBadge(){
         }
     }catch(error){
         console.warn("updateUnreadBadge:", error);
+        /* اگر کوئری fail شد، حداقل badge را صفر نکن مگر مطمئن باشیم */
     }
 
     checkCommentReplies();
@@ -10064,14 +10588,37 @@ function changePublishType(){
     const type =
         $("adminType").value;
 
+    const isVideo = type === "video";
     const isUserBook = type === "userbook";
     const isChapterWork = type === "manga" || type === "manhwa" || isUserBook;
+
+    if($("adminWorkFields")){
+        $("adminWorkFields").style.display =
+            isVideo ? "none" : "block";
+    }
 
     $("bookLinkBox").style.display =
         type === "book" ? "block" : "none";
 
     $("chapterPublishBox").style.display =
         isChapterWork ? "block" : "none";
+
+    if($("videoPublishBox")){
+        $("videoPublishBox").style.display =
+            isVideo ? "block" : "none";
+    }
+
+    if(isVideo){
+        try{
+            renderVideoBooksPicker(
+                "adminVideoBooksPicker",
+                selectedVideoBookIds
+            );
+            /* فوکوس روی جستجوی کتاب برای وضوح بهتر */
+            const search = $("adminVideoBooksSearch");
+            if(search) search.placeholder = "جستجوی نام / نویسنده / کلیدواژه کتاب...";
+        }catch(e){}
+    }
 
     if($("userBookAuthorIdBox")){
         $("userBookAuthorIdBox").style.display =
@@ -10110,6 +10657,11 @@ function changePublishType(){
     if($("pendingChapters")){
         $("pendingChapters").dataset.userbook =
             isUserBook ? "1" : "0";
+    }
+
+    if($("publishBtn")){
+        $("publishBtn").textContent =
+            isVideo ? "🚀 افزودن ویدیو" : "🚀 انتشار اثر";
     }
 }
 
@@ -10349,10 +10901,12 @@ $("publishedBooksTab").addEventListener("click",()=>{
     $("publishedAuthorsTab")?.classList.remove("active");
     $("publishedCommentsTab")?.classList.remove("active");
     $("publishedAccountsTab")?.classList.remove("active");
+    $("publishedVideosTab")?.classList.remove("active");
     $("adminPublishedBooks").classList.add("active");
     $("adminPublishedAuthors")?.classList.remove("active");
     $("adminPublishedComments")?.classList.remove("active");
     $("adminPublishedAccounts")?.classList.remove("active");
+    $("adminPublishedVideos")?.classList.remove("active");
 });
 
 $("publishedAuthorsTab").addEventListener("click",()=>{
@@ -10360,10 +10914,12 @@ $("publishedAuthorsTab").addEventListener("click",()=>{
     $("publishedBooksTab")?.classList.remove("active");
     $("publishedCommentsTab")?.classList.remove("active");
     $("publishedAccountsTab")?.classList.remove("active");
+    $("publishedVideosTab")?.classList.remove("active");
     $("adminPublishedAuthors").classList.add("active");
     $("adminPublishedBooks")?.classList.remove("active");
     $("adminPublishedComments")?.classList.remove("active");
     $("adminPublishedAccounts")?.classList.remove("active");
+    $("adminPublishedVideos")?.classList.remove("active");
     renderPublishedAuthors();
 });
 
@@ -10372,10 +10928,12 @@ $("publishedCommentsTab")?.addEventListener("click",()=>{
     $("publishedBooksTab")?.classList.remove("active");
     $("publishedAuthorsTab")?.classList.remove("active");
     $("publishedAccountsTab")?.classList.remove("active");
+    $("publishedVideosTab")?.classList.remove("active");
     $("adminPublishedComments").classList.add("active");
     $("adminPublishedBooks")?.classList.remove("active");
     $("adminPublishedAuthors")?.classList.remove("active");
     $("adminPublishedAccounts")?.classList.remove("active");
+    $("adminPublishedVideos")?.classList.remove("active");
     renderPublishedComments();
 });
 
@@ -10384,11 +10942,27 @@ $("publishedAccountsTab")?.addEventListener("click",()=>{
     $("publishedBooksTab")?.classList.remove("active");
     $("publishedAuthorsTab")?.classList.remove("active");
     $("publishedCommentsTab")?.classList.remove("active");
+    $("publishedVideosTab")?.classList.remove("active");
     $("adminPublishedAccounts").classList.add("active");
     $("adminPublishedBooks")?.classList.remove("active");
     $("adminPublishedAuthors")?.classList.remove("active");
     $("adminPublishedComments")?.classList.remove("active");
+    $("adminPublishedVideos")?.classList.remove("active");
     renderPublishedAccounts();
+});
+
+$("publishedVideosTab")?.addEventListener("click",()=>{
+    $("publishedVideosTab").classList.add("active");
+    $("publishedBooksTab")?.classList.remove("active");
+    $("publishedAuthorsTab")?.classList.remove("active");
+    $("publishedCommentsTab")?.classList.remove("active");
+    $("publishedAccountsTab")?.classList.remove("active");
+    $("adminPublishedVideos").classList.add("active");
+    $("adminPublishedBooks")?.classList.remove("active");
+    $("adminPublishedAuthors")?.classList.remove("active");
+    $("adminPublishedComments")?.classList.remove("active");
+    $("adminPublishedAccounts")?.classList.remove("active");
+    renderPublishedVideos();
 });
 
 async function renderPublishedAccounts(){
@@ -10792,6 +11366,891 @@ async function deleteAuthor(author){
 }
 
 /* =========================================================
+   VIDEOS (اکسپلور)
+========================================================= */
+
+let allVideos = [];
+let selectedVideoBookIds = [];
+let editingVideo = null;
+let editingVideoBookIds = [];
+
+async function loadVideos(){
+    if(!appwriteReady || !databases || !appwriteQuery){
+        allVideos = [];
+        return;
+    }
+
+    try{
+        const res = await databases.listDocuments(
+            DATABASE_ID,
+            COLLECTION_VIDEOS,
+            [
+                appwriteQuery.orderDesc("$createdAt"),
+                appwriteQuery.limit(100)
+            ]
+        );
+
+        allVideos = (res.documents || []).map(doc => ({
+            id: doc.$id,
+            caption: doc.caption || "",
+            videoUrl: doc.videoUrl || "",
+            bookIds: String(doc.bookIds || "")
+                .split(",")
+                .map(s => s.trim())
+                .filter(Boolean),
+            createdAt: doc.$createdAt
+        }));
+
+        /* همیشه از تازه‌ترین به قدیمی‌ترین */
+        allVideos.sort((a, b) => {
+            const ta = new Date(a.createdAt || 0).getTime();
+            const tb = new Date(b.createdAt || 0).getTime();
+            return tb - ta;
+        });
+    }catch(error){
+        console.warn("loadVideos:", error);
+        allVideos = [];
+    }
+}
+
+/* لیست کتاب‌های انتخاب‌شده به‌صورت چیپ، برای فرم افزودن یا ویرایش ویدیو */
+function renderVideoBooksPicker(boxId, idsArray){
+    const box = $(boxId);
+    if(!box) return;
+
+    box.innerHTML = "";
+
+    idsArray.forEach(id => {
+        const work = allWorks.find(w => w.id === id);
+        const chip = document.createElement("span");
+        chip.className = "videoBookChip";
+        chip.innerHTML = `${escapeHtml(work?.title || "کتاب حذف‌شده")} <b style="cursor:pointer">×</b>`;
+
+        chip.querySelector("b")?.addEventListener("click", ()=>{
+            const idx = idsArray.indexOf(id);
+            if(idx > -1) idsArray.splice(idx, 1);
+            renderVideoBooksPicker(boxId, idsArray);
+        });
+
+        box.appendChild(chip);
+    });
+}
+
+/* جستجوی کتاب برای افزودن به یک ویدیو (هم برای فرم افزودن، هم ویرایش) */
+function setupVideoBooksSearch(searchInputId, resultsBoxId, pickerBoxId, getIdsArray){
+    const input = $(searchInputId);
+    const results = $(resultsBoxId);
+    if(!input || !results) return;
+
+    if(input.dataset.videoBooksBound === "1") return;
+    input.dataset.videoBooksBound = "1";
+
+    const runSearch = ()=>{
+        const text = normalizeText(input.value);
+        results.innerHTML = "";
+
+        if(!text) return;
+
+        const idsArray = typeof getIdsArray === "function"
+            ? getIdsArray()
+            : (getIdsArray || []);
+
+        const matches = (allWorks || [])
+            .filter(w => w && w.type !== "author")
+            .filter(w => !idsArray.includes(w.id))
+            .filter(w => {
+                const title = normalizeText(w.title);
+                const author = normalizeText(w.Author);
+                const keywords = normalizeText(w.keywords || "");
+                return (
+                    title.includes(text) ||
+                    author.includes(text) ||
+                    keywords.includes(text)
+                );
+            })
+            .slice(0, 12);
+
+        if(!matches.length){
+            const empty = document.createElement("div");
+            empty.className = "videoBookResultRow";
+            empty.style.opacity = ".7";
+            empty.style.cursor = "default";
+            empty.textContent = "کتابی پیدا نشد";
+            results.appendChild(empty);
+            return;
+        }
+
+        matches.forEach(work => {
+            const row = document.createElement("div");
+            row.className = "videoBookResultRow";
+            row.innerHTML =
+                `${escapeHtml(work.title || "بدون عنوان")}` +
+                `<small>${escapeHtml(work.Author || work.type || "")}</small>`;
+
+            row.addEventListener("click", ()=>{
+                const list = typeof getIdsArray === "function"
+                    ? getIdsArray()
+                    : getIdsArray;
+                if(!list || list.includes(work.id)) return;
+                list.push(work.id);
+                renderVideoBooksPicker(pickerBoxId, list);
+                input.value = "";
+                results.innerHTML = "";
+                showToast("کتاب اضافه شد");
+            });
+
+            results.appendChild(row);
+        });
+    };
+
+    input.addEventListener("input", runSearch);
+    input.addEventListener("focus", runSearch);
+}
+
+setupVideoBooksSearch(
+    "adminVideoBooksSearch",
+    "adminVideoBooksResults",
+    "adminVideoBooksPicker",
+    () => selectedVideoBookIds
+);
+
+setupVideoBooksSearch(
+    "editVideoBooksSearch",
+    "editVideoBooksResults",
+    "editVideoBooksPicker",
+    () => editingVideoBookIds
+);
+
+async function publishVideoFromForm(){
+    const caption = $("adminVideoCaption")?.value.trim() || "";
+    const videoUrl = $("adminVideoUrl")?.value.trim() || "";
+
+    if(!videoUrl){
+        showToast("لینک ویدیو را وارد کنید");
+        return false;
+    }
+    if(!isValidUrl(videoUrl)){
+        showToast("لینک ویدیو معتبر نیست");
+        return false;
+    }
+    if(!appwriteReady || !databases || !appwriteID){
+        showToast("اتصال به سرور برقرار نیست");
+        return false;
+    }
+
+    await databases.createDocument(
+        DATABASE_ID,
+        COLLECTION_VIDEOS,
+        appwriteID.unique(),
+        {
+            caption,
+            videoUrl,
+            bookIds: selectedVideoBookIds.join(",")
+        }
+    );
+
+    if($("adminVideoCaption")) $("adminVideoCaption").value = "";
+    if($("adminVideoUrl")) $("adminVideoUrl").value = "";
+    selectedVideoBookIds.length = 0;
+    renderVideoBooksPicker("adminVideoBooksPicker", selectedVideoBookIds);
+
+    await loadVideos();
+    renderExplore();
+    showToast("ویدیو با موفقیت منتشر شد");
+    return true;
+}
+
+async function renderPublishedVideos(){
+    const box = $("adminPublishedVideosList");
+    if(!box || !isAdminMode) return;
+
+    box.innerHTML = `<div class="empty"><div class="emptyIcon">🎬</div>در حال بارگذاری ویدیوها...</div>`;
+
+    await loadVideos();
+
+    const text = normalizeText($("publishedSearchInput")?.value);
+    let videos = allVideos;
+
+    if(text){
+        videos = videos.filter(video => {
+            const bookTitles = video.bookIds
+                .map(id => allWorks.find(w => w.id === id)?.title || "")
+                .join(" ");
+            return (
+                normalizeText(video.caption).includes(text) ||
+                normalizeText(bookTitles).includes(text)
+            );
+        });
+    }
+
+    box.innerHTML = "";
+
+    if(!videos.length){
+        showEmpty(box, text ? "ویدیویی با این مشخصات پیدا نشد." : "هنوز ویدیویی منتشر نشده است.");
+        return;
+    }
+
+    videos.forEach(video => {
+        const bookTitles = video.bookIds
+            .map(id => allWorks.find(w => w.id === id)?.title)
+            .filter(Boolean);
+
+        const item = document.createElement("div");
+        item.className = "adminItem";
+
+        item.innerHTML = `
+            <div class="adminItemInfo">
+                <b>${escapeHtml(video.caption || "بدون کپشن")}</b>
+                <small>${escapeHtml(bookTitles.length ? bookTitles.join("، ") : "بدون کتاب مرتبط")}</small>
+            </div>
+            <div class="adminActions">
+                <button class="editBtn" type="button">✏️ ویرایش</button>
+                <button class="delete" type="button">🗑 حذف</button>
+            </div>
+        `;
+
+        item.querySelector(".editBtn")?.addEventListener("click", ()=> openEditVideo(video));
+        item.querySelector(".delete")?.addEventListener("click", ()=> deleteVideo(video));
+
+        box.appendChild(item);
+    });
+}
+
+function openEditVideo(video){
+    editingVideo = video;
+    editingVideoBookIds = [...video.bookIds];
+
+    $("editVideoCaption").value = video.caption || "";
+    $("editVideoUrl").value = video.videoUrl || "";
+
+    renderVideoBooksPicker("editVideoBooksPicker", editingVideoBookIds);
+    $("editVideoModal").classList.add("active");
+}
+
+$("closeEditVideoModal")?.addEventListener("click", ()=>{
+    $("editVideoModal").classList.remove("active");
+});
+
+$("saveEditVideoBtn")?.addEventListener("click", async ()=>{
+    if(!editingVideo || !appwriteReady || !databases){
+        showToast("ویدیو برای ویرایش انتخاب نشده است");
+        return;
+    }
+
+    const caption = $("editVideoCaption").value.trim();
+    const videoUrl = $("editVideoUrl").value.trim();
+
+    if(!videoUrl){
+        showToast("لینک ویدیو را وارد کنید");
+        return;
+    }
+    if(!isValidUrl(videoUrl)){
+        showToast("لینک ویدیو معتبر نیست");
+        return;
+    }
+
+    const button = $("saveEditVideoBtn");
+    const oldText = button.textContent;
+    button.disabled = true;
+    button.textContent = "در حال ذخیره...";
+
+    try{
+        await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTION_VIDEOS,
+            editingVideo.id,
+            {
+                caption,
+                videoUrl,
+                bookIds: editingVideoBookIds.join(",")
+            }
+        );
+
+        $("editVideoModal").classList.remove("active");
+        editingVideo = null;
+
+        await loadVideos();
+        renderPublishedVideos();
+        renderExplore();
+        showToast("ویرایش ویدیو ذخیره شد");
+    }catch(error){
+        showAppwriteError(error, "Edit video");
+    }finally{
+        button.disabled = false;
+        button.textContent = oldText;
+    }
+});
+
+async function deleteVideo(video){
+    if(!isAdminMode || !appwriteReady || !databases) return;
+
+    if(!confirm("این ویدیو حذف شود؟")) return;
+
+    try{
+        await databases.deleteDocument(
+            DATABASE_ID,
+            COLLECTION_VIDEOS,
+            video.id
+        );
+        await loadVideos();
+        renderPublishedVideos();
+        renderExplore();
+        showToast("ویدیو حذف شد");
+    }catch(error){
+        showAppwriteError(error, "Delete video");
+    }
+}
+
+/* تبدیل لینک آپارات / یوتیوب / اینستاگرام به لینک قابل‌نمایش با iframe؛ در غیر این‌صورت null (لینک مستقیم فایل) */
+function ytEmbedUrl(videoId, autoplay){
+    const ap = autoplay ? "1" : "0";
+    return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1&mute=1&autoplay=${ap}&controls=0&fs=0&iv_load_policy=3&disablekb=1`;
+}
+
+function extractYoutubeId(url){
+    try{
+        const u = new URL(url);
+        const host = u.hostname.replace(/^www\./, "").toLowerCase();
+        if(host.includes("youtube.com")){
+            const id = u.searchParams.get("v");
+            if(id) return id;
+            const parts = u.pathname.split("/").filter(Boolean);
+            if((parts[0] === "shorts" || parts[0] === "embed") && parts[1]){
+                return parts[1].split("?")[0];
+            }
+        }
+        if(host === "youtu.be"){
+            return u.pathname.replace("/", "").split("/")[0] || null;
+        }
+    }catch(e){}
+    return null;
+}
+
+function detectEmbedKind(url){
+    try{
+        const host = new URL(url).hostname.replace(/^www\./, "").toLowerCase();
+        if(host.includes("instagram.com")) return "instagram";
+        if(host.includes("youtube.com") || host === "youtu.be") return "youtube";
+        if(host.includes("aparat.com")) return "aparat";
+    }catch(e){}
+    return "file";
+}
+
+/* { url, kind } یا null برای فایل مستقیم */
+function toEmbedInfo(url){
+    try{
+        const u = new URL(url);
+        const host = u.hostname.replace(/^www\./, "").toLowerCase();
+        const kind = detectEmbedKind(url);
+
+        if(kind === "youtube"){
+            const id = extractYoutubeId(url);
+            if(id) return { url: ytEmbedUrl(id, false), kind, videoId: id };
+        }
+
+        if(kind === "aparat"){
+            const parts = u.pathname.split("/").filter(Boolean);
+            const idx = parts.indexOf("v");
+            const hash = idx >= 0 ? parts[idx + 1] : parts[parts.length - 1];
+            if(hash){
+                return {
+                    url: `https://www.aparat.com/video/video/embed/videohash/${hash}/vt/frame`,
+                    kind
+                };
+            }
+        }
+
+        if(kind === "instagram"){
+            const parts = u.pathname.split("/").filter(Boolean);
+            let kindPath = parts[0] || "";
+            let code = parts[1] || "";
+            if(kindPath === "reels") kindPath = "reel";
+            if(
+                (kindPath === "p" || kindPath === "reel" || kindPath === "tv") &&
+                code
+            ){
+                code = code.replace(/\/+$/, "").split("?")[0];
+                /* embed استاندارد اینستا — پخش با لمس کاربر */
+                return {
+                    url: `https://www.instagram.com/${kindPath}/${code}/embed/?cr=1&v=14&wp=1080`,
+                    kind: "instagram"
+                };
+            }
+            if(parts.includes("embed")){
+                return { url: url.split("?")[0], kind: "instagram" };
+            }
+        }
+    }catch(e){}
+
+    return null;
+}
+
+function toEmbedUrl(url){
+    const info = toEmbedInfo(url);
+    return info ? info.url : null;
+}
+
+let exploreObserver = null;
+let exploreHintShown = false;
+let exploreActiveIndex = -1;
+
+/* بنر VPN اکسپلور
+   تأیید = فقط همین‌بار بسته شود؛ با ورود دوباره به اکسپلور دوباره بیاید
+   خوانده شد = دیگر هرگز نیاید */
+const EXPLORE_VPN_READ_KEY = "explore_vpn_banner_read";
+
+function isExploreVpnBannerDone(){
+    try{
+        return localStorage.getItem(EXPLORE_VPN_READ_KEY) === "1";
+    }catch(e){
+        return false;
+    }
+}
+
+function hideExploreVpnBanner(){
+    const banner = $("exploreVpnBanner");
+    if(banner) banner.style.display = "none";
+}
+
+function showExploreVpnBanner(){
+    const banner = $("exploreVpnBanner");
+    if(!banner) return;
+
+    if(isExploreVpnBannerDone()){
+        hideExploreVpnBanner();
+        return;
+    }
+
+    banner.style.display = "flex";
+}
+
+$("exploreVpnBannerConfirm")?.addEventListener("click", ()=>{
+    /* فقط می‌بندد؛ هیچ چیز ذخیره نمی‌شود تا ورود بعدی دوباره بیاید */
+    hideExploreVpnBanner();
+});
+
+$("exploreVpnBannerRead")?.addEventListener("click", ()=>{
+    try{
+        localStorage.setItem(EXPLORE_VPN_READ_KEY, "1");
+    }catch(e){}
+    hideExploreVpnBanner();
+});
+
+function setExplorePlayBtn(card, show){
+    if(!card) return;
+    let btn = card.querySelector(".explorePlayBtn");
+    if(!btn){
+        btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "explorePlayBtn";
+        btn.setAttribute("aria-label", "پخش");
+        btn.textContent = "▶";
+        btn.addEventListener("click", (e)=>{
+            e.stopPropagation();
+            playExploreMedia(card, { fromStart:false, userGesture:true });
+        });
+        card.appendChild(btn);
+    }
+    btn.classList.toggle("show", !!show);
+}
+
+function stopExploreMedia(card, {reset = true} = {}){
+    if(!card) return;
+
+    const video = card.querySelector("video");
+    if(video){
+        try{
+            video.pause();
+            if(reset){
+                try{ video.currentTime = 0; }catch(e){}
+            }
+        }catch(e){}
+    }
+
+    const iframe = card.querySelector("iframe");
+    if(iframe){
+        const original = iframe.dataset.src || iframe.getAttribute("data-src") || "";
+        if(original){
+            iframe.dataset.src = original;
+        }
+        /* خاموش کردن پخش امبد با خالی کردن src */
+        try{
+            if(iframe.src && iframe.src !== "about:blank"){
+                iframe.src = "about:blank";
+            }
+        }catch(e){}
+    }
+
+    setExplorePlayBtn(card, true);
+}
+
+function withYoutubeAutoplay(src, on){
+    if(!src || !src.includes("youtube.com/embed")) return src;
+    try{
+        const u = new URL(src);
+        u.searchParams.set("autoplay", on ? "1" : "0");
+        u.searchParams.set("mute", "1");
+        u.searchParams.set("playsinline", "1");
+        u.searchParams.set("enablejsapi", "1");
+        return u.toString();
+    }catch(e){
+        return src;
+    }
+}
+
+function tryPlayVideoEl(video){
+    if(!video) return Promise.resolve(false);
+    video.muted = true;
+    video.defaultMuted = true;
+    video.setAttribute("muted", "");
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+
+    const p = video.play();
+    if(p && p.then){
+        return p.then(()=> true).catch(()=>{
+            return new Promise(resolve=>{
+                const onReady = ()=>{
+                    video.play().then(()=> resolve(true)).catch(()=> resolve(false));
+                };
+                if(video.readyState >= 2){
+                    onReady();
+                }else{
+                    video.addEventListener("loadeddata", onReady, { once:true });
+                    video.addEventListener("canplay", onReady, { once:true });
+                    /* اگر لود نشد */
+                    setTimeout(()=> resolve(false), 1500);
+                }
+            });
+        });
+    }
+    return Promise.resolve(!video.paused);
+}
+
+async function playExploreMedia(card, { fromStart = true, userGesture = false } = {}){
+    if(!card) return;
+
+    const video = card.querySelector("video");
+    if(video){
+        try{
+            if(fromStart && video.readyState >= 1){
+                try{ video.currentTime = 0; }catch(e){}
+            }
+            let ok = await tryPlayVideoEl(video);
+            if(!ok){
+                ok = await tryPlayVideoEl(video);
+            }
+            setExplorePlayBtn(card, !ok || video.paused);
+            if(ok){
+                video.onpause = ()=>{
+                    if(video.paused) setExplorePlayBtn(card, true);
+                };
+                video.onplay = ()=>{
+                    setExplorePlayBtn(card, false);
+                };
+            }
+        }catch(e){
+            setExplorePlayBtn(card, true);
+        }
+        return;
+    }
+
+    const iframe = card.querySelector("iframe");
+    if(iframe){
+        let src = iframe.dataset.src || "";
+        if(!src) return;
+
+        const kind = iframe.dataset.kind || "";
+        if(kind === "youtube"){
+            src = withYoutubeAutoplay(src, true);
+        }
+
+        const base = src.split("?")[0];
+        const already =
+            iframe.src &&
+            iframe.src !== "about:blank" &&
+            iframe.src.indexOf(base) === 0;
+
+        /* اینستاگرام معمولاً autoplay ندارد؛ با لمس کاربر iframe را لود/فعال کن */
+        if(!already || userGesture || fromStart){
+            try{
+                iframe.src = src;
+            }catch(e){}
+        }
+
+        /* بعد از لود اینستا، دکمه پخش را بردار تا خود امبد قابل لمس باشد */
+        if(kind === "instagram"){
+            setExplorePlayBtn(card, false);
+            iframe.style.pointerEvents = "auto";
+        }else{
+            setExplorePlayBtn(card, false);
+        }
+    }
+}
+
+function pauseAllExploreVideos(){
+    document.querySelectorAll("#exploreFeed .exploreVideoCard").forEach(card=>{
+        stopExploreMedia(card, {reset:true});
+    });
+    exploreActiveIndex = -1;
+}
+
+function setupExploreObserver(feed){
+    if(exploreObserver){
+        exploreObserver.disconnect();
+        exploreObserver = null;
+    }
+
+    if(!feed || !("IntersectionObserver" in window)) return;
+
+    exploreObserver = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+            const card = entry.target;
+            const index = Number(card.dataset.videoIndex || -1);
+
+            if(entry.isIntersecting && entry.intersectionRatio >= 0.5){
+                if(exploreActiveIndex === index){
+                    /* همان کلیپ فعال — فقط مطمئن شو در حال پخش است */
+                    playExploreMedia(card, { fromStart:false });
+                    return;
+                }
+                feed.querySelectorAll(".exploreVideoCard").forEach(other=>{
+                    if(other !== card){
+                        stopExploreMedia(other, {reset:true});
+                    }
+                });
+                exploreActiveIndex = index;
+                playExploreMedia(card, { fromStart:true });
+            }else if(!entry.isIntersecting || entry.intersectionRatio < 0.2){
+                if(exploreActiveIndex === index){
+                    stopExploreMedia(card, {reset:true});
+                    exploreActiveIndex = -1;
+                }else{
+                    stopExploreMedia(card, {reset:true});
+                }
+            }
+        });
+    }, {
+        root: feed,
+        threshold: [0.2, 0.5, 0.75, 0.9]
+    });
+
+    feed.querySelectorAll(".exploreVideoCard").forEach(card=>{
+        exploreObserver.observe(card);
+    });
+}
+
+function renderExplore(){
+    const feed = $("exploreFeed");
+    if(!feed) return;
+
+    pauseAllExploreVideos();
+    if(exploreObserver){
+        exploreObserver.disconnect();
+        exploreObserver = null;
+    }
+
+    if(!allVideos.length){
+        feed.innerHTML = `
+            <div class="exploreEmptyFull">
+                <div style="font-size:36px">▶</div>
+                <div>هنوز ویدیویی منتشر نشده است.</div>
+            </div>
+        `;
+        return;
+    }
+
+    feed.innerHTML = "";
+
+    allVideos.forEach((video, index) => {
+        const card = document.createElement("div");
+        card.className = "exploreVideoCard";
+        card.dataset.videoIndex = String(index);
+
+        const media = document.createElement("div");
+        media.className = "exploreVideoMedia";
+
+        const embedInfo = toEmbedInfo(video.videoUrl);
+        if(embedInfo && embedInfo.url){
+            if(embedInfo.kind === "instagram") media.classList.add("is-instagram");
+            if(embedInfo.kind === "youtube") media.classList.add("is-youtube");
+            if(embedInfo.kind === "aparat") media.classList.add("is-aparat");
+
+            const iframe = document.createElement("iframe");
+            iframe.dataset.src = embedInfo.url;
+            iframe.dataset.kind = embedInfo.kind || "";
+            iframe.src = "about:blank";
+            iframe.setAttribute("allow", "autoplay; fullscreen; encrypted-media; picture-in-picture; clipboard-write");
+            iframe.setAttribute("allowfullscreen", "");
+            iframe.setAttribute("frameborder", "0");
+            iframe.setAttribute("scrolling", "no");
+            iframe.setAttribute("title", "ویدیو");
+            iframe.style.background = "#000";
+            /* اینستاگرام: از همان ابتدا قابل لمس باشد */
+            if(embedInfo.kind === "instagram"){
+                iframe.style.pointerEvents = "auto";
+            }
+            media.appendChild(iframe);
+        }else{
+            const videoEl = document.createElement("video");
+            videoEl.setAttribute("playsinline", "");
+            videoEl.setAttribute("webkit-playsinline", "");
+            videoEl.setAttribute("loop", "");
+            videoEl.setAttribute("muted", "");
+            videoEl.setAttribute("autoplay", "");
+            videoEl.muted = true;
+            videoEl.defaultMuted = true;
+            videoEl.playsInline = true;
+            videoEl.preload = "auto";
+            videoEl.src = video.videoUrl;
+            videoEl.style.background = "#000";
+            videoEl.style.objectFit = "cover";
+            media.appendChild(videoEl);
+        }
+
+        card.appendChild(media);
+
+        if(index === 0 && !exploreHintShown && allVideos.length > 1){
+            const hint = document.createElement("div");
+            hint.className = "exploreSwipeHint";
+            hint.textContent = "↑ بکش برای کلیپ بعدی";
+            card.appendChild(hint);
+            setTimeout(()=>{
+                hint.style.opacity = "0";
+                hint.style.transition = "opacity .4s";
+                setTimeout(()=> hint.remove(), 450);
+            }, 2800);
+            exploreHintShown = true;
+        }
+
+        const overlay = document.createElement("div");
+        overlay.className = "exploreVideoOverlay";
+
+        if(video.caption){
+            const caption = document.createElement("div");
+            caption.className = "exploreVideoCaption";
+            const full = String(video.caption || "");
+            const shortLimit = 90;
+            const needsMore = full.length > shortLimit;
+            caption.dataset.full = full;
+            caption.dataset.short = needsMore ? full.slice(0, shortLimit).trim() + "…" : full;
+            caption.textContent = caption.dataset.short;
+
+            if(needsMore){
+                caption.addEventListener("click", (e)=>{
+                    e.stopPropagation();
+                    const open = caption.classList.toggle("expanded");
+                    caption.textContent = open
+                        ? caption.dataset.full
+                        : caption.dataset.short;
+                });
+            }
+
+            overlay.appendChild(caption);
+        }
+
+        if(video.bookIds && video.bookIds.length){
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "exploreVideoBooksBtn";
+            btn.textContent = video.bookIds.length > 1
+                ? "📚 مشاهده کتاب‌ها"
+                : "📖 مشاهده کتاب";
+
+            btn.addEventListener("click", (e)=>{
+                e.stopPropagation();
+                handleExploreVideoBooksClick(video);
+            });
+            overlay.appendChild(btn);
+        }
+
+        if(overlay.childNodes.length){
+            card.appendChild(overlay);
+        }
+
+        /* دکمه پخش مرکزی */
+        setExplorePlayBtn(card, true);
+
+        /* ضربه روی بدنه کارت: پخش / توقف */
+        card.addEventListener("click", (e)=>{
+            if(e.target.closest(".exploreVideoBooksBtn, .exploreVideoCaption, .explorePlayBtn")) return;
+
+            const videoEl = card.querySelector("video");
+            if(videoEl){
+                if(videoEl.paused){
+                    playExploreMedia(card, { fromStart:false, userGesture:true });
+                }else{
+                    videoEl.pause();
+                    setExplorePlayBtn(card, true);
+                }
+                return;
+            }
+
+            playExploreMedia(card, { fromStart:false, userGesture:true });
+        });
+
+        feed.appendChild(card);
+    });
+
+    feed.scrollTop = 0;
+    setupExploreObserver(feed);
+
+    /* پخش اولین کلیپ */
+    const firstCard = feed.querySelector(".exploreVideoCard");
+    if(firstCard){
+        exploreActiveIndex = 0;
+        playExploreMedia(firstCard, { fromStart:true });
+        setTimeout(()=> playExploreMedia(firstCard, { fromStart:false }), 300);
+        setTimeout(()=> playExploreMedia(firstCard, { fromStart:false }), 800);
+    }
+}
+
+function handleExploreVideoBooksClick(video){
+    const books = (video.bookIds || [])
+        .map(id => allWorks.find(w => w.id === id))
+        .filter(Boolean);
+
+    if(!books.length){
+        showToast("کتابی برای این ویدیو ثبت نشده است");
+        return;
+    }
+
+    if(books.length === 1){
+        openDetail(books[0]);
+        return;
+    }
+
+    const listBox = $("videoBooksModalList");
+    listBox.innerHTML = "";
+
+    books.forEach(work => {
+        const row = document.createElement("div");
+        row.className = "adminItem";
+        row.style.cursor = "pointer";
+        row.innerHTML = `
+            <div class="adminItemInfo">
+                <b>${escapeHtml(work.title || "بدون عنوان")}</b>
+                <small>${escapeHtml(work.Author || "")}</small>
+            </div>
+        `;
+
+        row.addEventListener("click", ()=>{
+            $("videoBooksModal").classList.remove("active");
+            openDetail(work);
+        });
+
+        listBox.appendChild(row);
+    });
+
+    $("videoBooksModal").classList.add("active");
+}
+
+$("closeVideoBooksModal")?.addEventListener("click", ()=>{
+    $("videoBooksModal").classList.remove("active");
+});
+
+/* =========================================================
    PUBLISH
 ========================================================= */
 
@@ -10837,6 +12296,30 @@ async function publishWork(){
 
     const type =
         $("adminType").value;
+
+    /* انتشار ویدیو از همان دکمه انتشار اثر */
+    if(type === "video"){
+        publishing = true;
+        const button = $("publishBtn");
+        const oldText = button ? button.textContent : "";
+        if(button){
+            button.disabled = true;
+            button.textContent = "در حال انتشار...";
+        }
+        try{
+            await publishVideoFromForm();
+            clearAdminForm();
+        }catch(error){
+            showAppwriteError(error, "Publish video");
+        }finally{
+            publishing = false;
+            if(button){
+                button.disabled = false;
+                button.textContent = oldText || "🚀 افزودن ویدیو";
+            }
+        }
+        return;
+    }
 
     const title =
         $("adminTitle")
@@ -11078,6 +12561,13 @@ function clearAdminForm(){
     $("chapterTitle").value = "";
     $("chapterLinkInput").value = "";
 
+    if($("adminVideoCaption")) $("adminVideoCaption").value = "";
+    if($("adminVideoUrl")) $("adminVideoUrl").value = "";
+    selectedVideoBookIds.length = 0;
+    try{
+        renderVideoBooksPicker("adminVideoBooksPicker", selectedVideoBookIds);
+    }catch(e){}
+
     pendingChapters = [];
 
     $("adminType").value = "book";
@@ -11101,6 +12591,8 @@ $("publishedSearchInput")
             renderPublishedComments();
         }else if($("publishedAccountsTab")?.classList.contains("active")){
             renderPublishedAccounts();
+        }else if($("publishedVideosTab")?.classList.contains("active")){
+            renderPublishedVideos();
         }else{
             renderPublishedWorks();
         }
@@ -11120,6 +12612,8 @@ $("clearPublishedSearch")
             renderPublishedComments();
         }else if($("publishedAccountsTab")?.classList.contains("active")){
             renderPublishedAccounts();
+        }else if($("publishedVideosTab")?.classList.contains("active")){
+            renderPublishedVideos();
         }else{
             renderPublishedWorks();
         }
@@ -11165,11 +12659,13 @@ function renderPublishedWorks(){
                         " " +
                         (
                             work.genre || ""
+                        ) +
+                        " " +
+                        (
+                            work.keywords || ""
                         );
 
-                    return value
-                        .toLowerCase()
-                        .includes(text);
+                    return normalizeText(value).includes(normalizeText(text));
                 }
             );
     }
