@@ -2331,6 +2331,55 @@ button{
     content:"متن این بخش خالی است.";
     color:#796655;
 }
+.readerSlideNav{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    margin:10px 0 16px;
+}
+.readerSlideNav.active{
+    display:flex;
+}
+.readerSlideNav button{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:1px solid #3a291e;
+    background:#241912;
+    color:#d6b994;
+    font-size:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.readerSlideNav button:disabled{
+    opacity:.35;
+}
+.readerSlideStar{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:1px solid rgba(224,169,78,.45);
+    background:#2b1d14;
+    color:#8d7660;
+    font-size:20px;
+}
+.readerSlideStar.on{
+    color:#e0a94e;
+    border-color:#e0a94e;
+    background:rgba(224,169,78,.12);
+}
+.readerSlideMeta{
+    text-align:center;
+    font-size:10px;
+    color:#8d7660;
+    margin-bottom:8px;
+    display:none;
+}
+.readerSlideMeta.active{
+    display:block;
+}
 .userBookEditHint{
     color:#8d7660;
     font-size:9px;
@@ -3275,6 +3324,12 @@ style="display:none">
 <div class="readerTop">
 <button class="readerBack" id="readerBack" type="button" aria-label="بازگشت">←</button>
 </div>
+<div id="readerSlideNav" class="readerSlideNav">
+<button type="button" id="readerPrevSlide" aria-label="اسلاید قبلی">‹</button>
+<button type="button" id="readerSlideStar" class="readerSlideStar" aria-label="نشانه‌گذاری اسلاید">★</button>
+<button type="button" id="readerNextSlide" aria-label="اسلاید بعدی">›</button>
+</div>
+<div id="readerSlideMeta" class="readerSlideMeta"></div>
 <div id="readerText" class="readerText"></div>
 </section>
 
@@ -3380,10 +3435,11 @@ style="min-height:110px"></textarea>
 
 
 <label>کلید واژه</label>
-
+<div id="adminKeywordsPicker" class="videoBooksPicker"></div>
 <input
-id="adminKeywords"
-placeholder="کلیدواژه‌ها را با کاما جدا کنید (فقط برای جستجو)">
+id="adminKeywordsInput"
+placeholder="کلیدواژه را بنویسید و Enter بزنید">
+<div class="userBookEditHint">هر کلیدواژه را جدا بنویسید و Enter یا افزودن بزنید</div>
 
 </div>
 
@@ -3895,10 +3951,11 @@ placeholder="توضیحات">
 
 
 <label>کلید واژه</label>
-
+<div id="editKeywordsPicker" class="videoBooksPicker"></div>
 <input
-id="editKeywords"
-placeholder="کلیدواژه‌ها را با کاما جدا کنید (فقط برای جستجو)">
+id="editKeywordsInput"
+placeholder="کلیدواژه را بنویسید و Enter بزنید">
+<div class="userBookEditHint">هر کلیدواژه را جدا بنویسید و Enter بزنید</div>
 
 
 <label>لینک مستقیم جلد</label>
@@ -4155,10 +4212,6 @@ const COLLECTION_USERS =
 const COLLECTION_MESSAGES =
     "messages";
 
-/* Appwrite Function که ارسال پیام خصوصی را با دسترسی امن انجام می‌دهد */
-const SEND_MESSAGE_FUNCTION_ID =
-    "6a954d6e003e408f48b4";
-
 const COLLECTION_VIDEOS =
     "videos";
 
@@ -4179,7 +4232,6 @@ const ADMIN_EMAIL =
 let client = null;
 let databases = null;
 let account = null;
-let appwriteFunctions = null;
 
 let appwriteReady = false;
 let appwriteID = null;
@@ -4194,6 +4246,9 @@ let currentUser = null;          // کاربر لاگین‌شده (Appwrite)
 let currentCategory = "book";
 
 let pendingChapters = [];
+
+let adminKeywordsList = [];
+let editKeywordsList = [];
 
 let isAdminMode = false;
 let publishing = false;
@@ -5479,11 +5534,8 @@ function renderHomeAuthors(){
         return;
     }
 
-    const authors = shuffleWorks(getAuthors());
+    const authors = getAuthors();
     box.innerHTML = "";
-    box.classList.remove("authorGrid");
-    box.classList.add("authorStrip");
-    box.style.display = "block";
 
     if(!authors.length){
         section.style.display = "none";
@@ -5493,14 +5545,29 @@ function renderHomeAuthors(){
     section.style.display = "block";
 
     const expanded = window.homeExpanded?.authors === true;
-    const visible = expanded ? authors : authors.slice(0,12);
 
-    const track = document.createElement("div");
-    track.className = "authorStripTrack";
-    visible.forEach(author=>{
-        track.appendChild(createAuthorCard(author));
-    });
-    box.appendChild(track);
+    if(expanded){
+        /* همه نویسندگان در شبکه */
+        box.classList.remove("authorStrip");
+        box.classList.add("authorGrid");
+        box.style.display = "";
+        authors.forEach(author=>{
+            box.appendChild(createAuthorCard(author));
+        });
+    }else{
+        /* ردیف افقی محدود */
+        box.classList.remove("authorGrid");
+        box.classList.add("authorStrip");
+        box.style.display = "block";
+
+        const preview = authors.slice(0, 12);
+        const track = document.createElement("div");
+        track.className = "authorStripTrack";
+        preview.forEach(author=>{
+            track.appendChild(createAuthorCard(author));
+        });
+        box.appendChild(track);
+    }
 
     const arrow = $("authorsHomeArrow");
     if(arrow){
@@ -7541,7 +7608,6 @@ async function initAppwrite(){
             Client,
             Databases,
             Account,
-            Functions,
             ID,
             Query,
             Permission,
@@ -7586,12 +7652,6 @@ async function initAppwrite(){
             new Account(
                 client
             );
-
-
-        appwriteFunctions =
-            Functions
-                ? new Functions(client)
-                : null;
 
 
         appwriteID =
@@ -9774,33 +9834,24 @@ async function sendChatMessage(){
             return;
         }
 
-        if(!appwriteFunctions){
-            throw new Error("سرویس ارسال پیام در دسترس نیست");
-        }
+        const key = pairKeyFor(currentUser.id, chatWithUser.id);
 
-        const execution = await appwriteFunctions.createExecution(
-            SEND_MESSAGE_FUNCTION_ID,
-            JSON.stringify({
+        await databases.createDocument(
+            DATABASE_ID,
+            COLLECTION_MESSAGES,
+            appwriteID.unique(),
+            {
+                pairKey: key,
+                senderId: currentUser.id,
                 receiverId: chatWithUser.id,
                 text: text,
                 replyToId: chatReplyTo?.id || "",
-                replyToText: chatReplyTo?.text ? chatReplyTo.text.slice(0, 120) : ""
-            }),
-            false,
-            "/",
-            "POST"
+                replyToText: chatReplyTo?.text
+                    ? String(chatReplyTo.text).slice(0, 120)
+                    : "",
+                seen: false
+            }
         );
-
-        let result = {};
-        try{
-            result = JSON.parse(execution.responseBody || "{}");
-        }catch(e){
-            result = {};
-        }
-
-        if(execution.responseStatusCode >= 400 || result.error){
-            throw new Error(result.error || "ارسال پیام ناموفق بود");
-        }
 
         if(input) input.value = "";
         cancelChatReply();
@@ -10020,8 +10071,11 @@ function renderChapters(chapters){
                     }
 
                     if(isUserBook){
-                        $("readerText").textContent = content;
-                        showPage("readerPage");
+                        openUserBookReader(
+                            content,
+                            chapter.title || ("چپتر " + (index + 1)),
+                            currentWork?.id
+                        );
                         return;
                     }
 
@@ -10238,128 +10292,38 @@ async function forceDownload(url,filename){
         );
 
     /*
-       APK / Android WebView:
-       به‌جای target="_blank" که می‌تواند یک صفحه سفید
-       داخل WebView باز کند، ابتدا فایل را به Blob تبدیل
-       می‌کنیم و سپس دانلود را با یک لینک موقت انجام می‌دهیم.
+       دانلود سریع:
+       اول همان لحظه با لینک مستقیم شروع می‌شود
+       (بدون منتظر ماندن برای fetch کامل فایل).
+       اگر مرورگر/WebView اجازه داد، فایل دانلود می‌شود.
     */
 
     try{
-
-        showToast(
-            "در حال آماده‌سازی دانلود..."
-        );
-
-        const response =
-            await fetch(
-                url,
-                {
-                    method:"GET",
-                    mode:"cors",
-                    credentials:"omit"
-                }
-            );
-
-        if(!response.ok){
-
-            throw new Error(
-                "HTTP " + response.status
-            );
-        }
-
-        const blob =
-            await response.blob();
-
-        if(!blob || blob.size === 0){
-
-            throw new Error(
-                "فایل خالی است"
-            );
-        }
-
-        const blobUrl =
-            URL.createObjectURL(blob);
-
         const a =
             document.createElement("a");
 
-        a.href =
-            blobUrl;
-
-        a.download =
-            safeName;
-
-        a.style.display =
-            "none";
+        a.href = url;
+        a.download = safeName;
+        a.rel = "noopener";
+        a.style.display = "none";
 
         document.body.appendChild(a);
-
         a.click();
-
         a.remove();
 
-        setTimeout(
-            ()=>{
-                URL.revokeObjectURL(
-                    blobUrl
-                );
-            },
-            5000
-        );
+        showToast("دانلود شروع شد");
+        return;
+    }catch(e){
+        console.warn("Direct download failed:", e);
+    }
 
-        showToast(
-            "دانلود شروع شد"
-        );
-
-    }catch(error){
-
-        console.warn(
-            "Blob download failed:",
-            error
-        );
-
-        /*
-           اگر سرور CORS را اجازه ندهد،
-           فایل را مستقیماً باز می‌کنیم.
-           مهم: دیگر target="_blank" استفاده نمی‌شود
-           تا WebView صفحه سفید جدید نسازد.
-        */
-
-        try{
-
-            const a =
-                document.createElement("a");
-
-            a.href =
-                url;
-
-            a.download =
-                safeName;
-
-            a.style.display =
-                "none";
-
-            document.body.appendChild(a);
-
-            a.click();
-
-            a.remove();
-
-            showToast(
-                "درخواست دانلود ارسال شد"
-            );
-
-        }catch(fallbackError){
-
-            console.error(
-                "Download fallback failed:",
-                fallbackError
-            );
-
-            showToast(
-                "دانلود در این WebView پشتیبانی نمی‌شود"
-            );
-        }
+    /* fallback: باز کردن مستقیم لینک در همین صفحه */
+    try{
+        window.location.href = url;
+        showToast("در حال باز کردن لینک دانلود...");
+    }catch(fallbackError){
+        console.error("Download fallback failed:", fallbackError);
+        showToast("دانلود در این WebView پشتیبانی نمی‌شود");
     }
 }
 
@@ -10375,6 +10339,219 @@ function sanitizeFilename(name){
     )
     .trim();
 }
+
+
+/* =========================================================
+   KEYWORDS CHIPS
+========================================================= */
+
+function normalizeKeyword(value){
+    return String(value || "").trim().replace(/\s+/g, " ");
+}
+
+function renderKeywordsPicker(boxId, list){
+    const box = $(boxId);
+    if(!box) return;
+    box.innerHTML = "";
+
+    list.forEach((kw, index)=>{
+        const chip = document.createElement("span");
+        chip.className = "videoBookChip";
+        chip.innerHTML = `${escapeHtml(kw)} <b style="cursor:pointer">×</b>`;
+        chip.querySelector("b")?.addEventListener("click", ()=>{
+            list.splice(index, 1);
+            renderKeywordsPicker(boxId, list);
+        });
+        box.appendChild(chip);
+    });
+}
+
+function addKeywordToList(list, value, boxId, inputEl){
+    const kw = normalizeKeyword(value);
+    if(!kw) return;
+    const exists = list.some(x => normalizeText(x) === normalizeText(kw));
+    if(exists){
+        showToast("این کلیدواژه قبلاً اضافه شده");
+        return;
+    }
+    list.push(kw);
+    renderKeywordsPicker(boxId, list);
+    if(inputEl) inputEl.value = "";
+}
+
+function bindKeywordsInput(inputId, boxId, getList){
+    const input = $(inputId);
+    if(!input || input.dataset.keywordsBound === "1") return;
+    input.dataset.keywordsBound = "1";
+
+    input.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter"){
+            e.preventDefault();
+            addKeywordToList(getList(), input.value, boxId, input);
+        }
+    });
+
+    input.addEventListener("blur", ()=>{
+        if((input.value || "").trim()){
+            addKeywordToList(getList(), input.value, boxId, input);
+        }
+    });
+}
+
+function keywordsToStorage(list){
+    return (list || []).map(normalizeKeyword).filter(Boolean).join(",");
+}
+
+function keywordsFromStorage(value){
+    return String(value || "")
+        .split(",")
+        .map(normalizeKeyword)
+        .filter(Boolean);
+}
+
+
+/* =========================================================
+   USERBOOK READER SLIDES
+========================================================= */
+
+const USERBOOK_SLIDE_CHARS = 2000;
+const READER_STAR_KEY = "cafeketab_reader_stars_v1";
+
+let readerSlides = [];
+let readerSlideIndex = 0;
+let readerChapterKey = "";
+let readerStarIndex = null;
+
+function getReaderStars(){
+    try{
+        return JSON.parse(localStorage.getItem(READER_STAR_KEY) || "{}") || {};
+    }catch(e){
+        return {};
+    }
+}
+
+function setReaderStar(chapterKey, indexOrNull){
+    const map = getReaderStars();
+    if(indexOrNull === null || indexOrNull === undefined){
+        delete map[chapterKey];
+    }else{
+        map[chapterKey] = Number(indexOrNull);
+    }
+    localStorage.setItem(READER_STAR_KEY, JSON.stringify(map));
+}
+
+function splitTextToSlides(text, size){
+    const full = String(text || "");
+    if(!full) return [""];
+    const slides = [];
+    for(let i = 0; i < full.length; i += size){
+        slides.push(full.slice(i, i + size));
+    }
+    return slides.length ? slides : [""];
+}
+
+function openUserBookReader(content, chapterTitle, workId){
+    readerChapterKey =
+        String(workId || currentWork?.id || "") +
+        "::" +
+        String(chapterTitle || "chapter");
+
+    readerSlides = splitTextToSlides(content, USERBOOK_SLIDE_CHARS);
+
+    const stars = getReaderStars();
+    if(
+        Object.prototype.hasOwnProperty.call(stars, readerChapterKey) &&
+        Number.isFinite(Number(stars[readerChapterKey]))
+    ){
+        readerStarIndex = Number(stars[readerChapterKey]);
+        readerSlideIndex = Math.min(
+            Math.max(0, readerStarIndex),
+            readerSlides.length - 1
+        );
+    }else{
+        readerStarIndex = null;
+        readerSlideIndex = 0;
+    }
+
+    renderReaderSlide();
+    showPage("readerPage");
+}
+
+function renderReaderSlide(){
+    const textEl = $("readerText");
+    const nav = $("readerSlideNav");
+    const meta = $("readerSlideMeta");
+    const prev = $("readerPrevSlide");
+    const next = $("readerNextSlide");
+    const star = $("readerSlideStar");
+
+    if(!textEl) return;
+
+    if(!readerSlides.length){
+        textEl.textContent = "";
+        if(nav) nav.classList.remove("active");
+        if(meta) meta.classList.remove("active");
+        return;
+    }
+
+    readerSlideIndex = Math.min(
+        Math.max(0, readerSlideIndex),
+        readerSlides.length - 1
+    );
+
+    textEl.textContent = readerSlides[readerSlideIndex] || "";
+
+    const multi = readerSlides.length > 1;
+    if(nav) nav.classList.toggle("active", multi);
+    if(meta){
+        meta.classList.toggle("active", multi);
+        meta.textContent =
+            "اسلاید " +
+            (readerSlideIndex + 1) +
+            " از " +
+            readerSlides.length;
+    }
+
+    if(prev) prev.disabled = readerSlideIndex <= 0;
+    if(next) next.disabled = readerSlideIndex >= readerSlides.length - 1;
+
+    if(star){
+        const on = readerStarIndex !== null && readerStarIndex === readerSlideIndex;
+        star.classList.toggle("on", on);
+        star.textContent = on ? "★" : "☆";
+    }
+
+    window.scrollTo(0, 0);
+}
+
+function bindReaderSlideControls(){
+    $("readerPrevSlide")?.addEventListener("click", ()=>{
+        if(readerSlideIndex > 0){
+            readerSlideIndex--;
+            renderReaderSlide();
+        }
+    });
+    $("readerNextSlide")?.addEventListener("click", ()=>{
+        if(readerSlideIndex < readerSlides.length - 1){
+            readerSlideIndex++;
+            renderReaderSlide();
+        }
+    });
+    $("readerSlideStar")?.addEventListener("click", ()=>{
+        if(!readerChapterKey) return;
+        if(readerStarIndex === readerSlideIndex){
+            readerStarIndex = null;
+            setReaderStar(readerChapterKey, null);
+            showToast("نشانه اسلاید برداشته شد");
+        }else{
+            readerStarIndex = readerSlideIndex;
+            setReaderStar(readerChapterKey, readerSlideIndex);
+            showToast("این اسلاید نشانه‌گذاری شد");
+        }
+        renderReaderSlide();
+    });
+}
+
 
 
 /* =========================================================
@@ -10733,17 +10910,16 @@ function addChapter(){
         return;
     }
 
-    if(typeof link !== "string" || link.length > 2000){
+    if(!isUserBook && (typeof link !== "string" || link.length > 2000)){
 
         showToast(
-            isUserBook
-                ? "متن فصل / پارت نباید بیشتر از ۲۰۰۰ کاراکتر باشد"
-                : "لینک چپتر نباید بیشتر از ۲۰۰۰ کاراکتر باشد"
+            "لینک چپتر نباید بیشتر از ۲۰۰۰ کاراکتر باشد"
         );
 
         return;
     }
 
+    /* کتاب کاربران: متن بلند مجاز است؛ هنگام مطالعه به اسلایدهای ۲۰۰۰تایی تقسیم می‌شود */
     pendingChapters.push({
         title,
         link: String(link)
@@ -12628,9 +12804,7 @@ async function publishWork(){
             .trim();
 
     const keywords =
-        $("adminKeywords")
-            .value
-            .trim();
+        keywordsToStorage(adminKeywordsList);
 
     const coverUrl =
         $("adminCoverUrl")
@@ -12842,7 +13016,9 @@ function clearAdminForm(){
     $("adminTitle").value = "";
     $("adminAuthor").value = "";
     $("adminDescription").value = "";
-    $("adminKeywords").value = "";
+    adminKeywordsList = [];
+    if($("adminKeywordsInput")) $("adminKeywordsInput").value = "";
+    renderKeywordsPicker("adminKeywordsPicker", adminKeywordsList);
     $("adminCoverUrl").value = "";
     $("adminAuthorId").value = "";
     $("bookLinkInput").value = "";
@@ -13259,10 +13435,9 @@ async function openEditWork(work){
     $("editDescription").value =
         work.description || "";
 
-    if($("editKeywords")){
-        $("editKeywords").value =
-            work.keywords || "";
-    }
+    editKeywordsList = keywordsFromStorage(work.keywords || "");
+    renderKeywordsPicker("editKeywordsPicker", editKeywordsList);
+    if($("editKeywordsInput")) $("editKeywordsInput").value = "";
 
     $("editCoverUrl").value =
         work.coverUrl || "";
@@ -13624,8 +13799,7 @@ async function saveEditedWork(){
             .trim();
 
     const keywords =
-        ($("editKeywords")?.value || "")
-            .trim();
+        keywordsToStorage(editKeywordsList);
 
     const coverUrl =
         $("editCoverUrl")
@@ -14256,6 +14430,23 @@ function initializeUI(){
     renderSaved();
 
     renderPublishedWorks();
+
+    bindKeywordsInput(
+        "adminKeywordsInput",
+        "adminKeywordsPicker",
+        () => adminKeywordsList
+    );
+
+    bindKeywordsInput(
+        "editKeywordsInput",
+        "editKeywordsPicker",
+        () => editKeywordsList
+    );
+
+    renderKeywordsPicker("adminKeywordsPicker", adminKeywordsList);
+    renderKeywordsPicker("editKeywordsPicker", editKeywordsList);
+
+    bindReaderSlideControls();
 }
 
 
