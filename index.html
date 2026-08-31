@@ -4155,6 +4155,10 @@ const COLLECTION_USERS =
 const COLLECTION_MESSAGES =
     "messages";
 
+/* Appwrite Function که ارسال پیام خصوصی را با دسترسی امن انجام می‌دهد */
+const SEND_MESSAGE_FUNCTION_ID =
+    "6a954d6e003e408f48b4";
+
 const COLLECTION_VIDEOS =
     "videos";
 
@@ -4175,6 +4179,7 @@ const ADMIN_EMAIL =
 let client = null;
 let databases = null;
 let account = null;
+let appwriteFunctions = null;
 
 let appwriteReady = false;
 let appwriteID = null;
@@ -7536,6 +7541,7 @@ async function initAppwrite(){
             Client,
             Databases,
             Account,
+            Functions,
             ID,
             Query,
             Permission,
@@ -7580,6 +7586,12 @@ async function initAppwrite(){
             new Account(
                 client
             );
+
+
+        appwriteFunctions =
+            Functions
+                ? new Functions(client)
+                : null;
 
 
         appwriteID =
@@ -9762,52 +9774,32 @@ async function sendChatMessage(){
             return;
         }
 
-        const payload = {
-            pairKey: pairKeyFor(currentUser.id, chatWithUser.id),
-            senderId: currentUser.id,
-            receiverId: chatWithUser.id,
-            text: text,
-            seen: false
-        };
-
-        if(chatReplyTo){
-            payload.replyToId = chatReplyTo.id || "";
-            payload.replyToText = (chatReplyTo.text || "").slice(0, 120);
+        if(!appwriteFunctions){
+            throw new Error("سرویس ارسال پیام در دسترس نیست");
         }
 
-        const permissions = (appwritePermission && appwriteRole) ? [
-            appwritePermission.read(appwriteRole.user(currentUser.id)),
-            appwritePermission.read(appwriteRole.user(chatWithUser.id)),
-            appwritePermission.update(appwriteRole.user(currentUser.id)),
-            appwritePermission.delete(appwriteRole.user(currentUser.id))
-        ] : undefined;
+        const execution = await appwriteFunctions.createExecution(
+            SEND_MESSAGE_FUNCTION_ID,
+            JSON.stringify({
+                receiverId: chatWithUser.id,
+                text: text,
+                replyToId: chatReplyTo?.id || "",
+                replyToText: chatReplyTo?.text ? chatReplyTo.text.slice(0, 120) : ""
+            }),
+            false,
+            "/",
+            "POST"
+        );
 
+        let result = {};
         try{
-            await databases.createDocument(
-                DATABASE_ID,
-                COLLECTION_MESSAGES,
-                appwriteID.unique(),
-                payload,
-                permissions
-            );
-        }catch(firstError){
-            // اگر فیلد reply در اسکیما نبود، بدون آن بفرست
-            if(payload.replyToId || payload.replyToText){
-                delete payload.replyToId;
-                delete payload.replyToText;
-                if(chatReplyTo?.text){
-                    payload.text = "↩ " + chatReplyTo.text.slice(0, 40) + "\n" + text;
-                }
-                await databases.createDocument(
-                    DATABASE_ID,
-                    COLLECTION_MESSAGES,
-                    appwriteID.unique(),
-                    payload,
-                    permissions
-                );
-            }else{
-                throw firstError;
-            }
+            result = JSON.parse(execution.responseBody || "{}");
+        }catch(e){
+            result = {};
+        }
+
+        if(execution.responseStatusCode >= 400 || result.error){
+            throw new Error(result.error || "ارسال پیام ناموفق بود");
         }
 
         if(input) input.value = "";
